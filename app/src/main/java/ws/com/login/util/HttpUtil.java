@@ -1,55 +1,66 @@
 package ws.com.login.util;
 
+import static java.net.HttpURLConnection.HTTP_OK;
+
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.gson.Gson;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class HttpUtil {
-    private static String BASE_URL = "HTTP://10.0.2.2:9102";
+    private static String BASE_URL = "http://119.96.82.181:8081/WS_Administration";
+    private static String TAG = "HttpUtil";
 
-    public static void http(String params, String method, String api) {
-
+    public static void http(FormBody formBody,Handler handler, String api) {
         new Thread(new Runnable() {
-            private BufferedReader bufferedReader;
-
+            //http://119.96.82.181:8081/WS_Administration/login?phone=1&password=1
             @Override
             public void run() {
-                try {
-                    URL url = null;
-                    if (params != null) {
-                        url = new URL(BASE_URL + api + params);
-                    } else {
-                        url = new URL(BASE_URL + api);
+                String url = BASE_URL+api;
+                OkHttpClient okHttpClient = new OkHttpClient();
+                Request build = new Request.Builder().url(url).post(formBody).build();
+                Call call = okHttpClient.newCall(build);
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        Log.d(TAG, "onFailure: "+e.toString());
                     }
-                    Log.d("HttpUtil", "url: " + url.toString());
-                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                    httpURLConnection.setRequestMethod(method);
-                    httpURLConnection.setConnectTimeout(10000);
-                    httpURLConnection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
-                    httpURLConnection.setRequestProperty("Accept-Language", "zh-CN,zh;q=0.9");
-                    httpURLConnection.setRequestProperty("Accept", "application/json,text/plain,*/*");
-                    //拿结果
-                    int responseCode = httpURLConnection.getResponseCode();
-                    if (responseCode == httpURLConnection.HTTP_OK) {
-                        InputStream inputStream = httpURLConnection.getInputStream();
-                        bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                        Log.d("shen", "run: " + bufferedReader.readLine());
-                        inputStream.close();
-                        Message message = new Message();
-                        Handler handler = new Handler();
-                        message.obj = bufferedReader;
-                        message.what = 0x123;
-                        handler.sendMessage(message);
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        if(response.code()==HTTP_OK){
+                            try {
+//                        Log.d(TAG, "json: "+response.body().string());
+                                String result = response.body().string();
+                                Log.d(TAG, "login: "+result);
+                                Message msg = new Message();
+                                Bundle bundle = new Bundle();
+                                bundle.putString("result",result);
+                                msg.setData(bundle);
+                                handler.sendMessage(msg);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
-                } catch (Exception e) {
-
-                }
+                });
             }
         }).start();
     }

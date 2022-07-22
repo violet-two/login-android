@@ -11,7 +11,7 @@ import java.util.HashMap;
 import ws.com.login.event.Login;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-
+    private Login login;
     private EditText et_user;
     private EditText et_password;
 
@@ -48,8 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 HashMap<String,String> params = new HashMap<>();
                 params.put("user",et_user.getText().toString());
                 params.put("password",et_password.getText().toString());
-                Object login = Login.login(params);
-
+                Login.login(params);
                 break;
         }
     }
