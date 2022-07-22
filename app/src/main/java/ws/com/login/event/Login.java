@@ -46,6 +46,7 @@ public class Login extends Thread {
                 if(result.getFlag().equals("success")){
                     Intent intent = new Intent(context,ManageMenuActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("name","我是管理员");
                     context.startActivity(intent);
                 }else{
                     ToastUtil.show(context,"密码错误");

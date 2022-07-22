@@ -81,4 +81,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
+
+    public void closeBy_et_user(View view) {
+        et_user.setText("");
+        et_password.setText("");
+    }
+
+    public void closeBy_et_password(View view) {
+        et_password.setText("");
+    }
 }
