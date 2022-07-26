@@ -57,10 +57,18 @@ public class LoginByPhoneAndSms extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login_by_phone_and_sms, container, false);
+        View view = inflater.inflate(R.layout.fragment_login_by_phone_and_sms, container, false);
+        this.view = view;
+        return view;
+    }
+    public View view;
+
+    public View get() {
+        return  view;
     }
 }

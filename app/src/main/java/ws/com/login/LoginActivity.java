@@ -23,9 +23,10 @@ import ws.com.login.util.ToastUtil;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Login login;
-    private EditText et_user;
+    private EditText et_user_sms;
     private EditText et_password;
     private RadioButton rb_isRead;
+    private EditText et_user_password;
     private int loginId = 0;//0为密码登录 1为短息登录
     private Button btn_login_method;
 
@@ -33,6 +34,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private int currentIndex = 0;//控制当前需要显示第几个Fragment
     private ArrayList<Fragment> fragmentArrayList = new ArrayList<Fragment>(){};//用List来存储Fragment,List的初始化没有写
     private Fragment mCurrentFragment;//显示当前Fragment
+    private EditText et_verification;
+    private LoginByPhoneAndPassword loginByPhoneAndPassword;
+    private LoginByPhoneAndSms loginByPhoneAndSms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +90,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             ScreenUtil.closeSoftInput(this, v);
         }
     }
-
     //初始化视图
     private void initView() {
-        et_user = findViewById(R.id.et_user);
-        et_password = findViewById(R.id.et_password);
+        View loginByPhoneAndPasswordView = new LoginByPhoneAndPassword().get();
+        View loginByPhoneAndSmsView = new LoginByPhoneAndSms().get();
+        et_user_sms = loginByPhoneAndSmsView.findViewById(R.id.et_user_sms);
+        et_user_password = loginByPhoneAndPasswordView.findViewById(R.id.et_user_password);
+        et_password = loginByPhoneAndPasswordView.findViewById(R.id.et_password);
+        et_verification = loginByPhoneAndSmsView.findViewById(R.id.et_verification);
         rb_isRead = findViewById(R.id.rb_isRead);
         btn_login_method = findViewById(R.id.btn_login_method);
     }
@@ -110,18 +117,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iBtn_login:
-                if (et_user.length() < 11 || et_user == null) {
-                    ToastUtil.show(this, "请输入正确的手机号");
-                    return;
+                if(loginId==0){
+                    if (et_user_password.length() < 11 || et_user_password == null) {
+                        ToastUtil.show(this, "请输入正确的手机号");
+                        return;
+                    }
+                    if (!rb_isRead.isChecked()) {
+                        ToastUtil.show(this, "请勾选协议");
+                        return;
+                    }
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("user", et_user_password.getText().toString());
+                    params.put("password", et_password.getText().toString());
+                    Login.login(this, params);
+                }else{
+                    if (et_user_password.length() < 11 || et_user_password == null) {
+                        ToastUtil.show(this, "请输入正确的手机号");
+                        return;
+                    }
+                    if (!rb_isRead.isChecked()) {
+                        ToastUtil.show(this, "请勾选协议");
+                        return;
+                    }
+                    HashMap<String, String> params = new HashMap<>();
+                    params.put("user", et_user_sms.getText().toString());
+                    params.put("password", et_verification.getText().toString());
+                    Login.login(this, params);
                 }
-                if (!rb_isRead.isChecked()) {
-                    ToastUtil.show(this, "请勾选协议");
-                    return;
-                }
-                HashMap<String, String> params = new HashMap<>();
-                params.put("user", et_user.getText().toString());
-                params.put("password", et_password.getText().toString());
-                Login.login(this, params);
                 break;
             case R.id.btn_login_method:
                 loginId = loginId == 0 ? 1 : 0;
@@ -137,11 +159,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void closeBy_et_user(View view) {
-        et_user.setText("");
+        et_user_password.setText("");
         et_password.setText("");
+        et_verification.setText("");
     }
 
     public void closeBy_et_password(View view) {
         et_password.setText("");
     }
+    public void closeBy_et_verification(View view) {
+        et_verification.setText("");
+    }
+    public void closeBy_et_user_verification(View view) {
+        et_user_sms.setText("");
+    }
+
 }

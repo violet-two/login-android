@@ -1,7 +1,9 @@
 package ws.com.login.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -61,6 +63,15 @@ public class LoginByPhoneAndPassword extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login_by_phone_and_password, container, false);
+        View view = inflater.inflate(R.layout.fragment_login_by_phone_and_password, container, false);
+        this.view = view;
+        return  view;
+    }
+
+
+    public View view;
+
+    public View get() {
+        return  view;
     }
 }

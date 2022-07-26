@@ -20,6 +20,7 @@
         <activity
             android:name=".ManageMenuActivity"
             android:exported="false" />
+        
         <activity
             android:name=".LoginActivity"
             android:exported="true">
