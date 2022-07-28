@@ -13,17 +13,17 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp" />
 
-<!--   <fragment-->
-<!--       android:id="@+id/login_by_phone_password"-->
-<!--       android:name="ws.com.login.fragment.LoginByPhoneAndPasswordFragment"-->
-<!--       android:layout_width="match_parent"-->
-<!--       android:layout_height="200dp"/>-->
-<!--    <fragment-->
-<!--        android:id="@+id/login_by_phone_sms"-->
-<!--        android:name="ws.com.login.fragment.LoginByPhoneAndSmsFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        />-->
+    <!--   <fragment-->
+    <!--       android:id="@+id/login_by_phone_password"-->
+    <!--       android:name="ws.com.login.fragment.LoginByPhoneAndPasswordFragment"-->
+    <!--       android:layout_width="match_parent"-->
+    <!--       android:layout_height="200dp"/>-->
+    <!--    <fragment-->
+    <!--        android:id="@+id/login_by_phone_sms"-->
+    <!--        android:name="ws.com.login.fragment.LoginByPhoneAndSmsFragment"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        />-->
     <LinearLayout
         android:id="@+id/fragment"
         android:layout_gravity="center"
