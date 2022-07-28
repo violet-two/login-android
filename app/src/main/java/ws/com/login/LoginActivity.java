@@ -2,7 +2,6 @@ package ws.com.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
@@ -16,8 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ws.com.login.event.Login;
-import ws.com.login.fragment.LoginByPhoneAndPassword;
-import ws.com.login.fragment.LoginByPhoneAndSms;
+import ws.com.login.fragment.LoginByPhoneAndPasswordFragment;
+import ws.com.login.fragment.LoginByPhoneAndSmsFragment;
 import ws.com.login.util.ScreenUtil;
 import ws.com.login.util.ToastUtil;
 
@@ -32,28 +31,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     private int currentIndex = 0;//控制当前需要显示第几个Fragment
-    private ArrayList<Fragment> fragmentArrayList = new ArrayList<Fragment>(){};//用List来存储Fragment,List的初始化没有写
+    private ArrayList<Fragment> fragmentArrayList = new ArrayList<Fragment>() {
+    };//用List来存储Fragment,List的初始化没有写
     private Fragment mCurrentFragment;//显示当前Fragment
     private EditText et_verification;
-    private LoginByPhoneAndPassword loginByPhoneAndPassword;
-    private LoginByPhoneAndSms loginByPhoneAndSms;
+    private LoginByPhoneAndPasswordFragment loginByPhoneAndPassword = new LoginByPhoneAndPasswordFragment();
+    private LoginByPhoneAndSmsFragment loginByPhoneAndSms = new LoginByPhoneAndSmsFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        fragmentArrayList.add(new LoginByPhoneAndPassword());
-        fragmentArrayList.add(new LoginByPhoneAndSms());
-        initView();
-        loginMethodChange(0);
         //登录事件
         findViewById(R.id.iBtn_login).setOnClickListener(this);
         findViewById(R.id.btn_login_method).setOnClickListener(this);
+        fragmentArrayList.add(loginByPhoneAndPassword);
+        fragmentArrayList.add(loginByPhoneAndSms);
+        loginMethodChange(1);
+        loginMethodChange(0);
+        initView();
     }
 
+    //改变登录框 短信登录和密码登录切换
     private void loginMethodChange(int index) {
         currentIndex = index;
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         //判断当前的Fragment是否为空，不为空则隐藏
         if (null != mCurrentFragment) {
@@ -90,14 +91,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             ScreenUtil.closeSoftInput(this, v);
         }
     }
+
     //初始化视图
     private void initView() {
-        View loginByPhoneAndPasswordView = new LoginByPhoneAndPassword().get();
-        View loginByPhoneAndSmsView = new LoginByPhoneAndSms().get();
-        et_user_sms = loginByPhoneAndSmsView.findViewById(R.id.et_user_sms);
-        et_user_password = loginByPhoneAndPasswordView.findViewById(R.id.et_user_password);
-        et_password = loginByPhoneAndPasswordView.findViewById(R.id.et_password);
-        et_verification = loginByPhoneAndSmsView.findViewById(R.id.et_verification);
         rb_isRead = findViewById(R.id.rb_isRead);
         btn_login_method = findViewById(R.id.btn_login_method);
     }
@@ -115,9 +111,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
+        initFragment();
         switch (view.getId()) {
             case R.id.iBtn_login:
-                if(loginId==0){
+                if (loginId == 0) {
                     if (et_user_password.length() < 11 || et_user_password == null) {
                         ToastUtil.show(this, "请输入正确的手机号");
                         return;
@@ -130,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     params.put("user", et_user_password.getText().toString());
                     params.put("password", et_password.getText().toString());
                     Login.login(this, params);
-                }else{
+                } else {
                     if (et_user_password.length() < 11 || et_user_password == null) {
                         ToastUtil.show(this, "请输入正确的手机号");
                         return;
@@ -158,19 +155,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void initFragment() {
+        View loginByPhoneAndPasswordView = getSupportFragmentManager().findFragmentByTag(fragmentArrayList.get(0).getClass().getName()).getView();
+        View loginByPhoneAndSmsView = getSupportFragmentManager().findFragmentByTag(fragmentArrayList.get(1).getClass().getName()).getView();
+        et_user_sms = loginByPhoneAndSmsView.findViewById(R.id.et_user_sms);
+        et_user_password = loginByPhoneAndPasswordView.findViewById(R.id.et_user_password);
+        et_password = loginByPhoneAndPasswordView.findViewById(R.id.et_password);
+        et_verification = loginByPhoneAndSmsView.findViewById(R.id.et_verification);
+    }
+
     public void closeBy_et_user(View view) {
+        initFragment();
         et_user_password.setText("");
         et_password.setText("");
         et_verification.setText("");
+        et_user_sms.setText("");
     }
 
     public void closeBy_et_password(View view) {
+        initFragment();
         et_password.setText("");
     }
+
     public void closeBy_et_verification(View view) {
+        initFragment();
         et_verification.setText("");
     }
+
     public void closeBy_et_user_verification(View view) {
+        initFragment();
+        et_user_password.setText("");
+        et_password.setText("");
+        et_verification.setText("");
         et_user_sms.setText("");
     }
 

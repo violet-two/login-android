@@ -23,6 +23,7 @@ import ws.com.login.LoginActivity;
 import ws.com.login.ManageMenuActivity;
 import ws.com.login.util.HttpUtil;
 import ws.com.login.util.LoginUtil;
+import ws.com.login.util.MD5Util;
 import ws.com.login.util.ParamsUtil;
 import ws.com.login.util.ToastUtil;
 
@@ -49,16 +50,18 @@ public class Login extends Thread {
                     intent.putExtra("name","我是管理员");
                     context.startActivity(intent);
                 }else{
-                    ToastUtil.show(context,"密码错误");
+                    ToastUtil.show(context,result.getData());
                 }
             }
         };
         //字符串处理
 //        String param = ParamsUtil.stringBuilder(params);
+        //md5加密
+        String md5Password = MD5Util.md5s(params.get("password")+MD5Util.SALT);
         //访问网络请求
         FormBody formBody = new FormBody.Builder()
                 .add("phone", params.get("user"))
-                .add("password", params.get("password"))
+                .add("password", md5Password)
                 .build();
         String api = "/login";
         HttpUtil.http(formBody, handler, api);

@@ -15,12 +15,12 @@
 
 <!--   <fragment-->
 <!--       android:id="@+id/login_by_phone_password"-->
-<!--       android:name="ws.com.login.fragment.LoginByPhoneAndPassword"-->
+<!--       android:name="ws.com.login.fragment.LoginByPhoneAndPasswordFragment"-->
 <!--       android:layout_width="match_parent"-->
 <!--       android:layout_height="200dp"/>-->
 <!--    <fragment-->
 <!--        android:id="@+id/login_by_phone_sms"-->
-<!--        android:name="ws.com.login.fragment.LoginByPhoneAndSms"-->
+<!--        android:name="ws.com.login.fragment.LoginByPhoneAndSmsFragment"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="0dp"-->
 <!--        />-->
