@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">secure.example.com</domain>
+        <domain includeSubdomains="true">tse1-mm.cn.bing.net</domain>
+        <domain includeSubdomains="true">128.0.10.30</domain>
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">119.96.82.181</domain>
+    </domain-config>
+</network-security-config>

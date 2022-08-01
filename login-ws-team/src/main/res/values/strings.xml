@@ -1,3 +1,21 @@
 <resources>
     <string name="app_name">login-ws-team</string>
+    <!--login-->
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="bigCustomer">大客户</string>
+    <string name="copyright">copyright©2013-2022</string>
+    <string name="company">武汉武商电子商务有限公司 版权所有</string>
+    <string name="title_activity_login_success">LoginSuccess</string>
+    
+    <!--注册-->
+    <string name="title">用户注册</string>
+    <string name="phoneNum">请输入手机号码</string>
+    <string name="password">请设置登录密码（8到16位）</string>
+    <string name="confirmPassword">请再次输入密码（8到16位）</string>
+    <string name="name">请输入您的名称</string>
+    <string name="register_button">免费注册</string>
+    <string name="tips">注意：密码长度必须为8-16位并且包含大小写字母、数字、特殊字符</string>
+    
+    
 </resources>
