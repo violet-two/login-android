@@ -66,6 +66,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String confirmPassword = mConfirmPassword.getText().toString();
                 String phone = mPhone.getText().toString();
                 String name = mName.getText().toString();
+                if(phone==null||phone==""||phone.equals("")||
+                        password==null||password==""||password.equals("")||
+                        confirmPassword==null||confirmPassword==""||confirmPassword.equals("")||
+                        name==null||name==""||name.equals("")){
+                    ToastUtil.show(this,"输入不能为空");
+                    return ;
+                }
                 if(!mCheck.isChecked()){
                     ToastUtil.show(this,"请勾选协议");
                     return ;
