@@ -30,14 +30,10 @@ public class Register {
             @SuppressLint("HandlerLeak")
             @Override
             public void handleMessage(@NonNull Message msg) {
-                Log.d("login", "handleMessage: " + msg.getData());
                 Bundle bundle = msg.getData();
                 String bundleString = bundle.getString("result");
-                Log.d("login", "bundleString: " + bundleString);
                 Gson gson = new Gson();
                 LoginUtil result = gson.fromJson(bundleString, LoginUtil.class);
-                Log.d("login", "gson: " + result);
-                Log.d("login", "flag: " + result.getFlag());
                 if (result.getFlag().equals("success")) {
                     Intent intent = new Intent(context, LoginSuccess.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

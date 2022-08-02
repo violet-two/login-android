@@ -28,7 +28,6 @@ public class HttpUtil {
             @Override
             public void run() {
                 String url = BASE_URL+api;
-                Log.d(TAG, "run: "+url);
                 OkHttpClient okHttpClient = new OkHttpClient();
                 Request build = new Request.Builder().url(url).post(formBody).build();
                 Call call = okHttpClient.newCall(build);

@@ -77,10 +77,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     ToastUtil.show(this,"请勾选协议");
                     return ;
                 }
-//                if(!password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
-//                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字、特殊字符");
-//                    return ;
-//                }
+                if(!password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
+                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字、特殊字符");
+                    return ;
+                }
                 if(!password.equals(confirmPassword)){
                     ToastUtil.show(this,"密码不一致请重新输入");
                     return ;
