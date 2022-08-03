@@ -12,7 +12,9 @@ import android.widget.EditText;
 
 import java.util.HashMap;
 
-import ws.com.login_ws_team.LoginService.Login;
+import ws.com.login_ws_team.api.API;
+import ws.com.login_ws_team.loginService.Login;
+import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.util.ScreenUtil;
 
 
@@ -23,12 +25,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int inputType = 0;//0为密文，1为明文
     private EditText user;
     private Button login;
-
+    private static API api;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.changePasswordImage).setBackgroundResource(R.drawable.no_eye);
+
+        api = HttpUtil.getRetrofit().create(API.class);
 
         password = findViewById(R.id.et_password);
         user = findViewById(R.id.et_user);
@@ -71,16 +75,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()){
             case R.id.btn_login:
                 HashMap<String, String> params = new HashMap<>();
-                params.put("user", user.getText().toString());
+                params.put("phone", user.getText().toString());
                 params.put("password", password.getText().toString());
-                Login.login(this,params);
+                Login.login(this,api,params);
                 break;
             case R.id.btn_resign:
                 Intent intent = new Intent(this, RegisterActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
-
+            case R.id.btn_modifyPassword:
+                Intent intentModifyPassword = new Intent(this, ModifyPasswordActivity.class);
+                intentModifyPassword.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intentModifyPassword);
+                break;
         }
     }
 }

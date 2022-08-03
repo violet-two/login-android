@@ -11,7 +11,7 @@ import android.widget.RadioButton;
 
 import java.util.HashMap;
 
-import ws.com.login_ws_team.LoginService.Register;
+import ws.com.login_ws_team.loginService.Register;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.ToastUtil;
 

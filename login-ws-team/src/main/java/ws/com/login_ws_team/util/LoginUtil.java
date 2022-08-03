@@ -2,7 +2,9 @@ package ws.com.login_ws_team.util;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginUtil {
+import java.io.Serializable;
+
+public class LoginUtil implements Serializable {
     @SerializedName("data")
     private String data;
     @SerializedName("flag")
@@ -14,6 +16,14 @@ public class LoginUtil {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginUtil{" +
+                "data='" + data + '\'' +
+                ", flag='" + flag + '\'' +
+                '}';
     }
 
     public String getFlag() {
