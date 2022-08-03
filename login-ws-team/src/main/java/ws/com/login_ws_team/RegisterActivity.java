@@ -17,7 +17,8 @@ import ws.com.login_ws_team.util.ToastUtil;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String PW_PATTERN = "^(?![A-Za-z0-9]+$)(?![a-z0-9\\W]+$)(?![A-Za-z\\W]+$)(?![A-Z0-9\\W]+$)[a-zA-Z0-9\\W]{8,}$";
+    //    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?]).{8,16}$/";
+    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,16}$/";
     private EditText mPhone;
     private EditText mPassword;
     private EditText mConfirmPassword;
@@ -77,8 +78,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     ToastUtil.show(this,"请勾选协议");
                     return ;
                 }
-                if(!password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
-                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字、特殊字符");
+                if(password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
+                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字");
                     return ;
                 }
                 if(!password.equals(confirmPassword)){
