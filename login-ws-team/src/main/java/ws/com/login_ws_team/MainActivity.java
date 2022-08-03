@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button resign = findViewById(R.id.btn_resign);
         login.setOnClickListener(this);
         resign.setOnClickListener(this);
+        findViewById(R.id.btn_modifyPassword).setOnClickListener(this);
     }
 
     @Override

@@ -17,6 +17,6 @@ public interface API {
     @POST("/WS_Administration/regist")
     Call<LoginUtil> Regist(@QueryMap HashMap<String, String> params);
 
-    @POST("/WS_Administration/modify")
+    @POST("/WS_Administration/updatePasswordByPhone")
     Call<LoginUtil> Modify(@QueryMap HashMap<String, String> params);
 }
