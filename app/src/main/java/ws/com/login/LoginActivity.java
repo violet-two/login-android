@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginMethodChange(1);
         loginMethodChange(0);
         initView();
+//        initFragment();
     }
 
     //改变登录框 短信登录和密码登录切换
@@ -76,6 +77,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             ft.show(fragment);
         }
         ft.commit();
+    }
+
+    private void initFragment() {
+        View loginByPhoneAndPasswordView = getSupportFragmentManager().findFragmentByTag(fragmentArrayList.get(0).getClass().getName()).getView();
+        View loginByPhoneAndSmsView = getSupportFragmentManager().findFragmentByTag(fragmentArrayList.get(1).getClass().getName()).getView();
+        et_user_sms = loginByPhoneAndSmsView.findViewById(R.id.et_user_sms);
+        et_user_password = loginByPhoneAndPasswordView.findViewById(R.id.et_user_password);
+        et_password = loginByPhoneAndPasswordView.findViewById(R.id.et_password);
+        et_verification = loginByPhoneAndSmsView.findViewById(R.id.et_verification);
     }
 
     @Override
@@ -154,16 +164,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
         }
     }
-
-    private void initFragment() {
-        View loginByPhoneAndPasswordView = getSupportFragmentManager().findFragmentByTag(fragmentArrayList.get(0).getClass().getName()).getView();
-        View loginByPhoneAndSmsView = getSupportFragmentManager().findFragmentByTag(fragmentArrayList.get(1).getClass().getName()).getView();
-        et_user_sms = loginByPhoneAndSmsView.findViewById(R.id.et_user_sms);
-        et_user_password = loginByPhoneAndPasswordView.findViewById(R.id.et_user_password);
-        et_password = loginByPhoneAndPasswordView.findViewById(R.id.et_password);
-        et_verification = loginByPhoneAndSmsView.findViewById(R.id.et_verification);
-    }
-
     public void closeBy_et_user(View view) {
         initFragment();
         et_user_password.setText("");
