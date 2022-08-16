@@ -3,7 +3,7 @@
     <style name="Theme.Login" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <!--解决背景图不能显示到标题栏问题-->
-        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">#D3C3B2</item>
         <item name="colorPrimaryDark">@color/gray</item>

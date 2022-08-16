@@ -13,7 +13,7 @@
         android:id="@+id/logo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="70dp"
         android:background="@drawable/logo_radius"
         android:gravity="center">
 
@@ -55,7 +55,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
-                android:src="@drawable/user" />
+                android:src="@drawable/ic_user_24" />
 
             <EditText
                 android:id="@+id/et_user"
@@ -79,7 +79,7 @@
                 android:layout_height="40dp"
                 android:layout_alignParentLeft="true"
                 android:padding="2dp"
-                android:src="@drawable/unlock" />
+                android:src="@drawable/ic_lock_24" />
 
             <EditText
                 android:id="@+id/et_password"

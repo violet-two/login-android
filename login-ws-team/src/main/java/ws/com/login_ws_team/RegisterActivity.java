@@ -2,17 +2,23 @@ package ws.com.login_ws_team;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 
 import java.util.HashMap;
 
 import ws.com.login_ws_team.loginService.Register;
 import ws.com.login_ws_team.util.ScreenUtil;
+import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
@@ -31,6 +37,18 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_activity);
+        //设置状态栏背景为透明
+        StatusBarUtil.getStatusAToTransparent(this);
+        //获取状态栏高度
+        int statusBarHeight = StatusBarUtil.getStatusBarHeight(this);
+        //获取RelativeLayout
+        RelativeLayout topBox = findViewById(R.id.topBox);
+        //设置属性,获取属性要获取到他的父级容器标签或者布局
+        LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) topBox.getLayoutParams();
+        lp.setMargins(0,statusBarHeight,0,0);
+        topBox.setLayoutParams(lp);
+
+
         mPhone = findViewById(R.id.et_phone);
         mPassword = findViewById(R.id.et_password);
         mConfirmPassword = findViewById(R.id.et_confirm_password);
@@ -67,11 +85,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String confirmPassword = mConfirmPassword.getText().toString();
                 String phone = mPhone.getText().toString();
                 String name = mName.getText().toString();
-                if(phone==null||phone==""||phone.equals("")||
-                        password==null||password==""||password.equals("")||
-                        confirmPassword==null||confirmPassword==""||confirmPassword.equals("")||
-                        name==null||name==""||name.equals("")){
-                    ToastUtil.show(this,"输入不能为空");
+                if("".equals(phone)){
+                    ToastUtil.show(this,"手机号不能为空");
+                    return ;
+                }
+                if("".equals(password)){
+                    ToastUtil.show(this,"密码不能为空");
+                    return ;
+                }
+                if("".equals(confirmPassword)){
+                    ToastUtil.show(this,"重复密码不能为空");
+                    return ;
+                }
+                if("".equals(name)){
+                    ToastUtil.show(this,"昵称不能为空");
                     return ;
                 }
                 if(!mCheck.isChecked()){
