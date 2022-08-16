@@ -55,14 +55,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        try {
             Bundle bundle = getIntent().getExtras();
-            String status = bundle.getString("status");
-            if("success".equals(status)){
-                user.setText(bundle.getString("user"));
-                password.setText(bundle.getString("password"));
+            if(bundle!=null){
+                String status = bundle.getString("status");
+                if("success".equals(status)){
+                    user.setText(bundle.getString("user"));
+                    password.setText(bundle.getString("password"));
+                }
+            }else{
+                password.setText("");
             }
-        }catch (Exception e){}
     }
 
     @Override

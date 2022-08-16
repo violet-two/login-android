@@ -22,6 +22,7 @@ import okhttp3.internal.concurrent.Task;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ws.com.login_ws_team.InformationDepartmentActivity;
 import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.LoginSuccess;
@@ -42,7 +43,7 @@ public class Login {
                 Bundle bundle = msg.getData();
                 LoginUtil result = (LoginUtil) bundle.getSerializable("result");
                 if (result.getFlag().equals("success")) {
-                    Intent intent = new Intent(context, LoginSuccess.class);
+                    Intent intent = new Intent(context, InformationDepartmentActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("state", "登录成功");
                     context.startActivity(intent);
