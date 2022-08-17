@@ -89,7 +89,7 @@
                 android:layout_toRightOf="@id/iv_password_image"
                 android:background="@color/white"
                 android:gravity="center_vertical"
-                android:inputType="textPassword" />
+                android:maxLength="16" />
 
             <ImageView
                 android:id="@+id/changePasswordImage"
@@ -127,15 +127,15 @@
             android:textColor="@color/gray"
             android:textSize="@dimen/s15sp" />
 
-        <Button
-            android:id="@+id/btn_modifyPassword"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/resign_button_bg_by_login"
-            android:text="@string/bigCustomer"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/s15sp" />
+<!--        <Button-->
+<!--            android:id="@+id/btn_modifyPassword"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:background="@drawable/resign_button_bg_by_login"-->
+<!--            android:text="@string/bigCustomer"-->
+<!--            android:textColor="@color/gray"-->
+<!--            android:textSize="@dimen/s15sp" />-->
     </LinearLayout>
 
     <LinearLayout

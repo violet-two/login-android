@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 
 import retrofit2.Call;
+import ws.com.login_ws_team.InformationDepartmentActivity;
 import ws.com.login_ws_team.MainActivity;
 import ws.com.login_ws_team.RegisterActivity;
 import ws.com.login_ws_team.api.API;
@@ -34,7 +35,8 @@ public class Register {
                 Bundle bundle = msg.getData();
                 LoginUtil result = (LoginUtil) bundle.getSerializable("result");
                 if (result.getFlag().equals("success")) {
-                    Intent intent = new Intent(context, MainActivity.class);
+//                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent(context, InformationDepartmentActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("status", "success");
                     intent.putExtra("user", params.get("phone"));

@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.changePasswordImage).setBackgroundResource(R.drawable.ic_visibility_24);
         //设置状态栏背景为透明
         StatusBarUtil.getStatusAToTransparent(this);
 
@@ -49,7 +48,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button resign = findViewById(R.id.btn_resign);
         login.setOnClickListener(this);
         resign.setOnClickListener(this);
-        findViewById(R.id.btn_modifyPassword).setOnClickListener(this);
+
+        findViewById(R.id.changePasswordImage).setBackgroundResource(R.drawable.ic_visibility_off_24);
+        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//        findViewById(R.id.btn_modifyPassword).setOnClickListener(this);
     }
 
     @Override
@@ -61,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if("success".equals(status)){
                     user.setText(bundle.getString("user"));
                     password.setText(bundle.getString("password"));
+                    Intent intent = new Intent(this, InformationDepartmentActivity.class);
+                    startActivity(intent);
                 }
             }else{
                 password.setText("");
@@ -114,14 +118,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_resign:
                 Intent intent = new Intent(this, RegisterActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
                 break;
-            case R.id.btn_modifyPassword:
-                Intent intentModifyPassword = new Intent(this, ModifyPasswordActivity.class);
-                intentModifyPassword.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(intentModifyPassword);
-                break;
+//            case R.id.btn_modifyPassword:
+//                Intent intentModifyPassword = new Intent(this, ModifyPasswordActivity.class);
+//                intentModifyPassword.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                startActivity(intentModifyPassword);
+//                break;
         }
     }
 }
