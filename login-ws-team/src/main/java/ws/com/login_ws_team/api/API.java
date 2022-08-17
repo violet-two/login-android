@@ -7,6 +7,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
+import ws.com.login_ws_team.util.InformationDPUtil;
 import ws.com.login_ws_team.util.LoginUtil;
 
 public interface API {
@@ -19,4 +20,7 @@ public interface API {
 
     @POST("/WS_Administration/updatePasswordByPhone")
     Call<LoginUtil> Modify(@QueryMap HashMap<String, String> params);
+
+    @POST("/")
+    Call<InformationDPUtil> queryDP(@QueryMap HashMap<String, String> params);
 }

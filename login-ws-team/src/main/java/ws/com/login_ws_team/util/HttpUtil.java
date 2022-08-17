@@ -59,6 +59,30 @@ public class HttpUtil {
             }
         });
     }
+    public static void queryTask(Handler handler,Call<InformationDPUtil> task){
+        task.enqueue(new Callback<InformationDPUtil>() {
+            @Override
+            public void onResponse(Call<InformationDPUtil> call, Response<InformationDPUtil> response) {
+                if (response.code() == HTTP_OK) {
+                    try {
+                        InformationDPUtil result = response.body();
+                        Log.d(TAG, "onResponse: "+result);
+                        Message msg = new Message();
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("result", result);
+                        msg.setData(bundle);
+                        handler.sendMessage(msg);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<InformationDPUtil> call, Throwable t) {
+                Log.d(TAG, "onResponse: " + t);
+            }
+        });
+    }
 
 //    public static void http(FormBody formBody,Handler handler, String api) {
 //        new Thread(new Runnable() {

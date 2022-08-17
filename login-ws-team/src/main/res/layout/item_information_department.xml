@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_unline_information_dp"
+    android:gravity="center_vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/idBox"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="150dp"
+                android:layout_height="30dp"
+                android:gravity="center_vertical"
+                android:text="名字"
+                android:textSize="@dimen/s16sp"></TextView>
+            <TextView
+                android:id="@+id/phone"
+                android:layout_width="150dp"
+                android:layout_height="20dp"
+                android:gravity="center_vertical"
+                android:text="电话号码"
+                android:textSize="@dimen/s16sp"></TextView>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dp"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_toLeftOf="@id/role"
+            android:layout_toRightOf="@id/idBox"
+            android:gravity="center_vertical"
+            android:text="部门"
+            android:textSize="@dimen/s16sp"></TextView>
+
+        <TextView
+            android:id="@+id/role"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="身份"
+            android:textSize="@dimen/s16sp"></TextView>
+    </RelativeLayout>
+</LinearLayout>

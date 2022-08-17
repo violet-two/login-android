@@ -15,7 +15,7 @@
         android:theme="@style/Theme.Login"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".InformationDepartmentActivity"
+            android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".ModifyPasswordActivity"
@@ -35,9 +35,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Login.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".InformationDepartmentActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import retrofit2.Call;
 import ws.com.login_ws_team.LoginSuccess;
+import ws.com.login_ws_team.MainActivity;
 import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.util.LoginUtil;
@@ -32,9 +33,9 @@ public class ModifyPassword {
                 Bundle bundle = msg.getData();
                 LoginUtil result = (LoginUtil) bundle.getSerializable("result");
                 if (result.getFlag().equals("success")) {
-                    Intent intent = new Intent(context, LoginSuccess.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("state", "修改成功");
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("state", "修改成功,请重新登录");
                     context.startActivity(intent);
                 } else {
                     ToastUtil.show(context, result.getData());
@@ -44,7 +45,8 @@ public class ModifyPassword {
         //md5加密
 
         API api = HttpUtil.getRetrofit().create(API.class);
-        String md5Password = MD5Util.md5s(params.get("password") + MD5Util.SALT);
+//        String md5Password = MD5Util.md5s(params.get("password") + MD5Util.SALT);
+        String md5Password = MD5Util.md5s(params.get("password") );
         params.put("password", md5Password);
         Call<LoginUtil> task = api.Modify(params);
         HttpUtil.loginTask(handler, task);

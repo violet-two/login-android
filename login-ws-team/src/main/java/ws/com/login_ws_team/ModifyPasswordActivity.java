@@ -21,8 +21,9 @@ import ws.com.login_ws_team.util.ToastUtil;
 
 public class ModifyPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText mPhone;
-    private EditText mPassword;
+    private EditText mOldPassword;
+    private EditText mNewPassword;
+    private EditText mAgainPassword;
     //正则表达式，判断是否为含有大小写、8-16位
 //    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?]).{8,16}$/";
     public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,16}$/";
@@ -43,8 +44,9 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
         topBox.setLayoutParams(lp);
 
 
-        mPhone = findViewById(R.id.et_phone);
-        mPassword = findViewById(R.id.et_password);
+        mOldPassword = findViewById(R.id.old_password);
+        mNewPassword = findViewById(R.id.new_password);
+        mAgainPassword = findViewById(R.id.again_password);
         findViewById(R.id.modify_password).setOnClickListener(this);
     }
 
@@ -67,23 +69,28 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.modify_password:
-                String password = mPassword.getText().toString();
-                String phone = mPhone.getText().toString();
-                if("".equals(phone)){
-                    ToastUtil.show(this,"手机号不能为空");
+                String oldPassword = mOldPassword.getText().toString();
+                String newPassword = mNewPassword.getText().toString();
+                String againPassword = mAgainPassword.getText().toString();
+                if("".equals(oldPassword)){
+                    ToastUtil.show(this,"旧密码不能为空");
                     return ;
                 }
-                if("".equals(password)){
-                    ToastUtil.show(this,"密码不能为空");
+                if("".equals(newPassword)){
+                    ToastUtil.show(this,"新密码不能为空");
                     return ;
                 }
-                if(password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
+                if("".equals(againPassword)){
+                    ToastUtil.show(this,"重复密码不能为空");
+                    return ;
+                }
+                if(newPassword.matches(PW_PATTERN)||newPassword.length()<8||newPassword.length()>16){
                     ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字");
                     return ;
                 }
                 HashMap<String,String> params = new HashMap<>();
-                params.put("phone",phone);
-                params.put("password",password);
+                params.put("oldPassword",oldPassword);
+                params.put("newPassword",newPassword);
                 ModifyPassword.modifyPassword(this,params);
                 break;
         }
