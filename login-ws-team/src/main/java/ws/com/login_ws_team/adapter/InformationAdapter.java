@@ -13,8 +13,8 @@ import ws.com.login_ws_team.R;
 import ws.com.login_ws_team.util.InformationDPUtil;
 
 public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    protected final List<InformationDPUtil> mData;
-    public InformationAdapter(List<InformationDPUtil> mData) {
+    protected final List<InformationDPUtil.DataBean> mData;
+    public InformationAdapter(List<InformationDPUtil.DataBean> mData) {
         this.mData = mData;
     }
 
@@ -54,11 +54,11 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         //设置每个控件的值
-        public void setData(InformationDPUtil informationDPUtil, int position) {
+        public void setData(InformationDPUtil.DataBean informationDPUtil, int position) {
             phone.setText(informationDPUtil.getPhone());
-            name.setText(informationDPUtil.getName());
+            name.setText(informationDPUtil.getRegname());
             dp.setText(informationDPUtil.getDepartment());
-            role.setText(informationDPUtil.getRole());
+            role.setText(informationDPUtil.getUserStatus());
         }
     }
 }

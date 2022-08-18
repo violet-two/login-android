@@ -1,49 +1,123 @@
 package ws.com.login_ws_team.util;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
-public class InformationDPUtil implements Serializable {
-    private String name;
-    private String phone;
-    private String department;
-    private String role;
+public class InformationDPUtil<T> implements Serializable {
 
-    public InformationDPUtil(String name, String phone, String department, String role) {
-        this.name = name;
-        this.phone = phone;
-        this.department = department;
-        this.role = role;
+    @SerializedName("data")
+    private Object data;
+    @SerializedName("flag")
+    private String flag;
+    @SerializedName("page")
+    private PageBean page;
+
+    public Object getData() {
+        return data;
     }
 
-    public String getName() {
-        return name;
+    public void setData(T data) {
+        this.data = data;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFlag() {
+        return flag;
     }
 
-    public String getPhone() {
-        return phone;
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public PageBean getPage() {
+        return page;
     }
 
-    public String getDepartment() {
-        return department;
+    public void setPage(PageBean page) {
+        this.page = page;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    public static class PageBean implements Serializable{
+        @SerializedName("pageSize")
+        private Integer pageSize;
+        @SerializedName("startPage")
+        private Integer startPage;
+        @SerializedName("total")
+        private Integer total;
+
+        public Integer getPageSize() {
+            return pageSize;
+        }
+
+        public void setPageSize(Integer pageSize) {
+            this.pageSize = pageSize;
+        }
+
+        public Integer getStartPage() {
+            return startPage;
+        }
+
+        public void setStartPage(Integer startPage) {
+            this.startPage = startPage;
+        }
+
+        public Integer getTotal() {
+            return total;
+        }
+
+        public void setTotal(Integer total) {
+            this.total = total;
+        }
     }
 
-    public String getRole() {
-        return role;
-    }
+    public static class DataBean implements Serializable{
 
-    public void setRole(String role) {
-        this.role = role;
+        public DataBean(String regname, String userStatus, String phone, String department) {
+            this.regname = regname;
+            this.userStatus = userStatus;
+            this.phone = phone;
+            this.department = department;
+        }
+
+        @SerializedName("regname")
+        private String regname;
+        @SerializedName("userStatus")
+        private String userStatus;
+        @SerializedName("phone")
+        private String phone;
+        @SerializedName("department")
+        private String department;
+
+        public String getRegname() {
+            return regname;
+        }
+
+        public void setRegname(String regname) {
+            this.regname = regname;
+        }
+
+        public String getUserStatus() {
+            return userStatus;
+        }
+
+        public void setUserStatus(String userStatus) {
+            this.userStatus = userStatus;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getDepartment() {
+            return department;
+        }
+
+        public void setDepartment(String department) {
+            this.department = department;
+        }
     }
 }

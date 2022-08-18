@@ -21,6 +21,6 @@ public interface API {
     @POST("/WS_Administration/updatePasswordByPhone")
     Call<LoginUtil> Modify(@QueryMap HashMap<String, String> params);
 
-    @POST("/")
-    Call<InformationDPUtil> queryDP(@QueryMap HashMap<String, String> params);
+    @POST("/WS_Administration/findUser")
+    Call<InformationDPUtil> queryDPAll(@QueryMap HashMap<String, String> params);
 }

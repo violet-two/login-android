@@ -3,20 +3,19 @@ package ws.com.login_ws_team.util;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class LoginUtil implements Serializable {
+public class LoginUtil<T> implements Serializable{
 
     @SerializedName("data")
-    private List<DataBean> data;
+    private Object data;
     @SerializedName("flag")
     private String flag;
 
-    public List<DataBean> getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(Object data) {
         this.data = data;
     }
 
@@ -28,7 +27,7 @@ public class LoginUtil implements Serializable {
         this.flag = flag;
     }
 
-    public static class DataBean {
+    public static class DataBean implements Serializable{
         @SerializedName("regname")
         private String regname;
         @SerializedName("phone")
@@ -91,3 +90,25 @@ public class LoginUtil implements Serializable {
         }
     }
 }
+//class LoginUserErrorEntity extends LoginUtil implements Serializable{
+//    @SerializedName("data")
+//    private String data;
+//    @SerializedName("flag")
+//    private String flag;
+//
+//    public String getData() {
+//        return data;
+//    }
+//
+//    public void setData(String data) {
+//        this.data = data;
+//    }
+//
+//    public String getFlag() {
+//        return flag;
+//    }
+//
+//    public void setFlag(String flag) {
+//        this.flag = flag;
+//    }
+//}

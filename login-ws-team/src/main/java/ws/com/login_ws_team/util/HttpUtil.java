@@ -7,14 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import java.io.IOException;
-
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.internal.concurrent.Task;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,7 +19,10 @@ public class HttpUtil {
 
     private static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl("http://119.96.82.181:8081")
+//            //一般使用这个
             .addConverterFactory(GsonConverterFactory.create())
+            //自定义工厂解决数据返回类型不一致问题
+//            .addConverterFactory(GsonDConverterFactory.create())
             .build();
 
     public static Retrofit getRetrofit(){
@@ -44,9 +39,10 @@ public class HttpUtil {
                         Log.d(TAG, "onResponse: "+result);
                         Message msg = new Message();
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("result", result);
+                        bundle.putSerializable("result",result);
                         msg.setData(bundle);
                         handler.sendMessage(msg);
+                        Thread.sleep(100);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -72,6 +68,7 @@ public class HttpUtil {
                         bundle.putSerializable("result", result);
                         msg.setData(bundle);
                         handler.sendMessage(msg);
+                        Thread.sleep(100);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

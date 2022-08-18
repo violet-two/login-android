@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/allView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg"
@@ -23,6 +24,7 @@
             android:src="@drawable/reback_01" />
 
         <TextView
+            android:id="@+id/dpAndName"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
@@ -45,7 +47,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/search_by_informationdp">
 
-            <androidx.appcompat.widget.SearchView
+                <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
