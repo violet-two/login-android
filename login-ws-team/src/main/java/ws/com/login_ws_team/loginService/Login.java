@@ -45,10 +45,10 @@ public class Login {
                 if (result.getFlag().equals("success")) {
                     Intent intent = new Intent(context, InformationDepartmentActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("state", "登录成功");
+                    intent.putExtra("data", result);
                     context.startActivity(intent);
                 } else {
-                    ToastUtil.show(context, result.getData());
+                    ToastUtil.show(context, result.getData().toString());
                 }
             }
         };

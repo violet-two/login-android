@@ -14,6 +14,7 @@
             android:layout_width="150dp"
             android:layout_height="60dp"
             android:layout_alignParentLeft="true"
+            android:gravity="center_vertical"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/name"
@@ -21,33 +22,37 @@
                 android:layout_height="30dp"
                 android:gravity="center_vertical"
                 android:text="名字"
+                android:textStyle="bold"
                 android:textSize="@dimen/s16sp"></TextView>
             <TextView
+                android:layout_marginTop="2dp"
                 android:id="@+id/phone"
                 android:layout_width="150dp"
                 android:layout_height="20dp"
                 android:gravity="center_vertical"
                 android:text="电话号码"
-                android:textSize="@dimen/s16sp"></TextView>
+                android:textSize="@dimen/s14sp"></TextView>
         </LinearLayout>
 
         <TextView
-            android:id="@+id/dp"
+            android:id="@+id/role"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:layout_toLeftOf="@id/role"
+            android:layout_toLeftOf="@id/dp"
             android:layout_toRightOf="@id/idBox"
             android:gravity="center_vertical"
-            android:text="部门"
-            android:textSize="@dimen/s16sp"></TextView>
+            android:text="身份"
+            android:textSize="@dimen/s16sp"
+            android:textStyle="bold"></TextView>
 
         <TextView
-            android:id="@+id/role"
+            android:id="@+id/dp"
             android:layout_width="100dp"
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
             android:gravity="center"
-            android:text="身份"
+            android:text="部门"
+            android:textStyle="bold"
             android:textSize="@dimen/s16sp"></TextView>
     </RelativeLayout>
 </LinearLayout>

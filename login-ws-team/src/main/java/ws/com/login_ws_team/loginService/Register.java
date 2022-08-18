@@ -44,7 +44,7 @@ public class Register {
                     ToastUtil.show(context,"注册成功");
                     context.startActivity(intent);
                 } else {
-                    ToastUtil.show(context, result.getData());
+                    ToastUtil.show(context, result.getData().toString());
                 }
             }
         };

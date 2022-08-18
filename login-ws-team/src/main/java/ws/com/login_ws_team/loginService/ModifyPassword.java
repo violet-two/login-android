@@ -38,7 +38,7 @@ public class ModifyPassword {
                     intent.putExtra("state", "修改成功,请重新登录");
                     context.startActivity(intent);
                 } else {
-                    ToastUtil.show(context, result.getData());
+                    ToastUtil.show(context, result.getData().toString());
                 }
             }
         };

@@ -12,7 +12,7 @@
     <string name="title">用户注册</string>
     <string name="phoneNum">请输入手机号码</string>
     <string name="password">请设置登录密码（8到16位）</string>
-<!--    <string name="confirmPassword">请再次输入密码（8到16位）</string>-->
+    <!--    <string name="confirmPassword">请再次输入密码（8到16位）</string>-->
     <string name="name">请输入您的名称</string>
     <string name="register_button">免费注册</string>
     <string name="tips">注意：密码长度必须为8-16位并且包含大小写字母、数字</string>
@@ -27,6 +27,9 @@
     <string name="oldPassword">请输入旧密码</string>
     <string name="newPassword">请设置登录密码（8到16位）</string>
     <string name="confirmPassword">请再次输入密码（8到16位）</string>
+
+    <!--签到界面-->
+    <string name="signInTitle">签到日历</string>
 
 
 </resources>
