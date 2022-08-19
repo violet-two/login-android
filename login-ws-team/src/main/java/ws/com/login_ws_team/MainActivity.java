@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (b) {
                     // 此处为得到焦点时的处理内容
                     System.out.println("获取焦点");
-                    String isTruePhoneNum = "/^1[3-9]\\d{9}$/";
+                    String isTruePhoneNum = "^1(3[0-9]|5[012356789]|7[1235678]|8[0-9])\\d{8}$";
                     String inputPhone = user.getText().toString();
                     if(!inputPhone.matches(isTruePhoneNum)){
                         ToastUtil.show(MainActivity.this,"手机号格式不正确");
