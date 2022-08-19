@@ -1,8 +1,15 @@
 package ws.com.login_ws_team.util;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Build;
+import android.provider.Settings;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.View;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,5 +37,30 @@ public class StatusBarUtil extends AppCompatActivity {
             statusBarHeight = activity.getResources().getDimensionPixelSize(resourceId);
         }
         return statusBarHeight;
+    }
+
+
+    public static boolean checkHasNavigationBar(Context context) {
+        boolean hasNavigationBar = false;
+        if ((Settings.Global.getInt(context.getContentResolver(), "force_fsg_nav_bar", 0) != 0)) {
+            hasNavigationBar = true;
+        }
+        return hasNavigationBar;
+    }
+
+    //获取导航栏高度
+    public static int getNavigationHeight(Context activity) {
+        if (activity == null) {
+            return 0;
+        }
+        Resources resources = activity.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height",
+                "dimen", "android");
+        int height = 0;
+        if (resourceId > 0) {
+            //获取NavigationBar的高度
+            height = resources.getDimensionPixelSize(resourceId);
+        }
+        return height;
     }
 }

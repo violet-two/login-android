@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 
 import retrofit2.Call;
-import ws.com.login_ws_team.LoginSuccess;
 import ws.com.login_ws_team.MainActivity;
 import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.util.HttpUtil;
@@ -46,8 +45,10 @@ public class ModifyPassword {
 
         API api = HttpUtil.getRetrofit().create(API.class);
 //        String md5Password = MD5Util.md5s(params.get("password") + MD5Util.SALT);
-        String md5Password = MD5Util.md5s(params.get("password") );
-        params.put("password", md5Password);
+        String password = MD5Util.md5s(params.get("password") );
+        String beforePassword = MD5Util.md5s(params.get("beforePassword") );
+        params.put("password", password);
+        params.put("beforePassword", beforePassword);
         Call<LoginUtil> task = api.Modify(params);
         HttpUtil.loginTask(handler, task);
     }

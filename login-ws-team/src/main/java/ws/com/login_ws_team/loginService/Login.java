@@ -25,7 +25,7 @@ public class Login {
 
 
     @SuppressLint("HandlerLeak")
-    public static void login(Context context, API api, HashMap<String, String> params) {
+    public static void login(Context context,HashMap<String, String> params) {
         handler = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -53,6 +53,27 @@ public class Login {
 //        String api = "/login";
 //        HttpUtil.http(formBody, handler, api);
 //        String md5Password = MD5Util.md5s(params.get("password"));
+        API api = HttpUtil.getRetrofit().create(API.class);
+        params.put("password", md5Password);
+        Call<LoginUtil> task = api.Login(params);
+        HttpUtil.loginTask(handler, task);
+    }
+
+    @SuppressLint("HandlerLeak")
+    public static void checkPassword(Context context,HashMap<String, String> params) {
+        handler = new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                Bundle bundle = msg.getData();
+                LoginUtil result = (LoginUtil) bundle.getSerializable("result");
+                if ("fail".equals(result.getFlag())){
+                    ToastUtil.show(context,"密码与原密码不一致");
+                }
+            }
+        };
+        //md5加密
+        String md5Password = MD5Util.md5s(params.get("password"));
+        API api = HttpUtil.getRetrofit().create(API.class);
         params.put("password", md5Password);
         Call<LoginUtil> task = api.Login(params);
         HttpUtil.loginTask(handler, task);

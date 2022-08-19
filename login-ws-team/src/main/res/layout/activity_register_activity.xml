@@ -43,11 +43,14 @@
             android:id="@+id/et_phone"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/register_input_bg"
             android:hint="@string/phoneNum"
-            android:paddingLeft="5dp"
+            android:inputType="number"
             android:maxLength="11"
+            android:paddingLeft="5dp"
             android:textColor="@color/black"
             android:textColorHint="#95A1AA" />
 
@@ -55,7 +58,9 @@
             android:id="@+id/et_password"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/register_input_bg"
             android:hint="@string/password"
             android:inputType="textPassword"
@@ -67,7 +72,9 @@
             android:id="@+id/et_confirm_password"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/register_input_bg"
             android:hint="@string/confirmPassword"
             android:inputType="textPassword"
@@ -79,20 +86,33 @@
             android:id="@+id/et_name"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/register_input_bg"
             android:hint="@string/name"
             android:paddingLeft="5dp"
             android:textColor="@color/black"
             android:textColorHint="#95A1AA" />
-<!--        <Spinner-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="40dp"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:dropDownVerticalOffset="0dp"-->
-<!--            android:spinnerMode="dropdown"-->
-<!--            android:entries="@array/DepartmentList">-->
-<!--        </Spinner>-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/register_input_bg">
+
+            <Spinner
+                android:id="@+id/department"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:entries="@array/DepartmentList"
+                android:popupBackground="@drawable/register_spinner_bg"
+                android:spinnerMode="dropdown"></Spinner>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout

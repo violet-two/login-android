@@ -8,7 +8,12 @@ import android.os.Message;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.internal.LinkedTreeMap;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import ws.com.login_ws_team.InformationDepartmentActivity;
@@ -38,9 +43,19 @@ public class Register {
 //                    Intent intent = new Intent(context, MainActivity.class);
                     Intent intent = new Intent(context, InformationDepartmentActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("status", "success");
-                    intent.putExtra("user", params.get("phone"));
-                    intent.putExtra("password",  password);
+                    result = new LoginUtil();
+                    result.setFlag("success");
+                    List<LinkedTreeMap<String,Object>> dataBeans = new ArrayList<>();
+                    LinkedTreeMap<String,Object> linkedHashMap= new LinkedTreeMap<>();
+                    linkedHashMap.put("id",1);
+                    linkedHashMap.put("regname",params.get("regname"));
+                    linkedHashMap.put("phone",params.get("phone"));
+                    linkedHashMap.put("deptId",1);
+                    linkedHashMap.put("department",params.get("department"));
+                    linkedHashMap.put("status",1);
+                    dataBeans.add(linkedHashMap);
+                    result.setData(dataBeans);
+                    intent.putExtra("data",result);
                     ToastUtil.show(context,"注册成功");
                     context.startActivity(intent);
                 } else {
@@ -49,7 +64,8 @@ public class Register {
             }
         };
         //md5加密
-        String md5Password = MD5Util.md5s( password+ MD5Util.SALT);
+//        String md5Password = MD5Util.md5s( password+ MD5Util.SALT);
+        String md5Password = MD5Util.md5s( password);
         api = HttpUtil.getRetrofit().create(API.class);
         params.put("password", md5Password);
         Call<LoginUtil> task = api.Regist(params);

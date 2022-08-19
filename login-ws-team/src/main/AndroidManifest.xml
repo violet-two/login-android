@@ -31,13 +31,6 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginSuccess"
-            android:configChanges="orientation|screenSize"
-            android:exported="false"
-            android:label="@string/title_activity_login_success"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.Login.NoActionBar" />
-        <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true"

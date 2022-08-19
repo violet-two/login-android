@@ -8,11 +8,13 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 
 import java.util.HashMap;
 
@@ -23,8 +25,8 @@ import ws.com.login_ws_team.util.ToastUtil;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?]).{8,16}$/";
-    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,16}$/";
+        public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?]).{8,16}$/";
+//    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,16}$/";
     private EditText mPhone;
     private EditText mPassword;
     private EditText mConfirmPassword;
@@ -32,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private Button mRegister;
     private RadioButton mCheck;
     private Boolean isCheck = false;//true代表选中，false代表没选择
+    private Spinner mDepartment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +51,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         lp.setMargins(0,statusBarHeight,0,0);
         topBox.setLayoutParams(lp);
 
-
         mPhone = findViewById(R.id.et_phone);
         mPassword = findViewById(R.id.et_password);
         mConfirmPassword = findViewById(R.id.et_confirm_password);
@@ -58,6 +60,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mCheck = findViewById(R.id.check);
         mCheck.setOnClickListener(this);
         mCheck.setChecked(false);
+        mDepartment = findViewById(R.id.department);
+
     }
 
     @Override
@@ -85,6 +89,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 String confirmPassword = mConfirmPassword.getText().toString();
                 String phone = mPhone.getText().toString();
                 String name = mName.getText().toString();
+                String department = mDepartment.getSelectedItem().toString();
                 if("".equals(phone)){
                     ToastUtil.show(this,"手机号不能为空");
                     return ;
@@ -105,10 +110,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     ToastUtil.show(this,"请勾选协议");
                     return ;
                 }
-                if(password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
-                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字");
-                    return ;
-                }
+//                if(password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
+//                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字、特殊符号");
+//                    return ;
+//                }
                 if(!password.equals(confirmPassword)){
                     ToastUtil.show(this,"密码不一致请重新输入");
                     return ;
@@ -116,14 +121,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 HashMap<String,String> params = new HashMap<>();
                 params.put("phone",phone);
                 params.put("regname",name);
-                params.put("deptId","2");
-                params.put("sex","2");
-                params.put("age","2");
-                params.put("department","2");
-                params.put("wsid","2");
+                params.put("deptId","");
+                params.put("sex","");
+                params.put("age","");
+                params.put("department",department);
+                params.put("wsid","");
                 params.put("password",password);
-                params.put("address","2");
-                params.put("upload","2");
+                params.put("address","");
+                params.put("upload","");
                 Register.register(this,params);
                 break;
             case R.id.check:
@@ -137,4 +142,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 break;
         }
     }
+
 }

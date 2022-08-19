@@ -1,25 +1,23 @@
 package ws.com.login_ws_team;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
 
-import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.loginService.Login;
-import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
@@ -32,7 +30,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     int inputType = 0;//0为密文，1为明文
     private EditText user;
     private Button login;
-    private static API api;
+    private Button resign;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,18 +39,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //设置状态栏背景为透明
         StatusBarUtil.getStatusAToTransparent(this);
 
-        api = HttpUtil.getRetrofit().create(API.class);
-
-        password = findViewById(R.id.et_password);
         user = findViewById(R.id.et_user);
+        password = findViewById(R.id.et_password);
         login = findViewById(R.id.btn_login);
-        Button resign = findViewById(R.id.btn_resign);
+        resign = findViewById(R.id.btn_resign);
+        user.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    // 此处为得到焦点时的处理内容
+                    System.out.println("获取焦点");
+                } else {
+                    System.out.println("失去焦点");
+                }
+            }
+        });
+        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+                    // 此处为得到焦点时的处理内容
+                    System.out.println("获取焦点");
+                    String isTruePhoneNum = "/^1[3-9]\\d{9}$/";
+                    String inputPhone = user.getText().toString();
+                    if(!inputPhone.matches(isTruePhoneNum)){
+                        ToastUtil.show(MainActivity.this,"手机号格式不正确");
+                        user.requestFocus();
+                    }
+                } else {
+                    System.out.println("失去焦点");
+                }
+            }
+        });
         login.setOnClickListener(this);
         resign.setOnClickListener(this);
-
+        //设置密码框默认属性
         findViewById(R.id.changePasswordImage).setBackgroundResource(R.drawable.ic_visibility_off_24);
         password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-//        findViewById(R.id.btn_modifyPassword).setOnClickListener(this);
     }
 
     @Override
@@ -84,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    //改变密码框输入的密码是否显示和图标显示
     public void changePasswordImage(View view) {
         if(inputType==0){
             view.setBackgroundResource(R.drawable.ic_visibility_24);
@@ -114,18 +139,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 HashMap<String, String> params = new HashMap<>();
                 params.put("phone", user.getText().toString());
                 params.put("password", password.getText().toString());
-                Login.login(this,api,params);
+                Login.login(this,params);
                 break;
             case R.id.btn_resign:
                 Intent intent = new Intent(this, RegisterActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
                 break;
-//            case R.id.btn_modifyPassword:
-//                Intent intentModifyPassword = new Intent(this, ModifyPasswordActivity.class);
-//                intentModifyPassword.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                startActivity(intentModifyPassword);
-//                break;
         }
     }
 }

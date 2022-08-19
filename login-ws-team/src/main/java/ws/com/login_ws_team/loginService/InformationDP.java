@@ -52,7 +52,7 @@ public class InformationDP extends AppCompatActivity {
                     //初始化人员数据
                     initData(view,activity);
                 } else {
-                    ToastUtil.show(activity.getBaseContext(), result.getData().toString());
+                    ToastUtil.show(activity, result.getData().toString());
                 }
             }
         };
