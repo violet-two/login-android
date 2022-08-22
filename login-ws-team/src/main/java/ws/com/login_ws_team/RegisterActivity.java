@@ -121,14 +121,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 HashMap<String,String> params = new HashMap<>();
                 params.put("phone",phone);
                 params.put("regname",name);
-                params.put("deptId","");
-                params.put("sex","");
-                params.put("age","");
                 params.put("department",department);
-                params.put("wsid","");
                 params.put("password",password);
-                params.put("address","");
-                params.put("upload","");
                 Register.register(this,params);
                 break;
             case R.id.check:

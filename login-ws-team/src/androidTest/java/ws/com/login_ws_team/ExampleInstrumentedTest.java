@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.*;
 
+import ws.com.login_ws_team.util.DateUtils;
+
 /**
  * Instrumented test, which will execute on an Android device.
  *
@@ -23,4 +25,5 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("ws.com.login_ws_team", appContext.getPackageName());
     }
+
 }

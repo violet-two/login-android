@@ -9,4 +9,8 @@
     <dimen name="s18sp">18sp</dimen>
     <dimen name="s19sp">19sp</dimen>
     <dimen name="s20sp">20sp</dimen>
+    <dimen name="s21sp">21sp</dimen>
+    <dimen name="s22sp">22sp</dimen>
+    <dimen name="s23sp">23sp</dimen>
+    <dimen name="s24sp">24sp</dimen>
 </resources>

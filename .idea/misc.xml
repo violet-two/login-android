@@ -16,10 +16,15 @@
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.273" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/register_input_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/resign_button_bg.xml" value="0.1825" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/resign_button_bg_by_login.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/resiter_input_bg.xml" value="0.273" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/search_by_informationdp.xml" value="0.1535" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/shape.xml" value="0.1825" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/shape_login_button.xml" value="0.1825" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/signin_button_bg.xml" value="0.229" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/signin_tiptext_color_bg.xml" value="0.229" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/signin_underline.xml" value="0.229" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/signup_button_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/text_underline.xml" value="0.1825" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-xhdpi/shape)logo.xml" value="0.165" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.229" />
@@ -31,15 +36,19 @@
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/register_spinner_bg.xml" value="0.2" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/search_by_informationdp.xml" value="0.3015" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/shape_unline_information_dp.xml" value="0.229" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/signin_calendar_bg.xml" value="0.229" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/signin_gradual_color_bg.xml" value="0.229" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/signup_calendar_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_information_department.xml" value="0.33" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_login_success.xml" value="0.17806484295845998" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_modify_password.xml" value="0.28229166666666666" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_regist_actvity.xml" value="0.33152173913043476" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_register_activity.xml" value="0.25" />
-        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_sign_in.xml" value="0.1703125" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_sign_in.xml" value="0.5" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/content_login_success.xml" value="0.33152173913043476" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/item_information_department.xml" value="0.3651041666666667" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/item_signin.xml" value="0.3651041666666667" />
       </map>
     </option>
   </component>

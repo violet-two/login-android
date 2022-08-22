@@ -20,7 +20,8 @@
             android:paddingTop="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="10dp"
-            android:src="@drawable/ic_back_24"/>
+            android:src="@drawable/ic_back_24" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -29,9 +30,159 @@
             android:textColor="@color/black"
             android:textSize="@dimen/s20sp" />
     </RelativeLayout>
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/signInText"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="4"
+                android:background="@drawable/signin_gradual_color_bg"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/monthBox"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:gravity="center_horizontal"
+                        android:text="今天已签到，获得奖励"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/s24sp"></TextView>
+
+                    <ws.com.login_ws_team.customView.SignInTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="5dp"
+                        android:drawableLeft="@drawable/happy_bean"
+                        android:gravity="center_vertical"
+                        android:text="@string/happyBean"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/s24sp"></ws.com.login_ws_team.customView.SignInTextView>
+
+                    <Button
+                        android:layout_width="150dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/signin_button_bg"
+                        android:text="再领2京豆"></Button>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/monthBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="50dp">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentBottom="true">
+
+                        <TextView
+                            android:id="@+id/monthNum"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:text="8"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/s24sp"
+                            android:textStyle="bold"></TextView>
+
+                        <TextView
+                            android:id="@+id/monthText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/monthNum"
+                            android:paddingTop="10dp"
+                            android:text="月"
+                            android:textColor="@color/white"></TextView>
+
+                        <TextView
+                            android:layout_width="150dp"
+                            android:layout_height="25dp"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_toRightOf="@+id/monthText"
+                            android:background="@drawable/signin_tiptext_color_bg"
+                            android:gravity="center"
+                            android:text="京豆下单可抵现,快来攒豆~"
+                            android:textColor="#FB716B"
+                            android:textSize="10sp"></TextView>
+                    </RelativeLayout>
+
+                    <ImageView
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/signin_bean_01"></ImageView>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:layout_marginTop="-40dp"
+                android:background="@drawable/signin_calendar_bg"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
+
+                <RelativeLayout
+                    android:id="@+id/dataBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/signin_underline">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:padding="10dp"
+                        android:text="签到提醒"
+                        android:textSize="@dimen/s18sp"></TextView>
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"></RadioButton>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_below="@+id/dataBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <GridView
+                        android:id="@+id/gvWeek"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:numColumns="7"></GridView>
+
+                    <GridView
+                        android:id="@+id/gvDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:numColumns="7"></GridView>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
