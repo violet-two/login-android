@@ -101,7 +101,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
-                            android:text="8"
+                            android:text="x"
                             android:textColor="@color/white"
                             android:textSize="@dimen/s24sp"
                             android:textStyle="bold"></TextView>
@@ -118,8 +118,8 @@
                         <TextView
                             android:layout_width="150dp"
                             android:layout_height="25dp"
-                            android:layout_marginTop="4dp"
                             android:layout_marginLeft="3dp"
+                            android:layout_marginTop="4dp"
                             android:layout_toRightOf="@+id/monthText"
                             android:background="@drawable/signin_tiptext_color_bg"
                             android:gravity="center"
@@ -139,47 +139,76 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="5"
-                android:layout_marginTop="-40dp"
-                android:background="@drawable/signin_calendar_bg"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp">
+                android:layout_marginTop="-40dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="5"
+                android:background="@drawable/signin_calendar_bg">
 
                 <RelativeLayout
                     android:id="@+id/dataBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:background="@drawable/signin_underline">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
-                        android:padding="10dp"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="10dp"
                         android:text="签到提醒"
-                        android:textSize="@dimen/s18sp"></TextView>
+                        android:textSize="@dimen/s16sp"></TextView>
 
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"></RadioButton>
+                    <RelativeLayout
+                        android:layout_width="40dp"
+                        android:layout_height="20dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/signin_radio_bg"
+                        android:gravity="center_vertical"
+                        android:onClick="radioClick">
+
+                        <TextView
+                            android:id="@+id/leftRadio"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="4dp"
+                            android:background="@drawable/signin_left_radio_bg"
+                            android:gravity="center"
+                            android:text="一"
+                            android:textColor="#EBEAEA"
+                            android:textSize="10sp"></TextView>
+
+                        <TextView
+                            android:id="@+id/rightRadio"
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="4dp"
+                            android:background="@drawable/signin_right_radio_bg"
+                            android:visibility="gone"></TextView>
+                    </RelativeLayout>
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_below="@+id/dataBox"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/dataBox">
 
                     <GridView
                         android:id="@+id/gvWeek"
                         android:layout_width="match_parent"
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:numColumns="7"></GridView>
 
                     <GridView
                         android:id="@+id/gvDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_below="@+id/gvWeek"
                         android:numColumns="7"></GridView>
                 </RelativeLayout>
             </RelativeLayout>

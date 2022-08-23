@@ -22,8 +22,8 @@ public class DateUtils {
     public static int[][] getDayOfMonthFormat(int year, int month) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, 1);//设置时间为每月的第一天
-        //设置日历格式数组,6行7列
-        int days[][] = new int[6][7];
+        //设置日历格式数组,5行7列
+        int days[][] = new int[5][7];
         //设置该月的第一天是周几
         int daysOfFirstWeek = calendar.get(Calendar.DAY_OF_WEEK);
         //设置本月有多少天

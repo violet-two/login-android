@@ -2,13 +2,18 @@ package ws.com.login_ws_team.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import ws.com.login_ws_team.R;
+import ws.com.login_ws_team.util.DateUtils;
 
 public class DateAdapter extends BaseAdapter {
     private int[] days = new int[35];
@@ -47,14 +52,18 @@ public class DateAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder viewHolder;
+        InnerHolder viewHolder;
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.item_signin, null);
-            viewHolder = new ViewHolder();
-            viewHolder.date_item = (TextView) view.findViewById(R.id.tvWeek);
+            viewHolder = new InnerHolder(view);
+            viewHolder.date_item = view.findViewById(R.id.tvWeek);
+            viewHolder.setStyle();
             view.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) view.getTag();
+            viewHolder = (InnerHolder) view.getTag();
+        }
+        if(i== DateUtils.getCurrentDayOfMonth()){
+            viewHolder.date_item.setTextColor(Color.rgb(204, 0, 0));//将当天设置背景设置成红色
         }
         if (i < 7 && days[i] > 20) {
             viewHolder.date_item.setTextColor(Color.rgb(204, 204, 204));//将上个月的和下个月的设置为灰色
@@ -69,7 +78,17 @@ public class DateAdapter extends BaseAdapter {
     /**
      * 优化Adapter
      */
-    class ViewHolder {
+    class InnerHolder extends RecyclerView.ViewHolder {
         TextView date_item;
+
+        public InnerHolder(@NonNull View itemView) {
+            super(itemView);
+            this.date_item = itemView.findViewById(R.id.tvWeek);
+        }
+
+        public void setStyle(){
+            date_item.setTypeface(Typeface.create(date_item.getTypeface(), Typeface.NORMAL), Typeface.BOLD);
+            date_item.setTextSize(22);
+        }
     }
 }

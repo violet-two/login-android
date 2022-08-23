@@ -8,7 +8,7 @@
         android:id="@+id/tvWeek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="5dp"
         android:text="1"
         android:gravity="center"
         android:textColor="#666"
