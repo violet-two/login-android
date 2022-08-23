@@ -22,7 +22,7 @@ public class SignInActivity extends AppCompatActivity {
     private int year;
     private int month;
     private GridView gvDate;
-    private int[][] days = new int[5][7];
+    private int[][] days = null;
     private TextView monthNum;
     private int radioStatus = 1;
     private double pingMuSize;
@@ -55,10 +55,10 @@ public class SignInActivity extends AppCompatActivity {
         monthNum.setText(String.valueOf(month));
         gvDate = findViewById(R.id.gvDate);
         days = DateUtils.getDayOfMonthFormat(year, month);
-        DateAdapter dateAdapter = new DateAdapter(this, days, year, month);
+        DateAdapter dateAdapter = new DateAdapter(this, days, 2027, 2);
         gvDate.setAdapter(dateAdapter);
         gvDate.setVerticalSpacing(60);
-        gvDate.setEnabled(false);
+//        gvDate.setEnabled(false);
 
         signInTextView = findViewById(R.id.signInTextView);
         tvText = findViewById(R.id.tv_text);

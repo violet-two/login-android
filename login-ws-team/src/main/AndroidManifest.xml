@@ -14,9 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Login"
         android:usesCleartextTraffic="true">
-<!--        <activity-->
-<!--            android:name=".SignInActivity"-->
-<!--            android:exported="false" />-->
+        <activity
+            android:name=".SignInActivity"
+            android:exported="false" />
         <activity
             android:name=".InformationDepartmentActivity"
             android:exported="false" />
@@ -31,7 +31,7 @@
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SignInActivity"
+            android:name=".MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"

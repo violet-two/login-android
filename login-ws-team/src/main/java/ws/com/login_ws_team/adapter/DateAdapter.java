@@ -18,7 +18,7 @@ import ws.com.login_ws_team.util.DateUtils;
 import ws.com.login_ws_team.util.GetPingMuSizeUtil;
 
 public class DateAdapter extends BaseAdapter {
-    private int[] days = new int[35];
+    private int[] days;
     private Context context;
     private int year;
     private int month;
@@ -26,6 +26,8 @@ public class DateAdapter extends BaseAdapter {
     public DateAdapter(Context context, int[][] days, int year, int month) {
         this.context = context;
         int dayNum = 0;
+        int length = days.length;
+        this.days = new int[length*7];
         //将二维数组转化为一维数组，方便使用
         for (int i = 0; i < days.length; i++) {
             for (int j = 0; j < days[i].length; j++) {

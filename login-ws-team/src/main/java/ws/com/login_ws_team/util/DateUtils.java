@@ -23,11 +23,18 @@ public class DateUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, 1);//设置时间为每月的第一天
         //设置日历格式数组,5行7列
-        int days[][] = new int[5][7];
         //设置该月的第一天是周几
         int daysOfFirstWeek = calendar.get(Calendar.DAY_OF_WEEK);
         //设置本月有多少天
         int daysOfMonth = getDaysOfMonth(year, month);
+        //计算本月有几个星期天，首位为星期日
+        int weekNum = daysOfMonth/7;
+        weekNum = daysOfMonth%7==0?weekNum:weekNum+1;
+        int daysOfLastWeek = (daysOfMonth-1)%7;
+        if((daysOfFirstWeek+daysOfLastWeek)%8==0){
+            weekNum++;
+        }
+        int days[][] = new int[weekNum][7];
         //设置上个月有多少天
         int daysOfLastMonth = getLastDaysOfMonth(year, month);
         int dayNum = 1;
