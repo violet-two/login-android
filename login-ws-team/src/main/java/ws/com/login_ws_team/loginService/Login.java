@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -60,14 +62,24 @@ public class Login {
     }
 
     @SuppressLint("HandlerLeak")
-    public static void checkPassword(Context context,HashMap<String, String> params) {
+    public static void checkPassword(Context context, Handler handler1, HashMap<String, String> params) {
         handler = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 Bundle bundle = msg.getData();
                 LoginUtil result = (LoginUtil) bundle.getSerializable("result");
+                Message message = new Message();
                 if ("fail".equals(result.getFlag())){
                     ToastUtil.show(context,"密码与原密码不一致");
+                    message.what = 0x0;
+                }else{
+                    message.what = 0x1;
+                }
+                handler1.sendMessage(message);
+                try {
+                    Thread.sleep(60);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         };
