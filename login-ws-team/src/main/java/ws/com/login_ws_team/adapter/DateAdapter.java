@@ -13,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import ws.com.login_ws_team.R;
+import ws.com.login_ws_team.SignInActivity;
 import ws.com.login_ws_team.util.DateUtils;
+import ws.com.login_ws_team.util.GetPingMuSizeUtil;
 
 public class DateAdapter extends BaseAdapter {
     private int[] days = new int[35];
@@ -87,8 +89,14 @@ public class DateAdapter extends BaseAdapter {
         }
 
         public void setStyle(){
+            double pingMuSize = GetPingMuSizeUtil.getPingMuSize(context);
+            if(pingMuSize<4.5){
+                date_item.setTypeface(Typeface.create(date_item.getTypeface(), Typeface.NORMAL), Typeface.BOLD);
+                date_item.setTextSize(16);
+                return ;
+            }
             date_item.setTypeface(Typeface.create(date_item.getTypeface(), Typeface.NORMAL), Typeface.BOLD);
-            date_item.setTextSize(22);
+            date_item.setTextSize(24);
         }
     }
 }
