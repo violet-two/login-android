@@ -64,7 +64,7 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
                     ToastUtil.show(this,"旧密码不能为空");
                     return;
                 }
-                checkPassword();
+//                checkPassword();
 
             }
         });
@@ -79,7 +79,7 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
                     ToastUtil.show(this,"新密码不能为空");
                     return;
                 }
-                checkPassword();
+//                checkPassword();
             }
         });
         findViewById(R.id.modify_password).setOnClickListener(this);
