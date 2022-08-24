@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import ws.com.login_ws_team.adapter.UpPullAdapter;
 import ws.com.login_ws_team.loginService.InformationDP;
 import ws.com.login_ws_team.util.LoginUtil;
 import ws.com.login_ws_team.util.ScreenUtil;
@@ -38,11 +40,54 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private TextView dpAndName;
     private View allView;
     private LinearLayout bottomBox;
+    private SwipeRefreshLayout sr;
+    private UpPullAdapter upPullAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information_department);
+
+        sr = findViewById(R.id.sr);
+        informationListRV = findViewById(R.id.informationListRV);
+        //设置主题
+        setTheme();
+        //初始化登录数据
+        initLoginData();
+
+        //上拉加载，下拉刷新
+        upPullAndDownPush();
+        searchView = findViewById(R.id.searchView);
+        //设置输入框属性
+        searchViewStyle();
+        search = findViewById(R.id.tv_search);
+        //设置搜索按钮的点击事件
+        search.setOnClickListener(view -> {
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("managerPhone", selfPhone);
+            String phone = searchView.getQuery().toString();
+            hashMap.put("phone", phone);
+            InformationDP.informationDP(this, allView, hashMap);
+        });
+    }
+
+    private void upPullAndDownPush() {
+        handlerUpPullOnload();
+    }
+
+    private void handlerUpPullOnload() {
+
+    }
+
+    private void initLoginData() {
+        dpAndName = findViewById(R.id.dpAndName);
+        //获取登录和注册页面传过来的参数
+        getLoginData();
+        //初始化所有人员信息
+        initData();
+    }
+
+    private void setTheme() {
         //设置状态栏背景为透明---------------
         StatusBarUtil.getStatusAToTransparent(this);
         //获取状态栏高度
@@ -64,26 +109,6 @@ public class InformationDepartmentActivity extends AppCompatActivity {
             lp.setMargins(0, 0, 0,navigationHeight );
             bottomBox.setLayoutParams(lp);
         }
-
-        dpAndName = findViewById(R.id.dpAndName);
-        informationListRV = findViewById(R.id.informationListRV);
-        //获取登录和注册页面传过来的参数
-        getLoginData();
-        //初始化所有人员信息
-        initData();
-
-        searchView = findViewById(R.id.searchView);
-        //设置输入框属性
-        searchViewStyle();
-        search = findViewById(R.id.tv_search);
-        //设置搜索按钮的点击事件
-        search.setOnClickListener(view -> {
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("managerPhone", selfPhone);
-            String phone = searchView.getQuery().toString();
-            hashMap.put("phone", phone);
-            InformationDP.informationDP(this, allView, hashMap);
-        });
     }
 
     private void initData() {
