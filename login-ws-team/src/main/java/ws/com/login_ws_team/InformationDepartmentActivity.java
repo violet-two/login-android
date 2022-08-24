@@ -2,6 +2,7 @@ package ws.com.login_ws_team;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -76,6 +77,24 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     }
 
     private void handlerUpPullOnload() {
+        sr.setEnabled(true);
+        //添加事件监听器
+        initData();
+        sr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //更新列表
+                        //更新列表
+                        initData();
+                        //停止刷新
+                        sr.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
 
     }
 
