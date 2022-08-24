@@ -60,12 +60,25 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
         mNewPassword.setOnFocusChangeListener((view, b) -> {
             if (b) {
                 // 此处为得到焦点时的处理内容
+                if("".equals(mOldPassword.getText().toString())){
+                    ToastUtil.show(this,"旧密码不能为空");
+                    return;
+                }
                 checkPassword();
+
             }
         });
         mAgainPassword.setOnFocusChangeListener((view, b) -> {
             if (b) {
                 // 此处为得到焦点时的处理内容
+                if("".equals(mOldPassword.getText().toString())){
+                    ToastUtil.show(this,"旧密码不能为空");
+                    return;
+                }
+                if("".equals(mNewPassword.getText().toString())){
+                    ToastUtil.show(this,"新密码不能为空");
+                    return;
+                }
                 checkPassword();
             }
         });
@@ -148,7 +161,7 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
                 params.put("phone", phone);
                 params.put("beforePassword", beforePassword);
                 params.put("password", newPassword);
-                ModifyPassword.modifyPassword(this, params);
+                ModifyPassword.modifyPassword(this,ModifyPasswordActivity.this, params);
                 break;
         }
     }

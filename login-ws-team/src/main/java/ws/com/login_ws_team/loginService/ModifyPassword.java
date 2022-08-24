@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 import retrofit2.Call;
 import ws.com.login_ws_team.MainActivity;
+import ws.com.login_ws_team.ModifyPasswordActivity;
 import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.util.LoginUtil;
@@ -25,17 +26,18 @@ public class ModifyPassword {
 
 
     @SuppressLint("HandlerLeak")
-    public static void modifyPassword(Context context, HashMap<String, String> params) {
+    public static void modifyPassword(Context context, ModifyPasswordActivity modifyPasswordActivity, HashMap<String, String> params) {
         handler = new Handler() {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 Bundle bundle = msg.getData();
                 LoginUtil result = (LoginUtil) bundle.getSerializable("result");
                 if (result.getFlag().equals("success")) {
-                    Intent intent = new Intent(context, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("state", "修改成功,请重新登录");
-                    context.startActivity(intent);
+                    modifyPasswordActivity.finish();
+//                    Intent intent = new Intent(context, MainActivity.class);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent.putExtra("state", "修改成功,请重新登录");
+//                    context.startActivity(intent);
                 } else {
                     ToastUtil.show(context, result.getData().toString());
                 }
