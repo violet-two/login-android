@@ -13,10 +13,21 @@ import ws.com.login_ws_team.R;
 import ws.com.login_ws_team.util.InformationDPUtil;
 
 public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    protected final List<InformationDPUtil.DataBean> mData;
-    public InformationAdapter(List<InformationDPUtil.DataBean> mData) {
-        this.mData = mData;
+
+    private static InformationAdapter instance;
+    private InformationAdapter (){}
+    private static List<InformationDPUtil.DataBean> mData;
+    public static InformationAdapter getInstance(List<InformationDPUtil.DataBean> data) {
+        mData = data;
+        if (instance == null) {
+            instance = new InformationAdapter();
+        }
+        return instance;
     }
+
+//    public InformationAdapter(List<InformationDPUtil.DataBean> mData) {
+//        this.mData = mData;
+//    }
 
     @NonNull
     @Override
@@ -30,7 +41,7 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((InnerHolder) holder).setData(mData.get(position),position);
     }
 
-    public void AddHeaderItem(List<InformationDPUtil.DataBean> items){
+    public void addHeaderItem(List<InformationDPUtil.DataBean> items){
         mData.addAll(mData.size(),items);
         notifyDataSetChanged();
     }

@@ -52,6 +52,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         topBox.setLayoutParams(lp);
 
         mPhone = findViewById(R.id.et_phone);
+        mPhone.setFocusable(true);
+        mPhone.requestFocus();
         mPassword = findViewById(R.id.et_password);
         mConfirmPassword = findViewById(R.id.et_confirm_password);
         mName = findViewById(R.id.et_name);
@@ -62,7 +64,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         mCheck.setChecked(false);
         mDepartment = findViewById(R.id.department);
 
-
+        mPhone.setOnFocusChangeListener((v, hasFocus) -> {
+            if(hasFocus)return;
+        });
         mPassword.setOnFocusChangeListener((view, b) -> {
             if ("".equals(mPhone.getText().toString())) {
                 ToastUtil.show(this, "手机号不能为空");
@@ -107,6 +111,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 return;
             }
         });
+        mDepartment.setSelection(0,false);
         mDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -130,9 +135,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+                return;
             }
         });
-
     }
 
     @Override

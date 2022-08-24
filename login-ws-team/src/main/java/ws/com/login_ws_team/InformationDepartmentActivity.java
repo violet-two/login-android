@@ -27,7 +27,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import ws.com.login_ws_team.adapter.InformationAdapter;
-import ws.com.login_ws_team.adapter.UpPullAdapter;
+//import ws.com.login_ws_team.adapter.UpPullAdapter;
 import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.loginService.InformationDP;
 import ws.com.login_ws_team.util.HttpUtil;
@@ -50,7 +50,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private View allView;
     private LinearLayout bottomBox;
     private SwipeRefreshLayout sr;
-    private UpPullAdapter upPullAdapter;
+//    private UpPullAdapter upPullAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +104,11 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                                     Gson gson = new Gson();
                                     Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>(){}.getType();
                                     List<InformationDPUtil.DataBean> info = gson.fromJson(result.getData().toString(),type);
-                                    informationAdapter.AddHeaderItem(info.subList(15,25));
+                                    System.out.println(info.size());
+                                    List<InformationDPUtil.DataBean> dataBeans = info.subList(9, 18);
+                                    System.out.println(dataBeans.size());
+                                    InformationAdapter instance = InformationAdapter.getInstance(info.subList(0, 9));
+                                    instance.addHeaderItem(dataBeans);
                                 }
                             }
                         };
@@ -112,7 +116,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                         Call<InformationDPUtil> task = api.queryDPAll(hashMap);
                         HttpUtil.queryTask(handler, task);
                     }
-                }, 1000);
+                }, 0);
             }
         });
     }
@@ -130,6 +134,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                         //更新列表
                         //更新列表
                         initData();
+
                         //停止刷新
                         sr.setRefreshing(false);
                     }
@@ -170,33 +175,12 @@ public class InformationDepartmentActivity extends AppCompatActivity {
             bottomBox.setLayoutParams(lp);
         }
     }
-    private InformationAdapter informationAdapter;
     private void initData() {
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("managerPhone", selfPhone);
         hashMap.put("phone", "");
         allView = findViewById(R.id.allView);
-        Handler handler = new Handler() {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                Bundle bundle = msg.getData();
-                InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
-                if ("success".equals(result.getFlag())) {
-                    Gson gson = new Gson();
-                    Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>(){}.getType();
-                    List<InformationDPUtil.DataBean> info = gson.fromJson(result.getData().toString(),type);
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(InformationDepartmentActivity.this);
-                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                    informationListRV.setLayoutManager(linearLayoutManager);
-                    informationAdapter = new InformationAdapter(info.subList(0,15));
-                    informationListRV.setAdapter(informationAdapter);
-                }
-            }
-        };
-        API api = HttpUtil.getRetrofit().create(API.class);
-        Call<InformationDPUtil> task = api.queryDPAll(hashMap);
-        HttpUtil.queryTask(handler, task);
-        InformationDP.informationDP(this, allView, hashMap);
+        InformationDP.informationDP(InformationDepartmentActivity.this, allView, hashMap);
     }
 
     private void getLoginData() {

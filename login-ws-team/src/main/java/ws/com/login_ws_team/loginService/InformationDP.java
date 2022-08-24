@@ -26,6 +26,7 @@ import retrofit2.Call;
 import ws.com.login_ws_team.R;
 import ws.com.login_ws_team.adapter.InformationAdapter;
 import ws.com.login_ws_team.api.API;
+import ws.com.login_ws_team.util.DPUtil;
 import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.util.InformationDPUtil;
 import ws.com.login_ws_team.util.ToastUtil;
@@ -63,14 +64,18 @@ public class InformationDP extends AppCompatActivity {
 
     private static void initData(View view,Activity activity) {
         RecyclerView informationListRV = view.findViewById(R.id.informationListRV);
+        int height = informationListRV.getHeight();
+        int itemNum = DPUtil.px2dip(activity, height)/60;
+        if(info.size()>itemNum){
+            info = info.subList(0,itemNum);
+        }
         SearchView searchView = view.findViewById(R.id.searchView);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         informationListRV.setLayoutManager(linearLayoutManager);
 
-        info = info.subList(0,15);
-        InformationAdapter informationAdapter = new InformationAdapter(info);
+        InformationAdapter informationAdapter = InformationAdapter.getInstance(info);
         informationListRV.setAdapter(informationAdapter);
 
         informationListRV.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {

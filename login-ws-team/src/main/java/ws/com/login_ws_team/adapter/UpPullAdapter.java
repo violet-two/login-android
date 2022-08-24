@@ -8,9 +8,9 @@ import java.util.List;
 
 import ws.com.login_ws_team.util.InformationDPUtil;
 
-public class UpPullAdapter extends InformationAdapter{
+//public class UpPullAdapter extends InformationAdapter{
 
-    public UpPullAdapter(List<InformationDPUtil.DataBean> mData) {
-        super(mData);
-    }
-}
+//    public UpPullAdapter(List<InformationDPUtil.DataBean> mData) {
+//        super(mData);
+//    }
+//}
