@@ -3,14 +3,17 @@ package ws.com.login_ws_team;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -22,8 +25,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import retrofit2.Call;
+import ws.com.login_ws_team.adapter.InformationAdapter;
 import ws.com.login_ws_team.adapter.UpPullAdapter;
+import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.loginService.InformationDP;
+import ws.com.login_ws_team.util.HttpUtil;
+import ws.com.login_ws_team.util.InformationDPUtil;
 import ws.com.login_ws_team.util.LoginUtil;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
@@ -74,9 +82,42 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
     private void upPullAndDownPush() {
         handlerUpPullOnload();
+        handlerDownPullUpdate();
     }
 
     private void handlerUpPullOnload() {
+        informationListRV.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("managerPhone", selfPhone);
+                        hashMap.put("phone", "");
+                        Handler handler = new Handler() {
+                            @Override
+                            public void handleMessage(@NonNull Message msg) {
+                                Bundle bundle = msg.getData();
+                                InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
+                                if ("success".equals(result.getFlag())) {
+                                    Gson gson = new Gson();
+                                    Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>(){}.getType();
+                                    List<InformationDPUtil.DataBean> info = gson.fromJson(result.getData().toString(),type);
+                                    informationAdapter.AddHeaderItem(info.subList(15,25));
+                                }
+                            }
+                        };
+                        API api = HttpUtil.getRetrofit().create(API.class);
+                        Call<InformationDPUtil> task = api.queryDPAll(hashMap);
+                        HttpUtil.queryTask(handler, task);
+                    }
+                }, 1000);
+            }
+        });
+    }
+
+    private void handlerDownPullUpdate() {
         sr.setEnabled(true);
         //添加事件监听器
         initData();
@@ -129,12 +170,32 @@ public class InformationDepartmentActivity extends AppCompatActivity {
             bottomBox.setLayoutParams(lp);
         }
     }
-
+    private InformationAdapter informationAdapter;
     private void initData() {
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("managerPhone", selfPhone);
         hashMap.put("phone", "");
         allView = findViewById(R.id.allView);
+        Handler handler = new Handler() {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                Bundle bundle = msg.getData();
+                InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
+                if ("success".equals(result.getFlag())) {
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>(){}.getType();
+                    List<InformationDPUtil.DataBean> info = gson.fromJson(result.getData().toString(),type);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(InformationDepartmentActivity.this);
+                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                    informationListRV.setLayoutManager(linearLayoutManager);
+                    informationAdapter = new InformationAdapter(info.subList(0,15));
+                    informationListRV.setAdapter(informationAdapter);
+                }
+            }
+        };
+        API api = HttpUtil.getRetrofit().create(API.class);
+        Call<InformationDPUtil> task = api.queryDPAll(hashMap);
+        HttpUtil.queryTask(handler, task);
         InformationDP.informationDP(this, allView, hashMap);
     }
 

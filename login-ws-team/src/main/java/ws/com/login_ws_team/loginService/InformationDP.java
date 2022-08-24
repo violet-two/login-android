@@ -69,7 +69,7 @@ public class InformationDP extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         informationListRV.setLayoutManager(linearLayoutManager);
 
-        info = info.subList(0,10);
+        info = info.subList(0,15);
         InformationAdapter informationAdapter = new InformationAdapter(info);
         informationListRV.setAdapter(informationAdapter);
 

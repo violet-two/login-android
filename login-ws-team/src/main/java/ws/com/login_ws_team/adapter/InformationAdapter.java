@@ -30,6 +30,10 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         ((InnerHolder) holder).setData(mData.get(position),position);
     }
 
+    public void AddHeaderItem(List<InformationDPUtil.DataBean> items){
+        mData.addAll(mData.size(),items);
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
