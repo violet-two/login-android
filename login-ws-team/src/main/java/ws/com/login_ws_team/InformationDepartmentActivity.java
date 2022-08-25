@@ -107,7 +107,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(dy>0){
+                if (dy > 0) {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -119,7 +119,8 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                                 private int showMaxNum;
 
                                 @Override
-                                public void handleMessage(@NonNull Message msg) {
+                                public synchronized void handleMessage(@NonNull Message msg) {
+
                                     InformationAdapter instance;
                                     Bundle bundle = msg.getData();
                                     InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
@@ -128,31 +129,33 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                                         Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>() {
                                         }.getType();
                                         info = gson.fromJson(result.getData().toString(), type);
-                                        //计算页面最大可以显示几条数据
-                                        if (showMaxNum == 0) {
-                                            int height = informationListRV.getHeight();
-                                            showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
-                                        }
+                                        synchronized (info) {
+                                            //计算页面最大可以显示几条数据
+                                            if (showMaxNum == 0) {
+                                                int height = informationListRV.getHeight();
+                                                showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
+                                            }
 
-                                        //获取现在适配器里面数据的长度
-                                        List<InformationDPUtil.DataBean> list = InformationAdapter.getList();
-                                        //获取适配器
-                                        instance = InformationAdapter.getInstance(list);
-                                        int size = list.size();
-                                        showEndNum = size + 1;
-                                        if (showEndNum > info.size()) {
-                                            showEndNum = info.size();
+                                            //获取现在适配器里面数据的长度
+                                            List<InformationDPUtil.DataBean> list = InformationAdapter.getList();
+                                            //获取适配器
+                                            instance = InformationAdapter.getInstance(list);
+                                            int size = list.size();
+                                            showEndNum = size + 1;
+                                            if (showEndNum > info.size()) {
+                                                showEndNum = info.size();
+                                                List<InformationDPUtil.DataBean> dataBeans = info.subList(size, showEndNum);
+                                                //添加数据
+                                                instance.addHeaderItem(dataBeans);
+//                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
+                                                return;
+                                            }
+                                            //从全部数据中获取要加载的数据
                                             List<InformationDPUtil.DataBean> dataBeans = info.subList(size, showEndNum);
+                                            instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
                                             //添加数据
                                             instance.addHeaderItem(dataBeans);
-//                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
-                                            return;
                                         }
-                                        //从全部数据中获取要加载的数据
-                                        List<InformationDPUtil.DataBean> dataBeans = info.subList(size, showEndNum);
-                                        instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
-                                        //添加数据
-                                        instance.addHeaderItem(dataBeans);
                                     }
                                 }
                             };
@@ -175,16 +178,16 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         initData();
         sr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public synchronized void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         //更新列表
                         int height = informationListRV.getHeight();
-                        int itemNum = DPUtil.px2dip(InformationDepartmentActivity.this, height)/60;
+                        int itemNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
                         List<InformationDPUtil.DataBean> list = InformationAdapter.getList();
-                        if(list.size()>itemNum){
-                            list = list.subList(0,itemNum);
+                        if (list.size() > itemNum) {
+                            list = list.subList(0, itemNum);
                         }
                         InformationAdapter instance = InformationAdapter.getInstance(list);
                         instance.addHeaderItem(null);
