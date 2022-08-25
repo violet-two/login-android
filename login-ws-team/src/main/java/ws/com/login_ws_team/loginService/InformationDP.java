@@ -76,6 +76,7 @@ public class InformationDP extends AppCompatActivity {
         informationListRV.setLayoutManager(linearLayoutManager);
 
         InformationAdapter informationAdapter = InformationAdapter.getInstance(info);
+        informationAdapter.changeMoreStatus(2);
         informationListRV.setAdapter(informationAdapter);
 
         informationListRV.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {

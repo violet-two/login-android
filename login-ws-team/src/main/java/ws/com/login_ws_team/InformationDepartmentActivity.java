@@ -24,12 +24,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
 
 import retrofit2.Call;
 import ws.com.login_ws_team.adapter.InformationAdapter;
 //import ws.com.login_ws_team.adapter.UpPullAdapter;
 import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.loginService.InformationDP;
+import ws.com.login_ws_team.util.DPUtil;
 import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.util.InformationDPUtil;
 import ws.com.login_ws_team.util.LoginUtil;
@@ -83,12 +85,18 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private void upPullAndDownPush() {
         handlerUpPullOnload();
         handlerDownPullUpdate();
+
     }
+
+    static int lastVisibleItem = 0;
+    static int showStartNum = 0;
+    static int showEndNum = 0;
 
     private void handlerUpPullOnload() {
         informationListRV.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState != 1) return;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -96,27 +104,62 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                         hashMap.put("managerPhone", selfPhone);
                         hashMap.put("phone", "");
                         Handler handler = new Handler() {
+
+                            private int showMaxNum;
+
                             @Override
                             public void handleMessage(@NonNull Message msg) {
+                                InformationAdapter instance = null;
                                 Bundle bundle = msg.getData();
                                 InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
                                 if ("success".equals(result.getFlag())) {
                                     Gson gson = new Gson();
-                                    Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>(){}.getType();
-                                    List<InformationDPUtil.DataBean> info = gson.fromJson(result.getData().toString(),type);
-                                    System.out.println(info.size());
-                                    List<InformationDPUtil.DataBean> dataBeans = info.subList(9, 18);
-                                    System.out.println(dataBeans.size());
-                                    InformationAdapter instance = InformationAdapter.getInstance(info.subList(0, 9));
+                                    Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>() {
+                                    }.getType();
+                                    List<InformationDPUtil.DataBean> info = gson.fromJson(result.getData().toString(), type);
+                                    //计算页面最大可以显示几条数据
+                                    if (showMaxNum == 0) {
+                                        int height = informationListRV.getHeight();
+                                        showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
+                                    }
+                                    //如果页面可以显示最大数据大于数据总量，则全部显示
+                                    if (showMaxNum > info.size()) {
+                                        showMaxNum = info.size();
+                                        instance = InformationAdapter.getInstance(info.subList(0, showMaxNum));
+                                        instance.addHeaderItem(null);
+                                        return ;
+                                    }
+                                    showStartNum = showMaxNum;
+                                    instance = InformationAdapter.getInstance(info.subList(0, showStartNum));
+                                    showEndNum = showStartNum + showMaxNum;
+                                    if (showEndNum > info.size()) {
+                                        showEndNum = info.size();
+                                    }
+                                    List<InformationDPUtil.DataBean> dataBeans = info.subList(showStartNum, showEndNum);
+                                    showStartNum = showStartNum + showMaxNum;
+//                                    instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
                                     instance.addHeaderItem(dataBeans);
+                                    showStartNum = showStartNum + showMaxNum;
+                                    System.out.println(showStartNum);
                                 }
+
                             }
                         };
                         API api = HttpUtil.getRetrofit().create(API.class);
                         Call<InformationDPUtil> task = api.queryDPAll(hashMap);
                         HttpUtil.queryTask(handler, task);
                     }
-                }, 0);
+                }, 1000);
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                //最后一个可见的ITEM
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
             }
         });
     }
@@ -134,7 +177,6 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                         //更新列表
                         //更新列表
                         initData();
-
                         //停止刷新
                         sr.setRefreshing(false);
                     }
@@ -169,12 +211,13 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         boolean b = StatusBarUtil.checkHasNavigationBar(this);
         //获取底部导航栏高度
         int navigationHeight = StatusBarUtil.getNavigationHeight(this);
-        if(!b){
+        if (!b) {
             lp = (RelativeLayout.LayoutParams) bottomBox.getLayoutParams();
-            lp.setMargins(0, 0, 0,navigationHeight );
+            lp.setMargins(0, 0, 0, navigationHeight);
             bottomBox.setLayoutParams(lp);
         }
     }
+
     private void initData() {
         HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("managerPhone", selfPhone);
