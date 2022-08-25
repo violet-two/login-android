@@ -3,6 +3,7 @@ package ws.com.login_ws_team;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
@@ -88,75 +89,79 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
     }
 
-    static int lastVisibleItem = 0;
-    static int showStartNum = 0;
     static int showEndNum = 0;
+    int lastVisibleItem = 0;
 
     private void handlerUpPullOnload() {
-        informationListRV.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
+        informationListRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (newState != 1) return;
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        HashMap<String, String> hashMap = new HashMap<>();
-                        hashMap.put("managerPhone", selfPhone);
-                        hashMap.put("phone", "");
-                        Handler handler = new Handler() {
-
-                            private int showMaxNum;
-
-                            @Override
-                            public void handleMessage(@NonNull Message msg) {
-                                InformationAdapter instance = null;
-                                Bundle bundle = msg.getData();
-                                InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
-                                if ("success".equals(result.getFlag())) {
-                                    Gson gson = new Gson();
-                                    Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>() {
-                                    }.getType();
-                                    List<InformationDPUtil.DataBean> info = gson.fromJson(result.getData().toString(), type);
-                                    //计算页面最大可以显示几条数据
-                                    if (showMaxNum == 0) {
-                                        int height = informationListRV.getHeight();
-                                        showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
-                                    }
-                                    //如果页面可以显示最大数据大于数据总量，则全部显示
-                                    if (showMaxNum > info.size()) {
-                                        showMaxNum = info.size();
-                                        instance = InformationAdapter.getInstance(info.subList(0, showMaxNum));
-                                        instance.addHeaderItem(null);
-                                        return ;
-                                    }
-                                    showStartNum = showMaxNum;
-                                    instance = InformationAdapter.getInstance(info.subList(0, showStartNum));
-                                    showEndNum = showStartNum + showMaxNum;
-                                    if (showEndNum > info.size()) {
-                                        showEndNum = info.size();
-                                    }
-                                    List<InformationDPUtil.DataBean> dataBeans = info.subList(showStartNum, showEndNum);
-                                    showStartNum = showStartNum + showMaxNum;
-//                                    instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
-                                    instance.addHeaderItem(dataBeans);
-                                    showStartNum = showStartNum + showMaxNum;
-                                    System.out.println(showStartNum);
-                                }
-
-                            }
-                        };
-                        API api = HttpUtil.getRetrofit().create(API.class);
-                        Call<InformationDPUtil> task = api.queryDPAll(hashMap);
-                        HttpUtil.queryTask(handler, task);
-                    }
-                }, 1000);
-
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == InformationAdapter.getList().size()) {
+                    InformationAdapter instance = InformationAdapter.getInstance(InformationAdapter.getList());
+                    instance.changeMoreStatus(InformationAdapter.NO_LOAD_MORE);
+                    return;
+                }
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if(dy>0){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            HashMap<String, String> hashMap = new HashMap<>();
+                            hashMap.put("managerPhone", selfPhone);
+                            hashMap.put("phone", "");
+                            Handler handler = new Handler() {
+                                private List<InformationDPUtil.DataBean> info;
+                                private int showMaxNum;
 
+                                @Override
+                                public void handleMessage(@NonNull Message msg) {
+                                    InformationAdapter instance;
+                                    Bundle bundle = msg.getData();
+                                    InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
+                                    if ("success".equals(result.getFlag())) {
+                                        Gson gson = new Gson();
+                                        Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>() {
+                                        }.getType();
+                                        info = gson.fromJson(result.getData().toString(), type);
+                                        //计算页面最大可以显示几条数据
+                                        if (showMaxNum == 0) {
+                                            int height = informationListRV.getHeight();
+                                            showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
+                                        }
+
+                                        //获取现在适配器里面数据的长度
+                                        List<InformationDPUtil.DataBean> list = InformationAdapter.getList();
+                                        //获取适配器
+                                        instance = InformationAdapter.getInstance(list);
+                                        int size = list.size();
+                                        showEndNum = size + 1;
+                                        if (showEndNum > info.size()) {
+                                            showEndNum = info.size();
+                                            List<InformationDPUtil.DataBean> dataBeans = info.subList(size, showEndNum);
+                                            //添加数据
+                                            instance.addHeaderItem(dataBeans);
+//                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
+                                            return;
+                                        }
+                                        //从全部数据中获取要加载的数据
+                                        List<InformationDPUtil.DataBean> dataBeans = info.subList(size, showEndNum);
+                                        instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
+                                        //添加数据
+                                        instance.addHeaderItem(dataBeans);
+                                    }
+                                }
+                            };
+                            API api = HttpUtil.getRetrofit().create(API.class);
+                            Call<InformationDPUtil> task = api.queryDPAll(hashMap);
+                            HttpUtil.queryTask(handler, task);
+                        }
+                    }, 1000);
+                }
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 //最后一个可见的ITEM
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
@@ -175,12 +180,18 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         //更新列表
-                        //更新列表
-                        initData();
+                        int height = informationListRV.getHeight();
+                        int itemNum = DPUtil.px2dip(InformationDepartmentActivity.this, height)/60;
+                        List<InformationDPUtil.DataBean> list = InformationAdapter.getList();
+                        if(list.size()>itemNum){
+                            list = list.subList(0,itemNum);
+                        }
+                        InformationAdapter instance = InformationAdapter.getInstance(list);
+                        instance.addHeaderItem(null);
                         //停止刷新
                         sr.setRefreshing(false);
                     }
-                }, 1000);
+                }, 0);
             }
         });
 

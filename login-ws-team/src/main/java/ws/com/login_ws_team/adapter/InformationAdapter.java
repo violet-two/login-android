@@ -24,7 +24,7 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public static final int PULLUP_LOAD_MORE = 0;
     //没有加载更多 隐藏
     public static final int NO_LOAD_MORE = 2;
-    //上拉加载更多状态-默认为0
+    //上拉加载更多状态-默认为2
     private static int mLoadMoreStatus = 2;
 
 
@@ -38,6 +38,9 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             instance = new InformationAdapter();
         }
         return instance;
+    }
+    public static List<InformationDPUtil.DataBean> getList(){
+        return  mData;
     }
 
 //    public InformationAdapter(List<InformationDPUtil.DataBean> mData) {
@@ -129,6 +132,10 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public void addHeaderItem(List<InformationDPUtil.DataBean> items){
+        if(items==null){
+            notifyDataSetChanged();
+            return ;
+        }
         mData.addAll(mData.size(),items);
         notifyDataSetChanged();
     }

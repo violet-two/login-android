@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -19,6 +21,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -46,6 +49,7 @@ public class InformationDP extends AppCompatActivity {
             public void handleMessage(@NonNull Message msg) {
                 Bundle bundle = msg.getData();
                 InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
+                Log.d("HttpUtil", "handleMessage:queryTask "+new Date());
                 if ("success".equals(result.getFlag())) {
                     Gson gson = new Gson();
                     Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>(){}.getType();

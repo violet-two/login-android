@@ -7,6 +7,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import java.util.Date;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,12 +39,12 @@ public class HttpUtil {
                     try {
                         LoginUtil result = response.body();
                         Log.d(TAG, "onResponse: "+result);
+                        Log.d(TAG, "onResponse: "+new Date());
                         Message msg = new Message();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("result",result);
                         msg.setData(bundle);
                         handler.sendMessage(msg);
-                        Thread.sleep(100);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -66,9 +68,9 @@ public class HttpUtil {
                         Message msg = new Message();
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("result", result);
+                        Log.d(TAG, "onResponse:queryTask "+new Date());
                         msg.setData(bundle);
                         handler.sendMessage(msg);
-                        Thread.sleep(100);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
