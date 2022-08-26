@@ -14,6 +14,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import ws.com.login_ws_team.entity.InformationDPBean;
+import ws.com.login_ws_team.entity.LoginBean;
 
 public class HttpUtil {
     private static String BASE_URL = "http://119.96.82.181:8081/WS_Administration";
@@ -31,13 +33,13 @@ public class HttpUtil {
         return retrofit;
     }
 
-    public static void loginTask(Handler handler,Call<LoginUtil> task){
-        task.enqueue(new Callback<LoginUtil>() {
+    public static void loginTask(Handler handler,Call<LoginBean> task){
+        task.enqueue(new Callback<LoginBean>() {
             @Override
-            public void onResponse(Call<LoginUtil> call, Response<LoginUtil> response) {
+            public void onResponse(Call<LoginBean> call, Response<LoginBean> response) {
                 if (response.code() == HTTP_OK) {
                     try {
-                        LoginUtil result = response.body();
+                        LoginBean result = response.body();
                         Log.d(TAG, "onResponse: "+result);
                         Log.d(TAG, "onResponse: "+new Date());
                         Message msg = new Message();
@@ -52,18 +54,18 @@ public class HttpUtil {
             }
 
             @Override
-            public void onFailure(Call<LoginUtil> call, Throwable t) {
+            public void onFailure(Call<LoginBean> call, Throwable t) {
                 Log.d(TAG, "onResponse: " + t);
             }
         });
     }
-    public static void queryTask(Handler handler,Call<InformationDPUtil> task){
-        task.enqueue(new Callback<InformationDPUtil>() {
+    public static void queryTask(Handler handler,Call<InformationDPBean> task){
+        task.enqueue(new Callback<InformationDPBean>() {
             @Override
-            public void onResponse(Call<InformationDPUtil> call, Response<InformationDPUtil> response) {
+            public void onResponse(Call<InformationDPBean> call, Response<InformationDPBean> response) {
                 if (response.code() == HTTP_OK) {
                     try {
-                        InformationDPUtil result = response.body();
+                        InformationDPBean result = response.body();
                         Log.d(TAG, "onResponse: "+result);
                         Message msg = new Message();
                         Bundle bundle = new Bundle();
@@ -77,7 +79,7 @@ public class HttpUtil {
                 }
             }
             @Override
-            public void onFailure(Call<InformationDPUtil> call, Throwable t) {
+            public void onFailure(Call<InformationDPBean> call, Throwable t) {
                 Log.d(TAG, "onResponse: " + t);
             }
         });

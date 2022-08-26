@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">login-ws-team</string>
+    <!--login-->
+    <string name="login">登录</string>
+    <string name="register">注册</string>
+    <string name="bigCustomer">大客户登录</string>
+    <string name="copyright">copyright©2013-2022</string>
+    <string name="company">武汉武商电子商务有限公司 版权所有</string>
+    <string name="title_activity_login_success">LoginSuccess</string>
+
+    <!--注册-->
+    <string name="title">用户注册</string>
+    <string name="phoneNum">请输入手机号码</string>
+    <string name="password">请设置登录密码（8到16位）</string>
+    <!--    <string name="confirmPassword">请再次输入密码（8到16位）</string>-->
+    <string name="name">请输入您的名称</string>
+    <string name="register_button">免费注册</string>
+    <string name="tips">注意：密码长度必须为8-16位并且包含大小写字母、数字和特殊符号</string>
+
+    <!--部门界面-->
+    <string name="departmentAndName">部门+名字</string>
+    <string name="modify_button_department">修改密码</string>
+    <string name="quit">退出</string>
+
+    <!--修改密码-->
+    <string name="modify_button">修改密码</string>
+    <string name="oldPassword">请输入旧密码</string>
+    <string name="newPassword">请设置登录密码（8到16位）</string>
+    <string name="confirmPassword">请再次输入密码（8到16位）</string>
+
+    <!--签到界面-->
+    <string name="signInTitle">签到日历</string>
+    <string name="happyBean">×2</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+
+</resources>

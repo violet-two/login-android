@@ -6,17 +6,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
+import retrofit2.Response;
 import ws.com.login_ws_team.adapter.DateAdapter;
 import ws.com.login_ws_team.adapter.WeekAdapter;
 import ws.com.login_ws_team.customView.SignInTextView;
+import ws.com.login_ws_team.entity.SignInBean;
+import ws.com.login_ws_team.model.IBaseRetCallback;
+import ws.com.login_ws_team.model.impl.SignInModelImpl;
 import ws.com.login_ws_team.util.DateUtils;
 import ws.com.login_ws_team.util.GetPingMuSizeUtil;
+import ws.com.login_ws_team.util.ToastUtil;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static double sqrt;
     private int year;
@@ -28,6 +36,8 @@ public class SignInActivity extends AppCompatActivity {
     private double pingMuSize;
     private SignInTextView signInTextView;
     private TextView tvText;
+    private Button signInButton;
+    private SignInModelImpl signInModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +65,34 @@ public class SignInActivity extends AppCompatActivity {
         monthNum.setText(String.valueOf(month));
         gvDate = findViewById(R.id.gvDate);
         days = DateUtils.getDayOfMonthFormat(year, month);
-        DateAdapter dateAdapter = new DateAdapter(this, days, 2027, 2);
+        DateAdapter dateAdapter = new DateAdapter(this, days, year, month);
         gvDate.setAdapter(dateAdapter);
         gvDate.setVerticalSpacing(60);
 //        gvDate.setEnabled(false);
-
         signInTextView = findViewById(R.id.signInTextView);
         tvText = findViewById(R.id.tv_text);
+        signInButton = findViewById(R.id.signInButton);
+        signInButton.setOnClickListener(this);
+        HashMap<String,String> hashMap = new HashMap<>();
+        hashMap.put("type","selectSign");
+        hashMap.put("phone","13464849855");
+        signInModel = new SignInModelImpl();
+        signInModel.sign(hashMap, new IBaseRetCallback<SignInBean>() {
+            @Override
+            public void onSucceed(Response<SignInBean> response) {
+                SignInBean result = response.body();
+                if("success".equals(result.getFlag())){
+                    tvText.setText("今天已签到，获取奖励");
+                    signInTextView.setText("×"+result.getPoints().toString());
+                    signInButton.setText("已签到");
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable t) {
+
+            }
+        });
     }
 
     private void initDate() {
@@ -84,6 +115,46 @@ public class SignInActivity extends AppCompatActivity {
             findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
             radioStatus = 0;
             return ;
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.signInButton:
+                HashMap<String,String> hashMap = new HashMap<>();
+                hashMap.put("type","sign");
+                hashMap.put("phone","13464849855");
+                signInModel.sign(hashMap, new IBaseRetCallback<SignInBean>() {
+                    @Override
+                    public void onSucceed(Response<SignInBean> response) {
+                        SignInBean result = response.body();
+                        if("success".equals(result.getFlag())){
+                            tvText.setText("今天已签到，获取奖励");
+                            signInButton.setText("已签到");
+                            hashMap.put("type","selectSign");
+                            signInModel.sign(hashMap, new IBaseRetCallback<SignInBean>() {
+                                @Override
+                                public void onSucceed(Response<SignInBean> response) {
+                                    signInTextView.setText("×"+response.body().getPoints().toString());
+                                }
+
+                                @Override
+                                public void onFailed(Throwable t) {
+
+                                }
+                            });
+                        }else{
+                            ToastUtil.show(SignInActivity.this,result.getMsg());
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable t) {
+
+                    }
+                });
+                break;
         }
     }
 }

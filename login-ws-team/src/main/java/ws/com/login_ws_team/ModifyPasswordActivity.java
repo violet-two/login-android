@@ -2,24 +2,23 @@ package ws.com.login_ws_team;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
 
-import ws.com.login_ws_team.loginService.Login;
-import ws.com.login_ws_team.loginService.ModifyPassword;
+import retrofit2.Response;
+import ws.com.login_ws_team.entity.LoginBean;
+import ws.com.login_ws_team.entity.ModifyPasswordBean;
+import ws.com.login_ws_team.model.IBaseRetCallback;
+import ws.com.login_ws_team.model.impl.LoginModelImpl;
+import ws.com.login_ws_team.model.impl.ModifyPasswordModelImpl;
+import ws.com.login_ws_team.util.MD5Util;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
@@ -60,8 +59,8 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
         mNewPassword.setOnFocusChangeListener((view, b) -> {
             if (b) {
                 // 此处为得到焦点时的处理内容
-                if("".equals(mOldPassword.getText().toString())){
-                    ToastUtil.show(this,"旧密码不能为空");
+                if ("".equals(mOldPassword.getText().toString())) {
+                    ToastUtil.show(this, "旧密码不能为空");
                     return;
                 }
 //                checkPassword();
@@ -71,12 +70,12 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
         mAgainPassword.setOnFocusChangeListener((view, b) -> {
             if (b) {
                 // 此处为得到焦点时的处理内容
-                if("".equals(mOldPassword.getText().toString())){
-                    ToastUtil.show(this,"旧密码不能为空");
+                if ("".equals(mOldPassword.getText().toString())) {
+                    ToastUtil.show(this, "旧密码不能为空");
                     return;
                 }
-                if("".equals(mNewPassword.getText().toString())){
-                    ToastUtil.show(this,"新密码不能为空");
+                if ("".equals(mNewPassword.getText().toString())) {
+                    ToastUtil.show(this, "新密码不能为空");
                     return;
                 }
 //                checkPassword();
@@ -86,30 +85,36 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
     }
 
     boolean b;
+
     //检查密码是否正确
     @SuppressLint("HandlerLeak")
     private boolean checkPassword() {
-        if("".equals(mOldPassword.getText().toString())){
+        if ("".equals(mOldPassword.getText().toString())) {
             mOldPassword.requestFocus();
-            ToastUtil.show(this,"输入密码不能为空");
+            ToastUtil.show(this, "输入密码不能为空");
             return false;
         }
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("phone", phone);
-        hashMap.put("password", mOldPassword.getText().toString());
-        Handler handler = new Handler(){
+        HashMap<String, String> params = new HashMap<>();
+        params.put("phone", phone);
+        params.put("password", mOldPassword.getText().toString());
+        LoginModelImpl loginModel = new LoginModelImpl();
+        loginModel.login(params, new IBaseRetCallback<LoginBean>() {
             @Override
-            public void handleMessage(@NonNull Message msg) {
-                if(msg.what==0x0){
+            public void onSucceed(Response<LoginBean> response) {
+                LoginBean result = response.body();
+                if ("success".equals(result.getFlag())) {
+                } else {
                     mOldPassword.requestFocus();
-                    b = false;
-                }else{
-                    b = true;
+                    ToastUtil.show(ModifyPasswordActivity.this, "旧密码错误");
                 }
             }
-        };
-        Login.checkPassword(ModifyPasswordActivity.this, handler, hashMap);
-        return  b;
+
+            @Override
+            public void onFailed(Throwable t) {
+
+            }
+        });
+        return b;
     }
 
     @Override
@@ -159,9 +164,25 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
 //                }
                 HashMap<String, String> params = new HashMap<>();
                 params.put("phone", phone);
-                params.put("beforePassword", beforePassword);
-                params.put("password", newPassword);
-                ModifyPassword.modifyPassword(this,ModifyPasswordActivity.this, params);
+                params.put("beforePassword", MD5Util.md5s(beforePassword));
+                params.put("password", MD5Util.md5s(newPassword));
+                ModifyPasswordModelImpl modifyPasswordModel = new ModifyPasswordModelImpl();
+                modifyPasswordModel.modifyPassword(params, new IBaseRetCallback<ModifyPasswordBean>() {
+                    @Override
+                    public void onSucceed(Response<ModifyPasswordBean> response) {
+                        ModifyPasswordBean result = response.body();
+                        if (result.getFlag().equals("success")) {
+                            finish();
+                        } else {
+                            ToastUtil.show(ModifyPasswordActivity.this, result.getData());
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable t) {
+
+                    }
+                });
                 break;
         }
     }

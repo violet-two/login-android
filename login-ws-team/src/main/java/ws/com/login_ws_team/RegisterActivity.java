@@ -1,13 +1,9 @@
 package ws.com.login_ws_team;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.graphics.Rect;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,9 +12,20 @@ import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
-import java.util.HashMap;
+import androidx.appcompat.app.AppCompatActivity;
 
-import ws.com.login_ws_team.loginService.Register;
+import com.google.gson.internal.LinkedTreeMap;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Response;
+import ws.com.login_ws_team.entity.LoginBean;
+import ws.com.login_ws_team.entity.RegisterBean;
+import ws.com.login_ws_team.model.IBaseRetCallback;
+import ws.com.login_ws_team.model.impl.RegisterModelImpl;
+import ws.com.login_ws_team.util.MD5Util;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
@@ -199,8 +206,40 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 params.put("phone", phone);
                 params.put("regname", name);
                 params.put("department", department);
-                params.put("password", password);
-                Register.register(this, params);
+                params.put("password", MD5Util.md5s(password));
+                RegisterModelImpl registerModel = new RegisterModelImpl();
+                registerModel.register(params, new IBaseRetCallback<RegisterBean>() {
+                    @Override
+                    public void onSucceed(Response<RegisterBean> response) {
+                        RegisterBean body = response.body();
+                        if (body.getFlag().equals("success")) {
+                            Intent intent = new Intent(RegisterActivity.this, InformationDepartmentActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            LoginBean result = new LoginBean();
+                            result.setFlag("success");
+                            List<LinkedTreeMap<String,Object>> dataBeans = new ArrayList<>();
+                            LinkedTreeMap<String,Object> linkedHashMap= new LinkedTreeMap<>();
+                            linkedHashMap.put("id",1);
+                            linkedHashMap.put("regname",params.get("regname"));
+                            linkedHashMap.put("phone",params.get("phone"));
+                            linkedHashMap.put("deptId",1);
+                            linkedHashMap.put("department",params.get("department"));
+                            linkedHashMap.put("status",1);
+                            dataBeans.add(linkedHashMap);
+                            result.setData(dataBeans);
+                            intent.putExtra("data",result);
+                            ToastUtil.show(RegisterActivity.this,"注册成功");
+                            startActivity(intent);
+                        } else {
+                            ToastUtil.show(RegisterActivity.this, body.getData().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Throwable t) {
+
+                    }
+                });
                 break;
             case R.id.check:
                 if (isCheck) {

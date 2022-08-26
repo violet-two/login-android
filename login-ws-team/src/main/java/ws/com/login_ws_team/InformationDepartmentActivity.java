@@ -3,7 +3,6 @@ package ws.com.login_ws_team;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +24,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Timer;
 
 import retrofit2.Call;
 import ws.com.login_ws_team.adapter.InformationAdapter;
@@ -34,8 +32,8 @@ import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.loginService.InformationDP;
 import ws.com.login_ws_team.util.DPUtil;
 import ws.com.login_ws_team.util.HttpUtil;
-import ws.com.login_ws_team.util.InformationDPUtil;
-import ws.com.login_ws_team.util.LoginUtil;
+import ws.com.login_ws_team.entity.InformationDPBean;
+import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
@@ -92,22 +90,34 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     static int showEndNum = 0;
     int lastVisibleItem = 0;
 
-    private void handlerUpPullOnload() {
+    private synchronized void handlerUpPullOnload() {
 
         informationListRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem + 1 == InformationAdapter.getList().size()) {
-                    InformationAdapter instance = InformationAdapter.getInstance(InformationAdapter.getList());
-                    instance.changeMoreStatus(InformationAdapter.NO_LOAD_MORE);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && lastVisibleItem == InformationAdapter.getList().size()) {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            InformationAdapter instance = InformationAdapter.getInstance(InformationAdapter.getList());
+                            instance.changeMoreStatus(InformationAdapter.NO_LOAD_MORE);
+                        }
+                    },1000);
                     return;
                 }
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public synchronized void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                List<InformationDPBean.DataBean> list = InformationAdapter.getList();
+                InformationAdapter instance = InformationAdapter.getInstance(list);
+                if(dy==0){
+                    instance.changeMoreStatus(2);
+                }
                 if (dy > 0) {
+                    instance.changeMoreStatus(0);
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -115,20 +125,20 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                             hashMap.put("managerPhone", selfPhone);
                             hashMap.put("phone", "");
                             Handler handler = new Handler() {
-                                private List<InformationDPUtil.DataBean> info;
+                                private List<InformationDPBean.DataBean> info;
                                 private int showMaxNum;
 
                                 @Override
                                 public synchronized void handleMessage(@NonNull Message msg) {
-
                                     InformationAdapter instance;
                                     Bundle bundle = msg.getData();
-                                    InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
+                                    InformationDPBean result = (InformationDPBean) bundle.getSerializable("result");
                                     if ("success".equals(result.getFlag())) {
                                         Gson gson = new Gson();
-                                        Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>() {
+                                        Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
                                         }.getType();
                                         info = gson.fromJson(result.getData().toString(), type);
+
                                         synchronized (info) {
                                             //计算页面最大可以显示几条数据
                                             if (showMaxNum == 0) {
@@ -137,30 +147,37 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                                             }
 
                                             //获取现在适配器里面数据的长度
-                                            List<InformationDPUtil.DataBean> list = InformationAdapter.getList();
-                                            //获取适配器
-                                            instance = InformationAdapter.getInstance(list);
-                                            int size = list.size();
-                                            showEndNum = size + 1;
-                                            if (showEndNum > info.size()) {
-                                                showEndNum = info.size();
-                                                List<InformationDPUtil.DataBean> dataBeans = info.subList(size, showEndNum);
-                                                //添加数据
-                                                instance.addHeaderItem(dataBeans);
+                                            List<InformationDPBean.DataBean> list = InformationAdapter.getList();
+                                            synchronized (list) {
+                                                //获取适配器
+                                                instance = InformationAdapter.getInstance(list);
+                                                synchronized (instance) {
+                                                    int size = list.size();
+                                                    showEndNum = size + 1;
+                                                    if (showEndNum > info.size()) {
+                                                        if (size > showMaxNum) {
+                                                            return;
+                                                        }
+                                                        List<InformationDPBean.DataBean> dataBeans = info.subList(size, info.size());
+                                                        //添加数据
+                                                        instance.addHeaderItem(dataBeans);
+
 //                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
-                                                return;
+                                                        return;
+                                                    }
+                                                    //从全部数据中获取要加载的数据
+                                                    List<InformationDPBean.DataBean> dataBeans = info.subList(size, showEndNum);
+                                                    instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
+                                                    //添加数据
+                                                    instance.addHeaderItem(dataBeans);
+                                                }
                                             }
-                                            //从全部数据中获取要加载的数据
-                                            List<InformationDPUtil.DataBean> dataBeans = info.subList(size, showEndNum);
-                                            instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
-                                            //添加数据
-                                            instance.addHeaderItem(dataBeans);
                                         }
                                     }
                                 }
                             };
                             API api = HttpUtil.getRetrofit().create(API.class);
-                            Call<InformationDPUtil> task = api.queryDPAll(hashMap);
+                            Call<InformationDPBean> task = api.queryDPAll(hashMap);
                             HttpUtil.queryTask(handler, task);
                         }
                     }, 1000);
@@ -184,8 +201,8 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                     public void run() {
                         //更新列表
                         int height = informationListRV.getHeight();
-                        int itemNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
-                        List<InformationDPUtil.DataBean> list = InformationAdapter.getList();
+                        int itemNum = (int) Math.round(((double)DPUtil.px2dip(InformationDepartmentActivity.this, height)) / 60);
+                        List<InformationDPBean.DataBean> list = InformationAdapter.getList();
                         if (list.size() > itemNum) {
                             list = list.subList(0, itemNum);
                         }
@@ -243,13 +260,13 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private void getLoginData() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            LoginUtil result = (LoginUtil) bundle.getSerializable("data");
+            LoginBean result = (LoginBean) bundle.getSerializable("data");
             Object data = result.getData().toString();
             System.out.println(data);
             Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<LoginUtil.DataBean>>() {
+            Type type = new TypeToken<ArrayList<LoginBean.DataBean>>() {
             }.getType();
-            List<LoginUtil.DataBean> info = gson.fromJson(result.getData().toString(), type);
+            List<LoginBean.DataBean> info = gson.fromJson(result.getData().toString(), type);
             System.out.println(info);
             regname = info.get(0).getRegname();
             department = info.get(0).getDepartment();

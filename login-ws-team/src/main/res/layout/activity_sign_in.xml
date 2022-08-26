@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="15dp"
                         android:gravity="center_horizontal"
-                        android:text="今天已签到，获得奖励"
+                        android:text="今天未签到"
                         android:textColor="@color/white"
                         android:textSize="@dimen/s24sp"></TextView>
 
@@ -78,11 +78,12 @@
                         android:textSize="@dimen/s24sp"></ws.com.login_ws_team.customView.SignInTextView>
 
                     <Button
+                        android:id="@+id/signInButton"
                         android:layout_width="150dp"
                         android:layout_height="40dp"
                         android:layout_gravity="center"
                         android:background="@drawable/signin_button_bg"
-                        android:text="再领2京豆"></Button>
+                        android:text="签到"></Button>
                 </LinearLayout>
 
                 <RelativeLayout

@@ -1,7 +1,5 @@
 package ws.com.login_ws_team.adapter;
 
-import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -14,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import ws.com.login_ws_team.R;
-import ws.com.login_ws_team.util.InformationDPUtil;
+import ws.com.login_ws_team.entity.InformationDPBean;
 
 public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -30,8 +28,8 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static InformationAdapter instance;
     private InformationAdapter (){}
-    private static List<InformationDPUtil.DataBean> mData;
-    public static InformationAdapter getInstance(List<InformationDPUtil.DataBean> data) {
+    private static List<InformationDPBean.DataBean> mData;
+    public static InformationAdapter getInstance(List<InformationDPBean.DataBean> data) {
         mData = data;
         mLoadMoreStatus = 2;
         if (instance == null) {
@@ -39,8 +37,11 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
         return instance;
     }
-    public static List<InformationDPUtil.DataBean> getList(){
+    public static List<InformationDPBean.DataBean> getList(){
         return  mData;
+    }
+    public static void setList(List<InformationDPBean.DataBean> data){
+        mData = data;
     }
 
 //    public InformationAdapter(List<InformationDPUtil.DataBean> mData) {
@@ -113,7 +114,7 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
 
         //设置每个控件的值
-        public void setData(InformationDPUtil.DataBean informationDPUtil, int position) {
+        public void setData(InformationDPBean.DataBean informationDPUtil, int position) {
             phone.setText(informationDPUtil.getPhone());
             name.setText(informationDPUtil.getRegname());
             dp.setText(informationDPUtil.getDepartment());
@@ -131,7 +132,7 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public void addHeaderItem(List<InformationDPUtil.DataBean> items){
+    public void addHeaderItem(List<InformationDPBean.DataBean> items){
         if(items==null){
             notifyDataSetChanged();
             return ;

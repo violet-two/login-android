@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -31,12 +30,12 @@ import ws.com.login_ws_team.adapter.InformationAdapter;
 import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.util.DPUtil;
 import ws.com.login_ws_team.util.HttpUtil;
-import ws.com.login_ws_team.util.InformationDPUtil;
+import ws.com.login_ws_team.entity.InformationDPBean;
 import ws.com.login_ws_team.util.ToastUtil;
 
 public class InformationDP extends AppCompatActivity {
-    private static List<InformationDPUtil.DataBean> info;
-    public static   List<InformationDPUtil.DataBean> getInfo(){
+    private static List<InformationDPBean.DataBean> info;
+    public static   List<InformationDPBean.DataBean> getInfo(){
         return info;
     }
 
@@ -48,11 +47,11 @@ public class InformationDP extends AppCompatActivity {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 Bundle bundle = msg.getData();
-                InformationDPUtil result = (InformationDPUtil) bundle.getSerializable("result");
+                InformationDPBean result = (InformationDPBean) bundle.getSerializable("result");
                 Log.d("HttpUtil", "handleMessage:queryTask "+new Date());
                 if ("success".equals(result.getFlag())) {
                     Gson gson = new Gson();
-                    Type type = new TypeToken<ArrayList<InformationDPUtil.DataBean>>(){}.getType();
+                    Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>(){}.getType();
                     info = gson.fromJson(result.getData().toString(),type);
                     //初始化人员数据
                     initData(view,activity);
@@ -62,14 +61,14 @@ public class InformationDP extends AppCompatActivity {
             }
         };
         API api = HttpUtil.getRetrofit().create(API.class);
-        Call<InformationDPUtil> task = api.queryDPAll(params);
+        Call<InformationDPBean> task = api.queryDPAll(params);
         HttpUtil.queryTask(handler, task);
     }
 
-    private static void initData(View view,Activity activity) {
+    private synchronized static void initData(View view,Activity activity) {
         RecyclerView informationListRV = view.findViewById(R.id.informationListRV);
         int height = informationListRV.getHeight();
-        int itemNum = DPUtil.px2dip(activity, height)/60;
+        int itemNum = (int) Math.round(((double)DPUtil.px2dip(activity, height)) / 60);
         if(info.size()>itemNum){
             info = info.subList(0,itemNum);
         }
