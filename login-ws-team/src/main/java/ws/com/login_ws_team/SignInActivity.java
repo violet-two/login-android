@@ -38,6 +38,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private TextView tvText;
     private Button signInButton;
     private SignInModelImpl signInModel;
+    private DateAdapter dateAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +66,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         monthNum.setText(String.valueOf(month));
         gvDate = findViewById(R.id.gvDate);
         days = DateUtils.getDayOfMonthFormat(year, month);
-        DateAdapter dateAdapter = new DateAdapter(this, days, year, month);
+        dateAdapter = DateAdapter.getInstance(this, days, year, month);
         gvDate.setAdapter(dateAdapter);
         gvDate.setVerticalSpacing(60);
+        //有问题
+//        dateAdapter.isSign(new int[]{1,23});
 //        gvDate.setEnabled(false);
         signInTextView = findViewById(R.id.signInTextView);
         tvText = findViewById(R.id.tv_text);
