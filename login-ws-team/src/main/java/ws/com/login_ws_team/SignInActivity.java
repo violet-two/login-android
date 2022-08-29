@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -26,6 +27,7 @@ import ws.com.login_ws_team.util.ToastUtil;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = "SignInActivity";
     private static double sqrt;
     private int year;
     private int month;
@@ -39,57 +41,102 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private Button signInButton;
     private SignInModelImpl signInModel;
     private DateAdapter dateAdapter;
+    private int[] signInDays = null;
+    private GridView gvWeek;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
-        GridView gvWeek = findViewById(R.id.gvWeek);
+        gvWeek = findViewById(R.id.gvWeek);
+        //配置week适配器
         WeekAdapter weekAdapter = new WeekAdapter(this);
         gvWeek.setAdapter(weekAdapter);
+
+        //初始化signInModel实现类
+        signInModel = new SignInModelImpl();
         //初始化时间
         initDate();
+        //获取签到的天数并初始化适配器
+        getSignInDays();
         //初始化组件
         initView();
+        //设置系统属性
+        setSystemStyle();
+    }
+
+    private void setSystemStyle() {
         pingMuSize = GetPingMuSizeUtil.getPingMuSize(this);
-        if(pingMuSize<4.5){
+        if (pingMuSize < 4.5) {
             //设置属性,获取属性要获取到他的父级容器标签或者布局
             LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) tvText.getLayoutParams();
-            lp.setMargins(0,0,0,10);
+            lp.setMargins(0, 0, 0, 10);
             tvText.setLayoutParams(lp);
             signInTextView.setLayoutParams(lp);
         }
+    }
+
+    private void getSignInDays() {
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("type", "selectSign");
+        hashMap.put("phone", "15337117134");
+        signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
+            @Override
+            public synchronized void onSucceed(Response<SignInBean> response) {
+                SignInBean body = response.body();
+                //获取签到的总天数
+                int signInNum = body.getSignDate().size();
+                signInDays = new int[signInNum];
+                for (int i = 0; i < signInNum; i++) {
+                    if (month == Integer.parseInt(body.getSignDate().get(i).getMonth())) {
+                        int day = Integer.parseInt(body.getSignDate().get(i).getDay());
+                        Log.d(TAG, "onSucceed: " + day);
+                        signInDays[i] = day;
+                    }
+                }
+                //初始化适配器
+                initAdapter();
+            }
+
+            @Override
+            public void onFailed(Throwable t) {
+
+            }
+        });
+    }
+
+    private void initAdapter() {
+        monthNum = findViewById(R.id.monthNum);
+        monthNum.setText(String.valueOf(month));
+        gvDate = findViewById(R.id.gvDate);
+        dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays);
+        gvDate.setAdapter(dateAdapter);
+        gvDate.setVerticalSpacing(60);
+        gvDate.setEnabled(false);
     }
 
     private void initView() {
         monthNum = findViewById(R.id.monthNum);
         monthNum.setText(String.valueOf(month));
         gvDate = findViewById(R.id.gvDate);
-        days = DateUtils.getDayOfMonthFormat(year, month);
-        dateAdapter = DateAdapter.getInstance(this, days, year, month);
-        gvDate.setAdapter(dateAdapter);
-        gvDate.setVerticalSpacing(60);
-        //有问题
-//        dateAdapter.isSign(new int[]{1,23});
-//        gvDate.setEnabled(false);
         signInTextView = findViewById(R.id.signInTextView);
         tvText = findViewById(R.id.tv_text);
         signInButton = findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
-        HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("type","selectSign");
-        hashMap.put("phone","13464849855");
-        signInModel = new SignInModelImpl();
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("type", "selectSign");
+        hashMap.put("phone", "15337117134");
         signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
             @Override
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
-                if("success".equals(result.getFlag())){
+                if ("success".equals(result.getFlag())) {
                     try {
                         tvText.setText("今天已签到，获取奖励");
-                        signInTextView.setText("×"+result.getPoints().toString());
+                        signInTextView.setText("×" + result.getPoints().toString());
                         signInButton.setText("已签到");
-                    }catch (Exception e){}
+                    } catch (Exception e) {
+                    }
                 }
             }
 
@@ -103,52 +150,53 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void initDate() {
         year = DateUtils.getYear();
         month = DateUtils.getMonth();
+        days = DateUtils.getDayOfMonthFormat(year, month);
     }
 
     public void reBack(View view) {
     }
 
     public void radioClick(View view) {
-        if(radioStatus==0){
+        if (radioStatus == 0) {
             findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
             findViewById(R.id.rightRadio).setVisibility(View.GONE);
             radioStatus = 1;
-            return ;
+            return;
         }
-        if(radioStatus==1){
+        if (radioStatus == 1) {
             findViewById(R.id.leftRadio).setVisibility(View.GONE);
             findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
             radioStatus = 0;
-            return ;
+            return;
         }
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.signInButton:
-                HashMap<String,String> hashMap = new HashMap<>();
-                hashMap.put("type","sign");
-                hashMap.put("phone","13464849855");
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("type", "sign");
+                hashMap.put("phone", "15337117134");
                 signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                     @Override
                     public void onSucceed(Response<SignInBean> response) {
                         SignInBean result = response.body();
-                        if("success".equals(result.getFlag())){
+                        if ("success".equals(result.getFlag())) {
                             tvText.setText("今天已签到，获取奖励");
                             signInButton.setText("已签到");
-                            hashMap.put("type","selectSign");
+                            hashMap.put("type", "selectSign");
                             signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                                 @Override
                                 public void onSucceed(Response<SignInBean> response) {
-                                    signInTextView.setText("×"+response.body().getPoints().toString());
+                                    signInTextView.setText("×" + response.body().getPoints().toString());
                                 }
                                 @Override
                                 public void onFailed(Throwable t) {
                                 }
                             });
-                        }else{
-                            ToastUtil.show(SignInActivity.this,result.getMsg());
+                        } else {
+                            ToastUtil.show(SignInActivity.this, result.getMsg());
                         }
                     }
 

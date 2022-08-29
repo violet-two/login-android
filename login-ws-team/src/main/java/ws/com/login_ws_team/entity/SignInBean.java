@@ -6,10 +6,13 @@ import java.util.List;
 
 public class SignInBean {
 
-    @SerializedName("flag")
-    private String flag;
+
+    @SerializedName("jptime")
+    private String jptime;
     @SerializedName("msg")
     private String msg;
+    @SerializedName("flag")
+    private String flag;
     @SerializedName("num")
     private Integer num;
     @SerializedName("signDate")
@@ -17,12 +20,12 @@ public class SignInBean {
     @SerializedName("points")
     private Integer points;
 
-    public String getFlag() {
-        return flag;
+    public String getJptime() {
+        return jptime;
     }
 
-    public void setFlag(String flag) {
-        this.flag = flag;
+    public void setJptime(String jptime) {
+        this.jptime = jptime;
     }
 
     public String getMsg() {
@@ -31,6 +34,14 @@ public class SignInBean {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 
     public Integer getNum() {
