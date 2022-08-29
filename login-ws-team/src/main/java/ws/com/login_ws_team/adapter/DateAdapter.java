@@ -3,6 +3,7 @@ package ws.com.login_ws_team.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +27,12 @@ public class DateAdapter extends BaseAdapter {
     private static int mMonth;
     private static DateAdapter instance;
     private static int[] mSignInDays;
+    private int length;
 
-    private DateAdapter (){}
-    public static DateAdapter getInstance(Context context, int[][] days, int year, int month,int[] signInDays) {
+    private DateAdapter() {
+    }
+
+    public static DateAdapter getInstance(Context context, int[][] days, int year, int month, int[] signInDays) {
         if (instance == null) {
             instance = new DateAdapter();
         }
@@ -49,6 +53,7 @@ public class DateAdapter extends BaseAdapter {
         mMonth = month;
         return instance;
     }
+
 //    public DateAdapter(Context context, int[][] days, int year, int month) {
 //        this.context = context;
 //        int dayNum = 0;
@@ -81,6 +86,7 @@ public class DateAdapter extends BaseAdapter {
     }
 
     InnerHolder viewHolder;
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
@@ -94,10 +100,12 @@ public class DateAdapter extends BaseAdapter {
         } else {
             viewHolder = (InnerHolder) view.getTag();
         }
-        for (int mSignInDay : mSignInDays) {
-            if(mSignInDay!=0){
-                if(mSignInDay==i){
-                    viewHolder.date_item.setBackgroundColor(Color.rgb(255,0,0));
+        if (mSignInDays != null) {
+            for (int mSignInDay : mSignInDays) {
+                if (mSignInDay != 0) {
+                    if (mSignInDay == i) {
+                        viewHolder.date_item.setBackgroundResource(R.color.redToWhite);
+                    }
                 }
             }
         }
@@ -113,19 +121,40 @@ public class DateAdapter extends BaseAdapter {
         return view;
     }
 
-    //判断每一天是否签到
-    public void isSign(int[] isSignDays, ViewGroup viewGroup) {
-        for (int day : mDays) {
-            for (int isSignDay : isSignDays) {
-                if (day == isSignDay) {
-//                    int id = viewHolder.date_item.getId();
-                    TextView viewById = viewGroup.findViewById(isSignDay);
-                    Log.d(TAG, "isSign: "+viewById);
-//                    viewById.setText("a");
-                }
-            }
+//    //判断每一天是否签到
+//    public void isSign(int[] isSignDays, ViewGroup viewGroup) {
+//        for (int day : mDays) {
+//            for (int isSignDay : isSignDays) {
+//                if (day == isSignDay) {
+////                    int id = viewHolder.date_item.getId();
+//                    TextView viewById = viewGroup.findViewById(isSignDay);
+//                    Log.d(TAG, "isSign: "+viewById);
+////                    viewById.setText("a");
+//                }
+//            }
+//        }
+////        notifyDataSetChanged();
+//    }
+
+    //将今天的背景改变
+    public void changeToday(int today) {
+        if (mSignInDays == null) {
+            length = 1;
+        } else {
+            length = mSignInDays.length + 1;
         }
-//        notifyDataSetChanged();
+        int[] newArray = new int[length];
+        for (int i = 0; i < length; i++) {
+            if (length == 1) {
+                newArray[i] = 0;
+                break;
+            }
+            newArray[i] = mSignInDays[i];
+        }
+        newArray[length - 1] = today;
+        mSignInDays = newArray;
+        Log.d(TAG, "changeToday: " + mSignInDays);
+        notifyDataSetChanged();
     }
 
     /**
@@ -144,6 +173,10 @@ public class DateAdapter extends BaseAdapter {
             if (pingMuSize < 4.5) {
                 date_item.setTypeface(Typeface.create(date_item.getTypeface(), Typeface.NORMAL), Typeface.BOLD);
                 date_item.setTextSize(16);
+                if (mDays.length / 7 > 5) {
+                    date_item.setTextSize(12);
+                    date_item.setPadding(4, 4, 4, 4);
+                }
                 return;
             }
             date_item.setTypeface(Typeface.create(date_item.getTypeface(), Typeface.NORMAL), Typeface.BOLD);

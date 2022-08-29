@@ -30,7 +30,7 @@
 
     <!--签到界面-->
     <string name="signInTitle">签到日历</string>
-    <string name="happyBean">×2</string>
+    <string name="happyBean">×0</string>
 
 
 </resources>

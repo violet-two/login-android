@@ -43,6 +43,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private DateAdapter dateAdapter;
     private int[] signInDays = null;
     private GridView gvWeek;
+    private HashMap<String, String> hashMap;
+    private int today;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +55,18 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         WeekAdapter weekAdapter = new WeekAdapter(this);
         gvWeek.setAdapter(weekAdapter);
 
+        //初始化账号
+        hashMap = new HashMap<>();
+        hashMap.put("type", "sign");
+        hashMap.put("phone", "15337117134");
+
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
-        //初始化时间
+        //初始化时间数据
         initDate();
         //获取签到的天数并初始化适配器
         getSignInDays();
-        //初始化组件
+        //初始化视图
         initView();
         //设置系统属性
         setSystemStyle();
@@ -77,22 +84,25 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void getSignInDays() {
-        HashMap<String, String> hashMap = new HashMap<>();
         hashMap.put("type", "selectSign");
-        hashMap.put("phone", "15337117134");
         signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
             @Override
             public synchronized void onSucceed(Response<SignInBean> response) {
                 SignInBean body = response.body();
-                //获取签到的总天数
-                int signInNum = body.getSignDate().size();
-                signInDays = new int[signInNum];
-                for (int i = 0; i < signInNum; i++) {
-                    if (month == Integer.parseInt(body.getSignDate().get(i).getMonth())) {
-                        int day = Integer.parseInt(body.getSignDate().get(i).getDay());
-                        Log.d(TAG, "onSucceed: " + day);
-                        signInDays[i] = day;
+                try {
+                    if ("success".equals(body.getFlag())) {
+                        //获取签到的总天数
+                        int signInNum = body.getSignDate().size();
+                        signInDays = new int[signInNum];
+                        for (int i = 0; i < signInNum; i++) {
+                            if (month == Integer.parseInt(body.getSignDate().get(i).getMonth())) {
+                                int day = Integer.parseInt(body.getSignDate().get(i).getDay());
+                                Log.d(TAG, "onSucceed: " + day);
+                                signInDays[i] = day;
+                            }
+                        }
                     }
+                } catch (Exception e) {
                 }
                 //初始化适配器
                 initAdapter();
@@ -106,38 +116,36 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initAdapter() {
-        monthNum = findViewById(R.id.monthNum);
-        monthNum.setText(String.valueOf(month));
-        gvDate = findViewById(R.id.gvDate);
         dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays);
         gvDate.setAdapter(dateAdapter);
         gvDate.setVerticalSpacing(60);
-        gvDate.setEnabled(false);
+//        gvDate.setEnabled(false);
     }
 
     private void initView() {
+        gvDate = findViewById(R.id.gvDate);
+        signInTextView = findViewById(R.id.signInTextView);
         monthNum = findViewById(R.id.monthNum);
         monthNum.setText(String.valueOf(month));
         gvDate = findViewById(R.id.gvDate);
-        signInTextView = findViewById(R.id.signInTextView);
         tvText = findViewById(R.id.tv_text);
         signInButton = findViewById(R.id.signInButton);
         signInButton.setOnClickListener(this);
-        HashMap<String, String> hashMap = new HashMap<>();
+
         hashMap.put("type", "selectSign");
-        hashMap.put("phone", "15337117134");
         signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
             @Override
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
-                if ("success".equals(result.getFlag())) {
-                    try {
+                try {
+                    if ("success".equals(result.getFlag())&&result.getSignDate()!=null) {
                         tvText.setText("今天已签到，获取奖励");
                         signInTextView.setText("×" + result.getPoints().toString());
                         signInButton.setText("已签到");
-                    } catch (Exception e) {
                     }
+                } catch (Exception e) {
                 }
+
             }
 
             @Override
@@ -150,6 +158,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void initDate() {
         year = DateUtils.getYear();
         month = DateUtils.getMonth();
+        today = DateUtils.getToday();
+        Log.d(TAG, "today: " + today);
         days = DateUtils.getDayOfMonthFormat(year, month);
     }
 
@@ -175,9 +185,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.signInButton:
-                HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("type", "sign");
-                hashMap.put("phone", "15337117134");
                 signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                     @Override
                     public void onSucceed(Response<SignInBean> response) {
@@ -190,7 +198,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                                 @Override
                                 public void onSucceed(Response<SignInBean> response) {
                                     signInTextView.setText("×" + response.body().getPoints().toString());
+                                    dateAdapter.changeToday(today);
                                 }
+
                                 @Override
                                 public void onFailed(Throwable t) {
                                 }

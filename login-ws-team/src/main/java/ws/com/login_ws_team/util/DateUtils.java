@@ -11,6 +11,10 @@ public class DateUtils {
         return Calendar.getInstance().get(Calendar.MONTH) + 1;
     }
 
+    public static int getToday() {
+        return Calendar.getInstance().get(Calendar.DATE);
+    }
+
     public static int getCurrentDayOfMonth() {
         return Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
@@ -29,8 +33,8 @@ public class DateUtils {
         //计算本月有几个星期天，首位为星期日
         int weekNum = daysOfMonth/7;
         weekNum = daysOfMonth%7==0?weekNum:weekNum+1;
-        int daysOfLastWeek = (daysOfMonth-1)%7;
-        if((daysOfFirstWeek+daysOfLastWeek)%8==0){
+        int daysOfLastWeek = daysOfMonth%7;
+        if((daysOfFirstWeek+daysOfLastWeek)>8){
             weekNum++;
         }
         //设置日历格式数组,weekNum行7列
