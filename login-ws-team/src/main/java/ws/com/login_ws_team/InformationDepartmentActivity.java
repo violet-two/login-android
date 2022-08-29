@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -26,10 +27,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import ws.com.login_ws_team.adapter.InformationAdapter;
 //import ws.com.login_ws_team.adapter.UpPullAdapter;
 import ws.com.login_ws_team.api.API;
-import ws.com.login_ws_team.loginService.InformationDP;
+//import ws.com.login_ws_team.loginService.InformationDP;
+import ws.com.login_ws_team.model.IBaseRetCallback;
+import ws.com.login_ws_team.model.impl.InformationDepartmentModelImpl;
 import ws.com.login_ws_team.util.DPUtil;
 import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.entity.InformationDPBean;
@@ -40,6 +44,7 @@ import ws.com.login_ws_team.util.ToastUtil;
 
 public class InformationDepartmentActivity extends AppCompatActivity {
 
+    private String TAG = "InformationDepartmentActivity";
     private SearchView searchView;
     private TextView search;
     private RecyclerView informationListRV;
@@ -51,7 +56,8 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private View allView;
     private LinearLayout bottomBox;
     private SwipeRefreshLayout sr;
-//    private UpPullAdapter upPullAdapter;
+    private InformationDepartmentModelImpl informationDepartmentModel;
+    //    private UpPullAdapter upPullAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +66,32 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
         sr = findViewById(R.id.sr);
         informationListRV = findViewById(R.id.informationListRV);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        informationListRV.setLayoutManager(linearLayoutManager);
+        informationListRV.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            //触摸拦截事件 返回false不执行后面函数
+            @Override
+            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+                //取消search框的焦点
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
         //设置主题
         setTheme();
         //初始化登录数据
         initLoginData();
 
-        //上拉加载，下拉刷新
-        upPullAndDownPush();
         searchView = findViewById(R.id.searchView);
         //设置输入框属性
         searchViewStyle();
@@ -77,21 +102,20 @@ public class InformationDepartmentActivity extends AppCompatActivity {
             hashMap.put("managerPhone", selfPhone);
             String phone = searchView.getQuery().toString();
             hashMap.put("phone", phone);
-            InformationDP.informationDP(this, allView, hashMap);
+            initData();
+//            InformationDP.informationDP(this, allView, hashMap);
         });
     }
 
     private void upPullAndDownPush() {
         handlerUpPullOnload();
         handlerDownPullUpdate();
-
     }
 
     static int showEndNum = 0;
     int lastVisibleItem = 0;
 
     private synchronized void handlerUpPullOnload() {
-
         informationListRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -102,7 +126,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                             InformationAdapter instance = InformationAdapter.getInstance(InformationAdapter.getList());
                             instance.changeMoreStatus(InformationAdapter.NO_LOAD_MORE);
                         }
-                    },1000);
+                    }, 1000);
                     return;
                 }
             }
@@ -112,76 +136,141 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                 super.onScrolled(recyclerView, dx, dy);
                 List<InformationDPBean.DataBean> list = InformationAdapter.getList();
                 InformationAdapter instance = InformationAdapter.getInstance(list);
-                if(dy==0){
-                    instance.changeMoreStatus(2);
-                }
-                if (dy > 0) {
-                    instance.changeMoreStatus(0);
-
-                    new Handler().postDelayed(new Runnable() {
+                if (dy == 0) {
+                    new Handler().post(new Runnable() {
                         @Override
                         public void run() {
-                            HashMap<String, String> hashMap = new HashMap<>();
-                            hashMap.put("managerPhone", selfPhone);
-                            hashMap.put("phone", "");
-                            Handler handler = new Handler() {
-                                private List<InformationDPBean.DataBean> info;
-                                private int showMaxNum;
+                            instance.changeMoreStatus(2);
+                        }
+                    });
+                    return;
+                }
+                if (dy > 0) {
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            instance.changeMoreStatus(0);
+                        }
+                    });
+                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("managerPhone", selfPhone);
+                        hashMap.put("phone", "");
+                        informationDepartmentModel.queryInformation(hashMap, new IBaseRetCallback<InformationDPBean>() {
+                            @Override
+                            public void onSucceed(Response<InformationDPBean> response) {
+                                InformationDPBean body = response.body();
+                                List<InformationDPBean.DataBean> info;
+                                int showMaxNum = getInformationListRVHeight();
+                                InformationAdapter instance;
+                                if ("success".equals(body.getFlag())) {
+                                    Gson gson = new Gson();
+                                    Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
+                                    }.getType();
+                                    info = gson.fromJson(body.getData().toString(), type);
+                                    synchronized (info) {
+                                        //计算页面最大可以显示几条数据
+                                        if (showMaxNum == 0) {
+                                            int height = informationListRV.getHeight();
+                                            showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
+                                        }
 
-                                @Override
-                                public synchronized void handleMessage(@NonNull Message msg) {
-                                    InformationAdapter instance;
-                                    Bundle bundle = msg.getData();
-                                    InformationDPBean result = (InformationDPBean) bundle.getSerializable("result");
-                                    if ("success".equals(result.getFlag())) {
-                                        Gson gson = new Gson();
-                                        Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
-                                        }.getType();
-                                        info = gson.fromJson(result.getData().toString(), type);
-
-                                        synchronized (info) {
-                                            //计算页面最大可以显示几条数据
-                                            if (showMaxNum == 0) {
-                                                int height = informationListRV.getHeight();
-                                                showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
-                                            }
-
-                                            //获取现在适配器里面数据的长度
-                                            List<InformationDPBean.DataBean> list = InformationAdapter.getList();
-                                            synchronized (list) {
-                                                //获取适配器
-                                                instance = InformationAdapter.getInstance(list);
-                                                synchronized (instance) {
-                                                    int size = list.size();
-                                                    showEndNum = size + 1;
-                                                    if (showEndNum > info.size()) {
-                                                        if (size > showMaxNum) {
-                                                            return;
-                                                        }
-                                                        List<InformationDPBean.DataBean> dataBeans = info.subList(size, info.size());
-                                                        //添加数据
-                                                        instance.addHeaderItem(dataBeans);
-
-//                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
+                                        //获取现在适配器里面数据的长度
+                                        List<InformationDPBean.DataBean> list = InformationAdapter.getList();
+                                        synchronized (list) {
+                                            //获取适配器
+                                            instance = InformationAdapter.getInstance(list);
+                                            synchronized (instance) {
+                                                int size = list.size();
+                                                showEndNum = size + 1;
+                                                if (showEndNum > info.size()) {
+                                                    if (size > showMaxNum) {
                                                         return;
                                                     }
-                                                    //从全部数据中获取要加载的数据
-                                                    List<InformationDPBean.DataBean> dataBeans = info.subList(size, showEndNum);
-                                                    instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
+                                                    List<InformationDPBean.DataBean> dataBeans = info.subList(size, info.size());
                                                     //添加数据
                                                     instance.addHeaderItem(dataBeans);
+
+//                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
+                                                    return;
                                                 }
+                                                //从全部数据中获取要加载的数据段
+                                                List<InformationDPBean.DataBean> dataBeans = info.subList(size, showEndNum);
+                                                instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
+                                                //添加数据
+                                                instance.addHeaderItem(dataBeans);
                                             }
                                         }
                                     }
                                 }
-                            };
-                            API api = HttpUtil.getRetrofit().create(API.class);
-                            Call<InformationDPBean> task = api.queryDPAll(hashMap);
-                            HttpUtil.queryTask(handler, task);
-                        }
-                    }, 1000);
-                }
+                            }
+
+                            @Override
+                            public void onFailed(Throwable t) {
+
+                            }
+                        });
+//                        Handler handler = new Handler() {
+//                            private List<InformationDPBean.DataBean> info;
+//                            private int showMaxNum;
+//
+//                            @Override
+//                            public synchronized void handleMessage(@NonNull Message msg) {
+//                                InformationAdapter instance;
+//                                Bundle bundle = msg.getData();
+//                                InformationDPBean result = (InformationDPBean) bundle.getSerializable("result");
+//                                if ("success".equals(result.getFlag())) {
+//                                    Gson gson = new Gson();
+//                                    Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
+//                                    }.getType();
+//                                    info = gson.fromJson(result.getData().toString(), type);
+//
+//                                    synchronized (info) {
+//                                        //计算页面最大可以显示几条数据
+//                                        if (showMaxNum == 0) {
+//                                            int height = informationListRV.getHeight();
+//                                            showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
+//                                        }
+//
+//                                        //获取现在适配器里面数据的长度
+//                                        List<InformationDPBean.DataBean> list = InformationAdapter.getList();
+//                                        synchronized (list) {
+//                                            //获取适配器
+//                                            instance = InformationAdapter.getInstance(list);
+//                                            synchronized (instance) {
+//                                                int size = list.size();
+//                                                showEndNum = size + 1;
+//                                                if (showEndNum > info.size()) {
+//                                                    if (size > showMaxNum) {
+//                                                        return;
+//                                                    }
+//                                                    List<InformationDPBean.DataBean> dataBeans = info.subList(size, info.size());
+//                                                    //添加数据
+//                                                    instance.addHeaderItem(dataBeans);
+//
+////                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
+//                                                    return;
+//                                                }
+//                                                //从全部数据中获取要加载的数据
+//                                                List<InformationDPBean.DataBean> dataBeans = info.subList(size, showEndNum);
+//                                                instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
+//                                                //添加数据
+//                                                instance.addHeaderItem(dataBeans);
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        };
+//                        API api = HttpUtil.getRetrofit().create(API.class);
+//                        Call<InformationDPBean> task = api.queryDPAll(hashMap);
+//                        HttpUtil.queryTask(handler, task);
+                    }
+                }, 1000);
+
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 //最后一个可见的ITEM
                 lastVisibleItem = layoutManager.findLastVisibleItemPosition();
@@ -199,15 +288,9 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //更新列表
-                        int height = informationListRV.getHeight();
-                        int itemNum = (int) Math.round(((double)DPUtil.px2dip(InformationDepartmentActivity.this, height)) / 60);
-                        List<InformationDPBean.DataBean> list = InformationAdapter.getList();
-                        if (list.size() > itemNum) {
-                            list = list.subList(0, itemNum);
-                        }
-                        InformationAdapter instance = InformationAdapter.getInstance(list);
-                        instance.addHeaderItem(null);
+                        //上拉刷新重置数据
+                        initData();
+                        ToastUtil.show(InformationDepartmentActivity.this,"成功刷新");
                         //停止刷新
                         sr.setRefreshing(false);
                     }
@@ -223,6 +306,8 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         getLoginData();
         //初始化所有人员信息
         initData();
+        //上拉加载，下拉刷新
+        upPullAndDownPush();
     }
 
     private void setTheme() {
@@ -254,8 +339,42 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         hashMap.put("managerPhone", selfPhone);
         hashMap.put("phone", "");
         allView = findViewById(R.id.allView);
-        InformationDP.informationDP(InformationDepartmentActivity.this, allView, hashMap);
+        informationDepartmentModel = new InformationDepartmentModelImpl();
+        informationDepartmentModel.queryInformation(hashMap, new IBaseRetCallback<InformationDPBean>() {
+            @Override
+            public void onSucceed(Response<InformationDPBean> response) {
+                InformationDPBean body = response.body();
+                if("fail".equals(body.getFlag())){
+                    ToastUtil.show(InformationDepartmentActivity.this, body.getData().toString());
+                    return ;
+                }
+                Gson gson = new Gson();
+                Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
+                }.getType();
+                List<InformationDPBean.DataBean> data = gson.fromJson(body.getData().toString(), type);
+                Log.d(TAG, "onSucceed:login " + data);
+                //获取informationListRV的视图一面最多可以放多少个item
+                int itemNum = getInformationListRVHeight();
+                if (data.size() > itemNum) {
+                    data = data.subList(0, itemNum);
+                }
+                InformationAdapter informationAdapter = InformationAdapter.getInstance(data);
+                informationAdapter.changeMoreStatus(2);
+                informationListRV.setAdapter(informationAdapter);
+            }
+
+            @Override
+            public void onFailed(Throwable t) {
+            }
+        });
     }
+
+    private int getInformationListRVHeight() {
+        int height = informationListRV.getHeight();
+        int itemNum = (int) Math.round(((double) DPUtil.px2dip(this, height)) / 60);
+        return itemNum;
+    }
+
 
     private void getLoginData() {
         Bundle bundle = getIntent().getExtras();
@@ -294,8 +413,10 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("managerPhone", selfPhone);
                 hashMap.put("phone", query);
-                InformationDP.informationDP(InformationDepartmentActivity.this, allView, hashMap);
+                initData();
+//                InformationDP.informationDP(InformationDepartmentActivity.this, allView, hashMap);
                 return true;
+
             }
 
             @Override
@@ -306,7 +427,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("managerPhone", selfPhone);
                 hashMap.put("phone", newText);
-                InformationDP.informationDP(InformationDepartmentActivity.this, allView, hashMap);
+                initData();
                 return false;
             }
         });

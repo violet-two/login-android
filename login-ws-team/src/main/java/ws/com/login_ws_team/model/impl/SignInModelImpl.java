@@ -26,7 +26,7 @@ public class SignInModelImpl implements SignInModel<IBaseRetCallback<SignInBean>
     }
 
     @Override
-    public void sign(HashMap<String, String> hashMap, IBaseRetCallback<SignInBean> signInCallBack) {
+    public void signIn(HashMap<String, String> hashMap, IBaseRetCallback<SignInBean> signInCallBack) {
         Call<SignInBean> login = api.sign(hashMap);
         login.enqueue(new Callback<SignInBean>() {
             @Override

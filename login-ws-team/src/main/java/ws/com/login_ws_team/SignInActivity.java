@@ -80,14 +80,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         hashMap.put("type","selectSign");
         hashMap.put("phone","13464849855");
         signInModel = new SignInModelImpl();
-        signInModel.sign(hashMap, new IBaseRetCallback<SignInBean>() {
+        signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
             @Override
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
                 if("success".equals(result.getFlag())){
-                    tvText.setText("今天已签到，获取奖励");
-                    signInTextView.setText("×"+result.getPoints().toString());
-                    signInButton.setText("已签到");
+                    try {
+                        tvText.setText("今天已签到，获取奖励");
+                        signInTextView.setText("×"+result.getPoints().toString());
+                        signInButton.setText("已签到");
+                    }catch (Exception e){}
                 }
             }
 
@@ -128,7 +130,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 HashMap<String,String> hashMap = new HashMap<>();
                 hashMap.put("type","sign");
                 hashMap.put("phone","13464849855");
-                signInModel.sign(hashMap, new IBaseRetCallback<SignInBean>() {
+                signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                     @Override
                     public void onSucceed(Response<SignInBean> response) {
                         SignInBean result = response.body();
@@ -136,15 +138,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                             tvText.setText("今天已签到，获取奖励");
                             signInButton.setText("已签到");
                             hashMap.put("type","selectSign");
-                            signInModel.sign(hashMap, new IBaseRetCallback<SignInBean>() {
+                            signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                                 @Override
                                 public void onSucceed(Response<SignInBean> response) {
                                     signInTextView.setText("×"+response.body().getPoints().toString());
                                 }
-
                                 @Override
                                 public void onFailed(Throwable t) {
-
                                 }
                             });
                         }else{
@@ -154,7 +154,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
                     @Override
                     public void onFailed(Throwable t) {
-
                     }
                 });
                 break;

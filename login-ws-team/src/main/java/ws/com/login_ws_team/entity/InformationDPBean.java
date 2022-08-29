@@ -79,6 +79,16 @@ public class InformationDPBean<T> implements Serializable {
             this.department = department;
         }
 
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "regname='" + regname + '\'' +
+                    ", userStatus='" + userStatus + '\'' +
+                    ", phone='" + phone + '\'' +
+                    ", department='" + department + '\'' +
+                    '}';
+        }
+
         @SerializedName("regname")
         private String regname;
         @SerializedName("userStatus")
@@ -119,5 +129,14 @@ public class InformationDPBean<T> implements Serializable {
         public void setDepartment(String department) {
             this.department = department;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "InformationDPBean{" +
+                "data=" + data +
+                ", flag='" + flag + '\'' +
+                ", page=" + page +
+                '}';
     }
 }
