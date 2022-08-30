@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         StatusBarUtil.getStatusAToTransparent(this);
 
         user = findViewById(R.id.et_user);
+        user.setFocusable(true);
+        user.requestFocus();
         password = findViewById(R.id.et_password);
         login = findViewById(R.id.btn_login);
         resign = findViewById(R.id.btn_resign);

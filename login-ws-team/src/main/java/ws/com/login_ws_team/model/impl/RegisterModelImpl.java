@@ -11,17 +11,13 @@ import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.entity.RegisterBean;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.RegisterModel;
+import ws.com.login_ws_team.util.RetrofitUtil;
 
 public class RegisterModelImpl implements RegisterModel<IBaseRetCallback<RegisterBean>> {
-    private final Retrofit retrofit;
     private final API api;
 
     public RegisterModelImpl() {
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://119.96.82.181:8081")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(API.class);
+        api = RetrofitUtil.getRetrofit();
     }
     @Override
     public void register(HashMap<String, String> hashMap, IBaseRetCallback<RegisterBean> loginCallback) {

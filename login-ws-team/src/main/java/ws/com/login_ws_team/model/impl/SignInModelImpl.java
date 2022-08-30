@@ -12,17 +12,13 @@ import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.SignInBean;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.SignInModel;
+import ws.com.login_ws_team.util.RetrofitUtil;
 
 public class SignInModelImpl implements SignInModel<IBaseRetCallback<SignInBean>> {
-    private final Retrofit retrofit;
     private final API api;
 
     public SignInModelImpl() {
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://119.96.82.181:8081")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(API.class);
+        api = RetrofitUtil.getRetrofit();
     }
 
     @Override

@@ -11,17 +11,13 @@ import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.entity.InformationDPBean;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.InformationDepartmentModel;
+import ws.com.login_ws_team.util.RetrofitUtil;
 
 public class InformationDepartmentModelImpl implements InformationDepartmentModel<IBaseRetCallback<InformationDPBean>> {
-    private final Retrofit retrofit;
     private final API api;
 
     public InformationDepartmentModelImpl() {
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://119.96.82.181:8081")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(API.class);
+        api = RetrofitUtil.getRetrofit();
     }
     @Override
     public void queryInformation(HashMap<String, String> hashMap, IBaseRetCallback<InformationDPBean> informationCallBack) {

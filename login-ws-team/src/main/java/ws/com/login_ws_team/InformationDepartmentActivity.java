@@ -57,6 +57,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private LinearLayout bottomBox;
     private SwipeRefreshLayout sr;
     private InformationDepartmentModelImpl informationDepartmentModel;
+    private HashMap<String, String> hashMap;
     //    private UpPullAdapter upPullAdapter;
 
     @Override
@@ -98,11 +99,9 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         search = findViewById(R.id.tv_search);
         //设置搜索按钮的点击事件
         search.setOnClickListener(view -> {
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("managerPhone", selfPhone);
             String phone = searchView.getQuery().toString();
             hashMap.put("phone", phone);
-            initData();
+            initData(hashMap);
 //            InformationDP.informationDP(this, allView, hashMap);
         });
     }
@@ -281,15 +280,16 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private void handlerDownPullUpdate() {
         sr.setEnabled(true);
         //添加事件监听器
-        initData();
+//        initData(hashMap);
         sr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public synchronized void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        hashMap.put("phone", "");
                         //上拉刷新重置数据
-                        initData();
+                        initData(hashMap);
                         ToastUtil.show(InformationDepartmentActivity.this,"成功刷新");
                         //停止刷新
                         sr.setRefreshing(false);
@@ -305,7 +305,10 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         //获取登录和注册页面传过来的参数
         getLoginData();
         //初始化所有人员信息
-        initData();
+        hashMap = new HashMap<>();
+        hashMap.put("managerPhone", selfPhone);
+        hashMap.put("phone", "");
+        initData(hashMap);
         //上拉加载，下拉刷新
         upPullAndDownPush();
     }
@@ -334,10 +337,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         }
     }
 
-    private void initData() {
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("managerPhone", selfPhone);
-        hashMap.put("phone", "");
+    private void initData(HashMap<String, String> hashMap) {
         allView = findViewById(R.id.allView);
         informationDepartmentModel = new InformationDepartmentModelImpl();
         informationDepartmentModel.queryInformation(hashMap, new IBaseRetCallback<InformationDPBean>() {
@@ -410,10 +410,8 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                     ToastUtil.show(InformationDepartmentActivity.this, "未获取到管理员账号");
                     return false;
                 }
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("managerPhone", selfPhone);
                 hashMap.put("phone", query);
-                initData();
+                initData(hashMap);
 //                InformationDP.informationDP(InformationDepartmentActivity.this, allView, hashMap);
                 return true;
 
@@ -424,10 +422,8 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                 if (selfStatus == 1) {
                     return false;
                 }
-                HashMap<String, String> hashMap = new HashMap<>();
-                hashMap.put("managerPhone", selfPhone);
                 hashMap.put("phone", newText);
-                initData();
+                initData(hashMap);
                 return false;
             }
         });
