@@ -10,14 +10,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.coder.vincent.smart_toast.SmartToast;
+
+import org.w3c.dom.Text;
+
+import java.util.List;
+
 import ws.com.login_ws_team.R;
+import ws.com.login_ws_team.SignInActivity;
+import ws.com.login_ws_team.entity.LoginBean;
+import ws.com.login_ws_team.entity.SignInBean;
 import ws.com.login_ws_team.util.DateUtils;
 import ws.com.login_ws_team.util.GetPingMuSizeUtil;
+import ws.com.login_ws_team.util.ToastUtil;
 
 public class DateAdapter extends BaseAdapter {
     private static final String TAG = "DateAdapter";
@@ -27,12 +39,13 @@ public class DateAdapter extends BaseAdapter {
     private static int mMonth;
     private static DateAdapter instance;
     private static int[] mSignInDays;
+    private static SignInBean.JpdetailBean mJpdetail;
     private int length;
 
     private DateAdapter() {
     }
 
-    public static DateAdapter getInstance(Context context, int[][] days, int year, int month, int[] signInDays) {
+    public static DateAdapter getInstance(Context context, int[][] days, int year, int month, int[] signInDays, List<SignInBean.JpdetailBean> jpdetail) {
         if (instance == null) {
             instance = new DateAdapter();
         }
@@ -51,6 +64,9 @@ public class DateAdapter extends BaseAdapter {
         mContext = context;
         mYear = year;
         mMonth = month;
+        if(jpdetail!=null)
+        mJpdetail = jpdetail.get(0);
+        else{mJpdetail = null;}
         return instance;
     }
 
@@ -109,6 +125,23 @@ public class DateAdapter extends BaseAdapter {
                 }
             }
         }
+        if(mJpdetail!=null){
+            Log.d(TAG, "getView: " + mJpdetail.getMonth() + mMonth);
+            if (mJpdetail.getMonth() - 1 == mMonth) {
+                if (i == mJpdetail.getDay()) {
+                    viewHolder.date_item.setBackgroundResource(R.color.noBlack);
+                    viewHolder.date_item.setOnClickListener(view1 -> {
+                        try {
+                            //自定义弹窗视图
+                            View textView = initToastView();
+                            String str = "再连签" + (7 - mJpdetail.getContinuityNum()) + "天即可获得哦";
+                            ToastUtil.showSignIn(mContext, str,textView);
+                        } catch (Exception e) {
+                        }
+                    });
+                }
+            }
+        }
         if (i == DateUtils.getCurrentDayOfMonth()) {
             viewHolder.date_item.setTextColor(Color.rgb(204, 0, 0));//将当天设置背景设置成红色
         }
@@ -119,6 +152,16 @@ public class DateAdapter extends BaseAdapter {
         }
         viewHolder.date_item.setText(mDays[i] + "");
         return view;
+    }
+
+    private View initToastView() {
+        TextView textView = new TextView(mContext);
+        textView.setBackgroundResource(R.drawable.shape_signin_toast);
+        textView.setPadding(50,25,50,25);
+        textView.setTextColor(Color.WHITE);
+        textView.setText("再连签" + (7 - mJpdetail.getContinuityNum()) + "天即可获得哦");
+        textView.setTextSize(18);
+        return textView;
     }
 
 //    //判断每一天是否签到

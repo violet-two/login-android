@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Response;
 import ws.com.login_ws_team.adapter.DateAdapter;
@@ -28,7 +29,6 @@ import ws.com.login_ws_team.util.ToastUtil;
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "SignInActivity";
-    private static double sqrt;
     private int year;
     private int month;
     private GridView gvDate;
@@ -41,7 +41,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private Button signInButton;
     private SignInModelImpl signInModel;
     private DateAdapter dateAdapter;
-    private int[] signInDays = null;
+    private int[] signInDays;
+    private List<SignInBean.JpdetailBean> jpdetail;
     private GridView gvWeek;
     private HashMap<String, String> hashMap;
     private int today;
@@ -58,7 +59,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //初始化账号
         hashMap = new HashMap<>();
         hashMap.put("type", "sign");
-        hashMap.put("phone", "15337117134");
+        hashMap.put("phone", "18956435982");
 
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
@@ -89,23 +90,32 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public synchronized void onSucceed(Response<SignInBean> response) {
                 SignInBean body = response.body();
+                Log.d(TAG, "onSucceed: "+body.getFlag());
                 try {
                     if ("success".equals(body.getFlag())) {
+                        if (body.getSignDate() == null) {
+                            signInDays = new int[0];
+                            initAdapter();
+                            return;
+                        }
                         //获取签到的总天数
                         int signInNum = body.getSignDate().size();
                         signInDays = new int[signInNum];
                         for (int i = 0; i < signInNum; i++) {
                             if (month == Integer.parseInt(body.getSignDate().get(i).getMonth())) {
                                 int day = Integer.parseInt(body.getSignDate().get(i).getDay());
-                                Log.d(TAG, "onSucceed: " + day);
+                                jpdetail = body.getJpdetail();
                                 signInDays[i] = day;
+                                if (signInDays == null) continue;
                             }
                         }
+                        //初始化适配器
+                        initAdapter();
+                    }else{
+                        getSignInDays();
                     }
                 } catch (Exception e) {
                 }
-                //初始化适配器
-                initAdapter();
             }
 
             @Override
@@ -116,7 +126,17 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initAdapter() {
-        dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays);
+        do {
+            dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays, jpdetail);
+            Log.d(TAG, "initAdapter,day: "+days);
+            Log.d(TAG, "initAdapter,year: "+year);
+            Log.d(TAG, "initAdapter,month: "+month);
+            Log.d(TAG, "initAdapter,signInDays: "+signInDays);
+            Log.d(TAG, "initAdapter,jpdetail: "+jpdetail);
+        }while (days==null);
+        for (int signInDay : signInDays) {
+            Log.d(TAG, "initAdapter: " + signInDay);
+        }
         gvDate.setAdapter(dateAdapter);
         gvDate.setVerticalSpacing(60);
 //        gvDate.setEnabled(false);
@@ -138,14 +158,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
                 try {
-                    if ("success".equals(result.getFlag())&&result.getSignDate()!=null) {
+                    if ("success".equals(result.getFlag()) && result.getSignDate() != null) {
                         tvText.setText("今天已签到，获取奖励");
                         signInTextView.setText("×" + result.getPoints().toString());
                         signInButton.setText("已签到");
                     }
                 } catch (Exception e) {
                 }
-
             }
 
             @Override
@@ -153,6 +172,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ToastUtil.cancelToast();
     }
 
     private void initDate() {

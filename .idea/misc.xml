@@ -28,6 +28,7 @@
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/search_by_informationdp.xml" value="0.1535" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/shape.xml" value="0.1825" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/shape_login_button.xml" value="0.1825" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/shape_signin_toast.xml" value="0.203" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/signin_button_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/signin_tiptext_color_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-v24/signin_underline.xml" value="0.229" />
@@ -60,6 +61,7 @@
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/item_information_department.xml" value="0.3651041666666667" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/item_load.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/item_signin.xml" value="0.3651041666666667" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/toast_item_signin.xml" value="0.1953125" />
       </map>
     </option>
   </component>

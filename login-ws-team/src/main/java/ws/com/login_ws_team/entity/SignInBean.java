@@ -7,26 +7,16 @@ import java.util.List;
 public class SignInBean {
 
 
-    @SerializedName("jptime")
-    private String jptime;
     @SerializedName("msg")
     private String msg;
     @SerializedName("flag")
     private String flag;
-    @SerializedName("num")
-    private Integer num;
+    @SerializedName("jpdetail")
+    private List<JpdetailBean> jpdetail;
     @SerializedName("signDate")
     private List<SignDateBean> signDate;
     @SerializedName("points")
     private Integer points;
-
-    public String getJptime() {
-        return jptime;
-    }
-
-    public void setJptime(String jptime) {
-        this.jptime = jptime;
-    }
 
     public String getMsg() {
         return msg;
@@ -44,12 +34,12 @@ public class SignInBean {
         this.flag = flag;
     }
 
-    public Integer getNum() {
-        return num;
+    public List<JpdetailBean> getJpdetail() {
+        return jpdetail;
     }
 
-    public void setNum(Integer num) {
-        this.num = num;
+    public void setJpdetail(List<JpdetailBean> jpdetail) {
+        this.jpdetail = jpdetail;
     }
 
     public List<SignDateBean> getSignDate() {
@@ -66,6 +56,59 @@ public class SignInBean {
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public static class JpdetailBean {
+        @SerializedName("month")
+        private Integer month;
+        @SerializedName("year")
+        private Integer year;
+        @SerializedName("continuityNum")
+        private Integer continuityNum;
+        @SerializedName("num")
+        private Integer num;
+        @SerializedName("day")
+        private Integer day;
+
+        public Integer getMonth() {
+            return month;
+        }
+
+        public void setMonth(Integer month) {
+            this.month = month;
+        }
+
+        public Integer getYear() {
+            return year;
+        }
+
+        public void setYear(Integer year) {
+            this.year = year;
+        }
+
+        public Integer getContinuityNum() {
+            return continuityNum;
+        }
+
+        public void setContinuityNum(Integer continuityNum) {
+            this.continuityNum = continuityNum;
+        }
+
+        public Integer getNum() {
+            return num;
+        }
+
+        public void setNum(Integer num) {
+            this.num = num;
+        }
+
+        public Integer getDay() {
+            return day;
+        }
+
+        public void setDay(Integer day) {
+            this.day = day;
+        }
     }
 
     public static class SignDateBean {
