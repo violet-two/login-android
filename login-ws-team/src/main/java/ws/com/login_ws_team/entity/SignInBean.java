@@ -13,10 +13,14 @@ public class SignInBean {
     private String flag;
     @SerializedName("jpdetail")
     private List<JpdetailBean> jpdetail;
+    @SerializedName("nowFlag")
+    private Boolean nowFlag;
     @SerializedName("signDate")
     private List<SignDateBean> signDate;
     @SerializedName("points")
     private Integer points;
+    @SerializedName("nowTime")
+    private String nowTime;
 
     public String getMsg() {
         return msg;
@@ -42,6 +46,14 @@ public class SignInBean {
         this.jpdetail = jpdetail;
     }
 
+    public Boolean getNowFlag() {
+        return nowFlag;
+    }
+
+    public void setNowFlag(Boolean nowFlag) {
+        this.nowFlag = nowFlag;
+    }
+
     public List<SignDateBean> getSignDate() {
         return signDate;
     }
@@ -56,6 +68,14 @@ public class SignInBean {
 
     public void setPoints(Integer points) {
         this.points = points;
+    }
+
+    public String getNowTime() {
+        return nowTime;
+    }
+
+    public void setNowTime(String nowTime) {
+        this.nowTime = nowTime;
     }
 
     public static class JpdetailBean {
@@ -113,33 +133,33 @@ public class SignInBean {
 
     public static class SignDateBean {
         @SerializedName("month")
-        private String month;
+        private Integer month;
         @SerializedName("year")
-        private String year;
+        private Integer year;
         @SerializedName("day")
-        private String day;
+        private Integer day;
 
-        public String getMonth() {
+        public Integer getMonth() {
             return month;
         }
 
-        public void setMonth(String month) {
+        public void setMonth(Integer month) {
             this.month = month;
         }
 
-        public String getYear() {
+        public Integer getYear() {
             return year;
         }
 
-        public void setYear(String year) {
+        public void setYear(Integer year) {
             this.year = year;
         }
 
-        public String getDay() {
+        public Integer getDay() {
             return day;
         }
 
-        public void setDay(String day) {
+        public void setDay(Integer day) {
             this.day = day;
         }
     }

@@ -1,5 +1,6 @@
 package ws.com.login_ws_team;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button login;
     private Button resign;
     private LoginModelImpl loginModel;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //设置密码框默认属性
         findViewById(R.id.changePasswordImage).setBackgroundResource(R.drawable.ic_visibility_off_24);
         password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        //弹出等待框
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("请稍等.....");
+
+        loginModel = new LoginModelImpl();
     }
 
     @Override
@@ -140,21 +150,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ToastUtil.show(this, "密码不能为空");
                     return;
                 }
+                progressDialog.show();
                 HashMap<String, String> params = new HashMap<>();
                 params.put("phone", user.getText().toString());
                 params.put("password", MD5Util.md5s(password.getText().toString()));
-                loginModel = new LoginModelImpl();
                 loginModel.login(params, new IBaseRetCallback<LoginBean>() {
                     @Override
                     public void onSucceed(Response<LoginBean> response) {
                         LoginBean result = response.body();
                         Log.d("mainActivity", "onSucceed: " + result);
                         if ("success".equals(result.getFlag())) {
+                            progressDialog.dismiss();
                             Intent intent = new Intent(MainActivity.this, InformationDepartmentActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("data", result);
                             startActivity(intent);
                         } else {
+                            progressDialog.dismiss();
                             ToastUtil.show(MainActivity.this, result.getData().toString());
                         }
                     }
