@@ -34,7 +34,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private GridView gvDate;
     private int[][] days = null;
     private TextView monthNum;
-    private int radioStatus = 1;
+    private String radioStatus = "false";
     private double pingMuSize;
     private SignInTextView signInTextView;
     private TextView tvText;
@@ -59,7 +59,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //初始化账号
         hashMap = new HashMap<>();
         hashMap.put("type", "sign");
-        hashMap.put("phone", "18956435982");
+        hashMap.put("phone", "13464849459");
 
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
@@ -71,6 +71,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         initView();
         //设置系统属性
         setSystemStyle();
+        double pingMuSize = GetPingMuSizeUtil.getPingMuSize(this);
+        Log.d(TAG, "initAdapter: 手机屏幕尺寸"+pingMuSize);
+        if(pingMuSize>4.5){
+            gvDate.setVerticalSpacing(30);
+        }else{
+            gvDate.setVerticalSpacing(0);
+        }
     }
 
     private void setSystemStyle() {
@@ -90,7 +97,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public synchronized void onSucceed(Response<SignInBean> response) {
                 SignInBean body = response.body();
-                Log.d(TAG, "onSucceed: "+body.getFlag());
+//                Log.d(TAG, "onSucceed: "+body.getFlag());
                 try {
                     if ("success".equals(body.getFlag())) {
                         if (body.getSignDate() == null) {
@@ -138,7 +145,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             Log.d(TAG, "initAdapter: " + signInDay);
         }
         gvDate.setAdapter(dateAdapter);
-        gvDate.setVerticalSpacing(60);
 //        gvDate.setEnabled(false);
     }
 
@@ -158,10 +164,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
                 try {
-                    if ("success".equals(result.getFlag()) && result.getSignDate() != null) {
-                        tvText.setText("今天已签到，获取奖励");
-                        signInTextView.setText("×" + result.getPoints().toString());
+                    if(result.getQiandaoTx()){
+                        findViewById(R.id.leftRadio).setVisibility(View.GONE);
+                        findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
+                        radioStatus = "true";
+                    }
+                    if ("success".equals(result.getFlag()) && result.getNowFlag()) {
+                        tvText.setText("今天已签到，获取奖励×5");
+                        signInTextView.setText(" ×" + result.getPoints().toString());
                         signInButton.setText("已签到");
+                    }else if("success".equals(result.getFlag()) && !result.getNowFlag()){
+                        signInTextView.setText(" ×" + result.getPoints().toString());
+                    }else{
+                        initView();
                     }
                 } catch (Exception e) {
                 }
@@ -192,18 +207,41 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void radioClick(View view) {
-        if (radioStatus == 0) {
-            findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
-            findViewById(R.id.rightRadio).setVisibility(View.GONE);
-            radioStatus = 1;
-            return;
-        }
-        if (radioStatus == 1) {
-            findViewById(R.id.leftRadio).setVisibility(View.GONE);
-            findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
-            radioStatus = 0;
-            return;
-        }
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("type", "signTx");
+        hashMap.put("phone", "13464849459");
+        hashMap.put("qiandaoTX", "false");
+        signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
+            @Override
+            public void onSucceed(Response<SignInBean> response) {
+                SignInBean result = response.body();
+                if("success".equals(result.getMsg())){
+                    findViewById(R.id.leftRadio).setVisibility(View.GONE);
+                    findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
+                    radioStatus = "false";
+                }else{
+                    findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
+                    findViewById(R.id.rightRadio).setVisibility(View.GONE);
+                    radioStatus = "true";
+                }
+            }
+
+            @Override
+            public void onFailed(Throwable t) {
+            }
+        });
+//        if (radioStatus == 0) {
+//            findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
+//            findViewById(R.id.rightRadio).setVisibility(View.GONE);
+//            radioStatus = 1;
+//            return;
+//        }
+//        if (radioStatus == 1) {
+//            findViewById(R.id.leftRadio).setVisibility(View.GONE);
+//            findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
+//            radioStatus = 0;
+//            return;
+//        }
     }
 
     @Override
@@ -219,10 +257,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                             tvText.setText("今天已签到，获取奖励");
                             signInButton.setText("已签到");
                             hashMap.put("type", "selectSign");
+                            ToastUtil.show(SignInActivity.this,result.getMsg());
                             signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                                 @Override
                                 public void onSucceed(Response<SignInBean> response) {
-                                    signInTextView.setText("×" + response.body().getPoints().toString());
+                                    signInTextView.setText(" ×" + response.body().getPoints().toString());
                                     dateAdapter.changeToday(today);
                                 }
 

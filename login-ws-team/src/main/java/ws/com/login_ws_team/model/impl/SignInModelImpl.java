@@ -18,7 +18,7 @@ public class SignInModelImpl implements SignInModel<IBaseRetCallback<SignInBean>
     private final API api;
 
     public SignInModelImpl() {
-        api = RetrofitUtil.getRetrofit();
+        api = RetrofitUtil.getInstance().getRetrofit();
     }
 
     @Override

@@ -26,14 +26,18 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static int mLoadMoreStatus = 2;
 
 
-    private static InformationAdapter instance;
+    private static volatile InformationAdapter instance;
     private InformationAdapter (){}
     private static List<InformationDPBean.DataBean> mData;
     public static InformationAdapter getInstance(List<InformationDPBean.DataBean> data) {
         mData = data;
         mLoadMoreStatus = 2;
         if (instance == null) {
-            instance = new InformationAdapter();
+            synchronized (InformationAdapter.class){
+                if(instance == null){
+                    instance = new InformationAdapter();
+                }
+            }
         }
         return instance;
     }

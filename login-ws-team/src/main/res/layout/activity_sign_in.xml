@@ -20,7 +20,8 @@
             android:paddingTop="10dp"
             android:paddingRight="10dp"
             android:paddingBottom="10dp"
-            android:src="@drawable/ic_back_24" />
+            android:src="@drawable/ic_back_24"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <TextView
             android:layout_width="match_parent"
@@ -45,7 +46,7 @@
                 android:id="@+id/signInText"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="4"
+                android:layout_weight="3.8"
                 android:background="@drawable/signin_gradual_color_bg"
                 android:orientation="vertical">
 
@@ -59,7 +60,7 @@
                         android:id="@+id/tv_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="15dp"
+                        android:layout_marginBottom="20dp"
                         android:gravity="center_horizontal"
                         android:text="今天未签到"
                         android:textColor="@color/white"
@@ -69,21 +70,24 @@
                         android:id="@+id/signInTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="15dp"
                         android:drawableLeft="@drawable/happy_bean"
                         android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:lineHeight="@dimen/s20sp"
                         android:text="@string/happyBean"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/s24sp"></ws.com.login_ws_team.customView.SignInTextView>
+                        android:textSize="26sp"></ws.com.login_ws_team.customView.SignInTextView>
 
                     <Button
                         android:id="@+id/signInButton"
                         android:layout_width="150dp"
-                        android:layout_height="40dp"
+                        android:layout_height="35dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="15dp"
                         android:background="@drawable/signin_button_bg"
-                        android:text="签到"></Button>
+                        android:text="签到"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/s16sp"></Button>
                 </LinearLayout>
 
                 <RelativeLayout
@@ -106,7 +110,7 @@
                             android:layout_marginLeft="15dp"
                             android:text="x"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/s24sp"
+                            android:textSize="32sp"
                             android:textStyle="bold"></TextView>
 
                         <TextView
@@ -170,7 +174,8 @@
                         android:layout_marginRight="10dp"
                         android:background="@drawable/signin_radio_bg"
                         android:gravity="center_vertical"
-                        android:onClick="radioClick">
+                        android:onClick="radioClick"
+                        tools:ignore="TouchTargetSizeCheck">
 
                         <TextView
                             android:id="@+id/leftRadio"
@@ -204,6 +209,7 @@
                         android:id="@+id/gvWeek"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:numColumns="7"></GridView>
 
                     <GridView

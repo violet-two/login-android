@@ -9,6 +9,8 @@ public class SignInBean {
 
     @SerializedName("msg")
     private String msg;
+    @SerializedName("qiandaoTx")
+    private boolean qiandaoTx;
     @SerializedName("flag")
     private String flag;
     @SerializedName("jpdetail")
@@ -28,6 +30,14 @@ public class SignInBean {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public boolean getQiandaoTx() {
+        return qiandaoTx;
+    }
+
+    public void setQiandaoTx(boolean qiandaoTx) {
+        this.qiandaoTx = qiandaoTx;
     }
 
     public String getFlag() {

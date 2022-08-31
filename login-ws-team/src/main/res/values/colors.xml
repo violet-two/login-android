@@ -9,7 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="red">#FA364E</color>
     <color name="redToWhite">#FC8C78</color>
-
+    <color name="green">#00ff00</color>
     <!--login-->
     <color name="gray">#A9A9A9</color>
     <color name="noBlack">#F22D2926</color>

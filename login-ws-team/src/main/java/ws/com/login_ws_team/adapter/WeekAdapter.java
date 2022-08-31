@@ -43,10 +43,14 @@ public class WeekAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
         viewHolder.tv = view.findViewById(R.id.tvWeek);
+        viewHolder.iv_check = view.findViewById(R.id.iv_check);
+        viewHolder.iv_check.setVisibility(View.GONE);
         viewHolder.tv.setText(week[i]);
+
         return view;
     }
     class ViewHolder{
         TextView tv;
+        TextView iv_check;
     }
 }

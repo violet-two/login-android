@@ -10,13 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.coder.vincent.smart_toast.SmartToast;
 
 import org.w3c.dom.Text;
@@ -27,6 +30,7 @@ import ws.com.login_ws_team.R;
 import ws.com.login_ws_team.SignInActivity;
 import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.SignInBean;
+import ws.com.login_ws_team.util.DPUtil;
 import ws.com.login_ws_team.util.DateUtils;
 import ws.com.login_ws_team.util.GetPingMuSizeUtil;
 import ws.com.login_ws_team.util.ToastUtil;
@@ -47,7 +51,11 @@ public class DateAdapter extends BaseAdapter {
 
     public static DateAdapter getInstance(Context context, int[][] days, int year, int month, int[] signInDays, List<SignInBean.JpdetailBean> jpdetail) {
         if (instance == null) {
-            instance = new DateAdapter();
+            synchronized (DateAdapter.class){
+                if(instance == null){
+                    instance = new DateAdapter();
+                }
+            }
         }
 
         int dayNum = 0;
@@ -110,7 +118,10 @@ public class DateAdapter extends BaseAdapter {
 //            View.inflate(viewGroup.getContext(), R.layout.item_information_department, null);
             viewHolder = new InnerHolder(view);
             viewHolder.date_item = view.findViewById(R.id.tvWeek);
-            viewHolder.date_item.setId(i);
+            viewHolder.iv_item = view.findViewById(R.id.iv_check);
+            viewHolder.iv_gift = view.findViewById(R.id.iv_gift);
+//            viewHolder.date_item.setId(i);
+            viewHolder.iv_item.setId(i);
             viewHolder.setStyle();
             view.setTag(viewHolder);
         } else {
@@ -120,7 +131,7 @@ public class DateAdapter extends BaseAdapter {
             for (int mSignInDay : mSignInDays) {
                 if (mSignInDay != 0) {
                     if (mSignInDay == i) {
-                        viewHolder.date_item.setBackgroundResource(R.color.redToWhite);
+                        viewHolder.iv_item.setVisibility(View.VISIBLE);
                     }
                 }
             }
@@ -129,11 +140,12 @@ public class DateAdapter extends BaseAdapter {
             Log.d(TAG, "getView: " + mJpdetail.getMonth() + mMonth);
             if (mJpdetail.getMonth() - 1 == mMonth) {
                 if (i == mJpdetail.getDay()) {
-                    viewHolder.date_item.setBackgroundResource(R.color.noBlack);
-                    viewHolder.date_item.setOnClickListener(view1 -> {
+//                    viewHolder.date_item.setBackgroundResource(R.color.noBlack);
+                    viewHolder.iv_gift.setVisibility(View.VISIBLE);
+                    viewHolder.iv_gift.setOnClickListener(view1 -> {
                         try {
-                            //自定义弹窗视图
                             View textView = initToastView();
+                            //自定义弹窗视图
                             String str = "再连签" + (7 - mJpdetail.getContinuityNum()) + "天即可获得哦";
                             ToastUtil.showSignIn(mContext, str,textView);
                         } catch (Exception e) {
@@ -143,7 +155,7 @@ public class DateAdapter extends BaseAdapter {
             }
         }
         if (i == DateUtils.getCurrentDayOfMonth()) {
-            viewHolder.date_item.setTextColor(Color.rgb(204, 0, 0));//将当天设置背景设置成红色
+            viewHolder.date_item.setBackgroundResource(R.drawable.shape_signin_dataitem);
         }
         if (i < 7 && mDays[i] > 20) {
             viewHolder.date_item.setTextColor(Color.rgb(204, 204, 204));//将上个月的和下个月的设置为灰色
@@ -187,9 +199,9 @@ public class DateAdapter extends BaseAdapter {
             length = mSignInDays.length + 1;
         }
         int[] newArray = new int[length];
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < length-1; i++) {
             if (length == 1) {
-                newArray[i] = 0;
+                newArray[0] = 0;
                 break;
             }
             newArray[i] = mSignInDays[i];
@@ -205,10 +217,14 @@ public class DateAdapter extends BaseAdapter {
      */
     class InnerHolder extends RecyclerView.ViewHolder {
         TextView date_item;
+        TextView iv_item;
+        ImageView iv_gift;
 
         public InnerHolder(@NonNull View itemView) {
             super(itemView);
             this.date_item = itemView.findViewById(R.id.tvWeek);
+            this.iv_item = itemView.findViewById(R.id.iv_check);
+            this.iv_gift = itemView.findViewById(R.id.iv_gift);
         }
 
         public void setStyle() {
@@ -218,7 +234,6 @@ public class DateAdapter extends BaseAdapter {
                 date_item.setTextSize(16);
                 if (mDays.length / 7 > 5) {
                     date_item.setTextSize(12);
-                    date_item.setPadding(4, 4, 4, 4);
                 }
                 return;
             }
