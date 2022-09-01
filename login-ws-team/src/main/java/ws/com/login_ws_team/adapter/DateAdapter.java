@@ -138,6 +138,7 @@ public class DateAdapter extends BaseAdapter {
                 }
             }
         }
+        aaaaa
         if (mDays[i] == DateUtils.getCurrentDayOfMonth()) {
             viewHolder.date_item.setBackgroundResource(R.drawable.shape_signin_dataitem);
         }
