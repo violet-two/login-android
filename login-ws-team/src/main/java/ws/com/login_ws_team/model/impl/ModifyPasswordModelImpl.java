@@ -18,7 +18,7 @@ public class ModifyPasswordModelImpl implements ModifyPasswordModel<IBaseRetCall
     private final API api;
 
     public ModifyPasswordModelImpl() {
-        api = RetrofitUtil.getRetrofit();
+        api = RetrofitUtil.getAPI();
     }
     @Override
     public void modifyPassword(HashMap<String, String> hashMap, IBaseRetCallback<ModifyPasswordBean> modifyCallBack) {

@@ -19,7 +19,7 @@ public class LoginModelImpl implements LoginModel<IBaseRetCallback<LoginBean>> {
     private final API api;
 
     public LoginModelImpl() {
-        api = RetrofitUtil.getRetrofit();
+        api = RetrofitUtil.getAPI();
     }
 
     @Override

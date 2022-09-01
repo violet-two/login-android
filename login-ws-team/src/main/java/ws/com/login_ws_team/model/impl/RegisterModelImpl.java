@@ -17,7 +17,7 @@ public class RegisterModelImpl implements RegisterModel<IBaseRetCallback<Registe
     private final API api;
 
     public RegisterModelImpl() {
-        api = RetrofitUtil.getRetrofit();
+        api = RetrofitUtil.getAPI();
     }
     @Override
     public void register(HashMap<String, String> hashMap, IBaseRetCallback<RegisterBean> loginCallback) {

@@ -17,7 +17,7 @@ public class InformationDepartmentModelImpl implements InformationDepartmentMode
     private final API api;
 
     public InformationDepartmentModelImpl() {
-        api = RetrofitUtil.getRetrofit();
+        api = RetrofitUtil.getAPI();
     }
     @Override
     public void queryInformation(HashMap<String, String> hashMap, IBaseRetCallback<InformationDPBean> informationCallBack) {

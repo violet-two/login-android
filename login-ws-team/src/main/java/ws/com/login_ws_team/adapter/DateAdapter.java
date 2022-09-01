@@ -138,8 +138,8 @@ public class DateAdapter extends BaseAdapter {
         }
         if(mJpdetail!=null){
             Log.d(TAG, "getView: " + mJpdetail.getMonth() + mMonth);
-            if (mJpdetail.getMonth() - 1 == mMonth) {
-                if (i == mJpdetail.getDay()) {
+            if (mJpdetail.getMonth() == mMonth) {
+                if (mDays[i] == mJpdetail.getDay()) {
 //                    viewHolder.date_item.setBackgroundResource(R.color.noBlack);
                     viewHolder.iv_gift.setVisibility(View.VISIBLE);
                     viewHolder.iv_gift.setOnClickListener(view1 -> {
@@ -154,10 +154,10 @@ public class DateAdapter extends BaseAdapter {
                 }
             }
         }
-        if (i == DateUtils.getCurrentDayOfMonth()) {
+        if (mDays[i] == DateUtils.getCurrentDayOfMonth()) {
             viewHolder.date_item.setBackgroundResource(R.drawable.shape_signin_dataitem);
         }
-        if (i < 7 && mDays[i] > 20) {
+        if (i < 7 && mDays[i] > 20&&!(i > 20 && mDays[i] < 15)&&!(i > 20 && mDays[i] < 15)) {
             viewHolder.date_item.setTextColor(Color.rgb(204, 204, 204));//将上个月的和下个月的设置为灰色
         } else if (i > 20 && mDays[i] < 15) {
             viewHolder.date_item.setTextColor(Color.rgb(204, 204, 204));

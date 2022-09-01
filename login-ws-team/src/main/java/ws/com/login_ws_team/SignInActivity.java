@@ -108,10 +108,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         //获取签到的总天数
                         int signInNum = body.getSignDate().size();
                         signInDays = new int[signInNum];
+                        jpdetail = body.getJpdetail();
                         for (int i = 0; i < signInNum; i++) {
                             if (month == body.getSignDate().get(i).getMonth()) {
                                 int day = body.getSignDate().get(i).getDay();
-                                jpdetail = body.getJpdetail();
                                 signInDays[i] = day;
                                 if (signInDays == null) continue;
                             }
