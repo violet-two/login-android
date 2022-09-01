@@ -160,21 +160,6 @@ public class DateAdapter extends BaseAdapter {
         return textView;
     }
 
-//    //判断每一天是否签到
-//    public void isSign(int[] isSignDays, ViewGroup viewGroup) {
-//        for (int day : mDays) {
-//            for (int isSignDay : isSignDays) {
-//                if (day == isSignDay) {
-////                    int id = viewHolder.date_item.getId();
-//                    TextView viewById = viewGroup.findViewById(isSignDay);
-//                    Log.d(TAG, "isSign: "+viewById);
-////                    viewById.setText("a");
-//                }
-//            }
-//        }
-////        notifyDataSetChanged();
-//    }
-
     //将今天的背景改变
     public void changeToday(int today) {
         if (mSignInDays == null) {
