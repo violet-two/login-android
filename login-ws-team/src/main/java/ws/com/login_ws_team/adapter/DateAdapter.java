@@ -3,34 +3,21 @@ package ws.com.login_ws_team.adapter;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.coder.vincent.smart_toast.SmartToast;
-
-import org.w3c.dom.Text;
-
 import java.util.List;
 
 import ws.com.login_ws_team.R;
-import ws.com.login_ws_team.SignInActivity;
-import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.SignInBean;
-import ws.com.login_ws_team.util.DPUtil;
 import ws.com.login_ws_team.util.DateUtils;
 import ws.com.login_ws_team.util.GetPingMuSizeUtil;
 import ws.com.login_ws_team.util.ToastUtil;
