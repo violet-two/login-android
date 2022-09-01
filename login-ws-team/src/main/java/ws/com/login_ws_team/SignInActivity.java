@@ -209,29 +209,40 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void radioClick(View view) {
-        HashMap<String, String> hashMap = new HashMap<>();
-        hashMap.put("type", "signTx");
-        hashMap.put("phone", "13464849459");
-        hashMap.put("qiandaoTX", "false");
+        HashMap<String, String> hashMap1 = new HashMap<>();
+        hashMap1.put("type", "signTx");
+        hashMap1.put("phone", "15337117134");
+        radioStatus = radioStatus == "false" ? "true" : "false";
+        hashMap1.put("qiandaoTx", ""+radioStatus+"");
+        signInModel.signIn(hashMap1, new IBaseRetCallback<SignInBean>() {
+            @Override
+            public void onSucceed(Response<SignInBean> response) {
+            }
+            @Override
+            public void onFailed(Throwable t) {
+            }
+        });
+        hashMap.put("type", "selectSign");
         signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
             @Override
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
-                if("success".equals(result.getMsg())){
+                if(result.getQiandaoTx()){
                     findViewById(R.id.leftRadio).setVisibility(View.GONE);
                     findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
-                    radioStatus = "false";
                 }else{
                     findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
                     findViewById(R.id.rightRadio).setVisibility(View.GONE);
-                    radioStatus = "true";
                 }
             }
 
             @Override
             public void onFailed(Throwable t) {
+
             }
         });
+
+
 //        if (radioStatus == 0) {
 //            findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
 //            findViewById(R.id.rightRadio).setVisibility(View.GONE);
