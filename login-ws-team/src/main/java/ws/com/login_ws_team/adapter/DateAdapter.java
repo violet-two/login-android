@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,8 +118,7 @@ public class DateAdapter extends BaseAdapter {
                         try {
                             View textView = initToastView();
                             //自定义弹窗视图
-                            String str = "再连签" + (7 - mJpdetail.getContinuityNum()) + "天即可获得哦";
-                            ToastUtil.showSignIn(mContext, str,textView);
+                            ToastUtil.showSignIn(mContext, "",textView);
                         } catch (Exception e) {
                         }
                     });
@@ -142,7 +142,14 @@ public class DateAdapter extends BaseAdapter {
         textView.setBackgroundResource(R.drawable.shape_signin_toast);
         textView.setPadding(50,25,50,25);
         textView.setTextColor(Color.WHITE);
-        textView.setText("再连签" + (7 - mJpdetail.getContinuityNum()) + "天即可获得哦");
+        textView.setGravity(Gravity.CENTER);
+        String str;
+        if(7!=mJpdetail.getContinuityNum()){
+            str = "再连签" + (7 - mJpdetail.getContinuityNum()) + "天即可获得哦";
+        }else{
+            str = "您已经连续签到了7天了，下一次签到重新开始";
+        }
+        textView.setText(str);
         textView.setTextSize(18);
         return textView;
     }
