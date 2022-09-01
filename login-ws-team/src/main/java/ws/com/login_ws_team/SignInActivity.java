@@ -49,6 +49,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //设置主题，同时去掉加载应用时的主题
+        setTheme(R.style.Theme_Login);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         gvWeek = findViewById(R.id.gvWeek);
@@ -59,7 +61,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //初始化账号
         hashMap = new HashMap<>();
         hashMap.put("type", "sign");
-        hashMap.put("phone", "13464849459");
+        hashMap.put("phone", "15337117134");
 
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
