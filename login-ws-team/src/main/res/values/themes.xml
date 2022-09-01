@@ -22,4 +22,12 @@
     </style>
     <style name="Theme.Login.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="Theme.Login.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.Splash" parent="Theme.Login">
+        <item name="android:windowBackground">@drawable/qidong</item>
+        <!--设置风格是全屏的-->
+        <item name="android:windowFullscreen">true</item>
+        <!--设置底部虚拟按键-->
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
 </resources>
