@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //设置主题，同时去掉加载应用时的主题
+        setTheme(R.style.Theme_Login);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //设置状态栏背景为透明

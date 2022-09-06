@@ -35,7 +35,6 @@ import ws.com.login_ws_team.api.API;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.InformationDepartmentModelImpl;
 import ws.com.login_ws_team.util.DPUtil;
-import ws.com.login_ws_team.util.HttpUtil;
 import ws.com.login_ws_team.entity.InformationDPBean;
 import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.util.ScreenUtil;
@@ -431,10 +430,11 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
 
     public void quit(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
-        //新建一个activity并清除以前的全部activity
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        this.startActivity(intent);
+//        Intent intent = new Intent(this, MainActivity.class);
+//        //新建一个activity并清除以前的全部activity
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        this.startActivity(intent);
+        finish();
     }
 
     @Override

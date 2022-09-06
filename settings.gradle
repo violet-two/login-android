@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 rootProject.name = "login"
 include ':app'
 include ':login-ws-team'
-include ':login-ws-m'

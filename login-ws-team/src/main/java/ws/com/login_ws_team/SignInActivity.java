@@ -52,6 +52,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //设置主题，同时去掉加载应用时的主题
         setTheme(R.style.Theme_Login);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_sign_in);
         gvWeek = findViewById(R.id.gvWeek);
         //配置week适配器
@@ -73,11 +74,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         initView();
         //设置系统属性
         setSystemStyle();
+        //设置适配
+        setAdapterBySize();
+    }
+
+    private void setAdapterBySize() {
         double pingMuSize = GetPingMuSizeUtil.getPingMuSize(this);
-        Log.d(TAG, "initAdapter: 手机屏幕尺寸"+pingMuSize);
-        if(pingMuSize>4.5){
+        Log.d(TAG, "initAdapter: 手机屏幕尺寸" + pingMuSize);
+        if (pingMuSize > 4.5) {
             gvDate.setVerticalSpacing(30);
-        }else{
+        } else {
             gvDate.setVerticalSpacing(0);
         }
     }
@@ -120,7 +126,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         }
                         //初始化适配器
                         initAdapter();
-                    }else{
+                    } else {
                         getSignInDays();
                     }
                 } catch (Exception e) {
@@ -137,12 +143,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void initAdapter() {
         do {
             dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays, jpdetail);
-            Log.d(TAG, "initAdapter,day: "+days);
-            Log.d(TAG, "initAdapter,year: "+year);
-            Log.d(TAG, "initAdapter,month: "+month);
-            Log.d(TAG, "initAdapter,signInDays: "+signInDays);
-            Log.d(TAG, "initAdapter,jpdetail: "+jpdetail);
-        }while (days==null);
+            Log.d(TAG, "initAdapter,day: " + days);
+            Log.d(TAG, "initAdapter,year: " + year);
+            Log.d(TAG, "initAdapter,month: " + month);
+            Log.d(TAG, "initAdapter,signInDays: " + signInDays);
+            Log.d(TAG, "initAdapter,jpdetail: " + jpdetail);
+        } while (days == null);
         for (int signInDay : signInDays) {
             Log.d(TAG, "initAdapter: " + signInDay);
         }
@@ -166,18 +172,18 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
                 try {
-                    if(result.getQiandaoTx()){
+                    if (result.getQiandaoTx()) {
                         findViewById(R.id.leftRadio).setVisibility(View.GONE);
                         findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
                         radioStatus = "true";
                     }
                     if ("success".equals(result.getFlag()) && result.getNowFlag()) {
-                        tvText.setText("今天已签到，获取奖励×5");
+                        tvText.setText("今天已签到，获取奖励");
                         signInTextView.setText(" ×" + result.getPoints().toString());
                         signInButton.setText("已签到");
-                    }else if("success".equals(result.getFlag()) && !result.getNowFlag()){
+                    } else if ("success".equals(result.getFlag()) && !result.getNowFlag()) {
                         signInTextView.setText(" ×" + result.getPoints().toString());
-                    }else{
+                    } else {
                         initView();
                     }
                 } catch (Exception e) {
@@ -213,11 +219,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         hashMap1.put("type", "signTx");
         hashMap1.put("phone", "15337117134");
         radioStatus = radioStatus == "false" ? "true" : "false";
-        hashMap1.put("qiandaoTx", ""+radioStatus+"");
+        hashMap1.put("qiandaoTx", "" + radioStatus + "");
         signInModel.signIn(hashMap1, new IBaseRetCallback<SignInBean>() {
             @Override
             public void onSucceed(Response<SignInBean> response) {
             }
+
             @Override
             public void onFailed(Throwable t) {
             }
@@ -227,10 +234,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
-                if(result.getQiandaoTx()){
+                if (result.getQiandaoTx()) {
                     findViewById(R.id.leftRadio).setVisibility(View.GONE);
                     findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
                     findViewById(R.id.rightRadio).setVisibility(View.GONE);
                 }
@@ -267,10 +274,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     public void onSucceed(Response<SignInBean> response) {
                         SignInBean result = response.body();
                         if ("success".equals(result.getFlag())) {
-                            tvText.setText("今天已签到，获取奖励");
                             signInButton.setText("已签到");
                             hashMap.put("type", "selectSign");
-                            ToastUtil.show(SignInActivity.this,result.getMsg());
+                            tvText.setText("今天已签到，获取奖励");
+                            ToastUtil.show(SignInActivity.this, result.getMsg());
                             signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                                 @Override
                                 public void onSucceed(Response<SignInBean> response) {
