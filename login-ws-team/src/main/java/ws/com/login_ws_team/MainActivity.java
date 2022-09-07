@@ -15,10 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
 
 import retrofit2.Response;
+import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.UserManage;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.LoginModelImpl;
-import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.util.MD5Util;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
