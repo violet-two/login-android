@@ -1,5 +1,7 @@
 package ws.com.login_ws_team.adapter;
 
+import android.os.Build;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -7,7 +9,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -123,6 +129,28 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             name.setText(informationDPUtil.getRegname());
             dp.setText(informationDPUtil.getDepartment());
             role.setText(informationDPUtil.getUserStatus());
+            //自适应字体大小
+            setTextFontSize(phone);
+            setTextFontSize(name);
+            setTextFontSize(dp);
+            setTextFontSize(role);
+        }
+
+        private void setTextFontSize(TextView view) {
+            view.post(new Runnable() {
+                @Override
+                public void run() {
+                    //获取省略的字符数，0表示没和省略
+                    int ellipsisCount = view.getLayout().getEllipsisCount(view.getLineCount() - 1);
+                    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+                        if(ellipsisCount>0){
+                            view.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                            view.setAutoSizeTextTypeUniformWithConfiguration(8, 18,
+                                    1, TypedValue.COMPLEX_UNIT_SP);
+                        }
+                    }
+                }
+            });
         }
     }
     class FooterViewHolder extends RecyclerView.ViewHolder {

@@ -155,6 +155,17 @@ public class DateAdapter extends BaseAdapter {
     }
 
     //将今天的背景改变
+    public void changeSetGift(int day,int month,int year,int num,int conNum) {
+        mJpdetail.setDay(day);
+        mJpdetail.setContinuityNum(conNum);
+        mJpdetail.setMonth(month);
+        mJpdetail.setYear(year);
+        mJpdetail.setNum(num);
+        notifyDataSetChanged();
+    }
+
+
+    //将今天的背景改变
     public void changeToday(int today) {
         if (mSignInDays == null) {
             length = 1;

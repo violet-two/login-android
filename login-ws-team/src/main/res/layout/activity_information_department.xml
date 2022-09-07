@@ -35,6 +35,22 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/contentBoxByDP"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomBox"
+        android:layout_below="@+id/topBox"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:text="您现在还没有权限查询，请联系管理员"
+            android:textSize="18sp"></TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/contentBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomBox"

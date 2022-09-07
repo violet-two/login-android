@@ -21,7 +21,7 @@ public class ToastUtil {
             toast = Toast.makeText(context, desc, Toast.LENGTH_SHORT);
         }
         Log.d(TAG, "showSignIn: "+toast.getGravity());
-        showTime(1000);
+        toast.show();
     }
 
     public static Toast showSignIn(Context context, String desc, View view) {

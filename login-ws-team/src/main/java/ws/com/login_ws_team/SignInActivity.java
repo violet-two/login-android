@@ -1,9 +1,5 @@
 package ws.com.login_ws_team;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +8,9 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -62,7 +61,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //初始化账号
         hashMap = new HashMap<>();
         hashMap.put("type", "sign");
-        hashMap.put("phone", "15337117134");
+        hashMap.put("phone", "17611111111");
 
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
@@ -142,6 +141,19 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initAdapter() {
         do {
+            if (jpdetail == null) {
+                List<SignInBean.JpdetailBean> list = new ArrayList<>();
+                SignInBean.JpdetailBean jpdetailBeans = new SignInBean.JpdetailBean();
+                jpdetailBeans.setDay(today + 6);
+                jpdetailBeans.setMonth(month);
+                jpdetailBeans.setYear(year);
+                jpdetailBeans.setNum(0);
+                jpdetailBeans.setContinuityNum(0);
+                list.add(jpdetailBeans);
+                Log.d(TAG, "initAdapter: "+list);
+                dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays, list);
+                break;
+            }
             dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays, jpdetail);
             Log.d(TAG, "initAdapter,day: " + days);
             Log.d(TAG, "initAdapter,year: " + year);
@@ -152,6 +164,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         for (int signInDay : signInDays) {
             Log.d(TAG, "initAdapter: " + signInDay);
         }
+//        if(jpdetail==null){
+//            dateAdapter.changeSetGift(today+6,month,year,0,0);
+//        }
         gvDate.setAdapter(dateAdapter);
 //        gvDate.setEnabled(false);
     }
@@ -283,6 +298,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                                 public void onSucceed(Response<SignInBean> response) {
                                     signInTextView.setText(" ×" + response.body().getPoints().toString());
                                     dateAdapter.changeToday(today);
+                                    dateAdapter.changeSetGift(response.body().getJpdetail().get(0).getDay(),
+                                            response.body().getJpdetail().get(0).getMonth(),
+                                            response.body().getJpdetail().get(0).getYear(),
+                                            response.body().getJpdetail().get(0).getNum(),
+                                            response.body().getJpdetail().get(0).getContinuityNum());
                                 }
 
                                 @Override

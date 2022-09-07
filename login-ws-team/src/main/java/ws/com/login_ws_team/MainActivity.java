@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
 
 import retrofit2.Response;
+import ws.com.login_ws_team.entity.UserManage;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.LoginModelImpl;
 import ws.com.login_ws_team.entity.LoginBean;
@@ -37,13 +38,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //设置主题，同时去掉加载应用时的主题
-        setTheme(R.style.Theme_Login);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //设置状态栏背景为透明
         StatusBarUtil.getStatusAToTransparent(this);
-
         user = findViewById(R.id.et_user);
         user.setFocusable(true);
         user.requestFocus();
@@ -144,18 +142,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
-                if ("".equals(user.getText().toString())) {
+                String phone = user.getText().toString();
+                String mPassword = password.getText().toString();
+                if ("".equals(phone)) {
                     ToastUtil.show(this, "用户名不能为空");
                     return;
                 }
-                if ("".equals(password.getText().toString())) {
+                if ("".equals(mPassword)) {
                     ToastUtil.show(this, "密码不能为空");
                     return;
                 }
                 progressDialog.show();
                 HashMap<String, String> params = new HashMap<>();
-                params.put("phone", user.getText().toString());
-                params.put("password", MD5Util.md5s(password.getText().toString()));
+                params.put("phone", phone);
+                params.put("password", MD5Util.md5s(mPassword));
                 loginModel.login(params, new IBaseRetCallback<LoginBean>() {
                     @Override
                     public void onSucceed(Response<LoginBean> response) {
@@ -167,6 +167,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("data", result);
                             startActivity(intent);
+                            UserManage.getInstance().saveUserInfo(MainActivity.this,result);
+                            finish();
                         } else {
                             progressDialog.dismiss();
                             ToastUtil.show(MainActivity.this, result.getData().toString());

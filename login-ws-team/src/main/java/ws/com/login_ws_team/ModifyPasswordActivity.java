@@ -64,7 +64,11 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
                     return;
                 }
 //                checkPassword();
-
+            }else{
+                if((!"".equals(mAgainPassword.getText().toString()))&&!mNewPassword.getText().toString().equals(mAgainPassword.getText().toString())){
+                    ToastUtil.show(this, "2次输入密码不一致");
+                    return ;
+                }
             }
         });
         mAgainPassword.setOnFocusChangeListener((view, b) -> {
@@ -79,6 +83,11 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
                     return;
                 }
 //                checkPassword();
+            }else{
+                if((!"".equals(mAgainPassword.getText().toString()))&&!mNewPassword.getText().toString().equals(mAgainPassword.getText().toString())){
+                    ToastUtil.show(this, "2次输入密码不一致");
+                    return ;
+                }
             }
         });
         findViewById(R.id.modify_password).setOnClickListener(this);

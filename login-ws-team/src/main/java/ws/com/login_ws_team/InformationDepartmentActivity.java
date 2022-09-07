@@ -3,7 +3,6 @@ package ws.com.login_ws_team;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,17 +25,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit2.Call;
 import retrofit2.Response;
 import ws.com.login_ws_team.adapter.InformationAdapter;
-//import ws.com.login_ws_team.adapter.UpPullAdapter;
-import ws.com.login_ws_team.api.API;
-//import ws.com.login_ws_team.loginService.InformationDP;
+import ws.com.login_ws_team.entity.InformationDPBean;
+import ws.com.login_ws_team.entity.LoginBean;
+import ws.com.login_ws_team.entity.UserManage;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.InformationDepartmentModelImpl;
 import ws.com.login_ws_team.util.DPUtil;
-import ws.com.login_ws_team.entity.InformationDPBean;
-import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
@@ -57,6 +53,8 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private SwipeRefreshLayout sr;
     private InformationDepartmentModelImpl informationDepartmentModel;
     private HashMap<String, String> hashMap;
+    private LinearLayout contentBox;
+    private LinearLayout contentBoxByDP;
     //    private UpPullAdapter upPullAdapter;
 
     @Override
@@ -64,7 +62,10 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_information_department);
 
+        informationDepartmentModel = new InformationDepartmentModelImpl();
         sr = findViewById(R.id.sr);
+        contentBox = findViewById(R.id.contentBox);
+        contentBoxByDP = findViewById(R.id.contentBoxByDP);
         informationListRV = findViewById(R.id.informationListRV);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -289,7 +290,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                         hashMap.put("phone", "");
                         //上拉刷新重置数据
                         initData(hashMap);
-                        ToastUtil.show(InformationDepartmentActivity.this,"成功刷新");
+                        ToastUtil.show(InformationDepartmentActivity.this, "成功刷新");
                         //停止刷新
                         sr.setRefreshing(false);
                     }
@@ -323,7 +324,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) topBox.getLayoutParams();
         lp.setMargins(0, statusBarHeight, 0, 0);
         topBox.setLayoutParams(lp);
-        //-----------------------------
+//        -----------------------------
         bottomBox = findViewById(R.id.bottomBox);
         //ture是没有底部导航栏
         boolean b = StatusBarUtil.checkHasNavigationBar(this);
@@ -336,21 +337,28 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         }
     }
 
-    private void initData(HashMap<String, String> hashMap) {
+    private synchronized void initData(HashMap<String, String> hashMap) {
         allView = findViewById(R.id.allView);
-        informationDepartmentModel = new InformationDepartmentModelImpl();
         informationDepartmentModel.queryInformation(hashMap, new IBaseRetCallback<InformationDPBean>() {
             @Override
             public void onSucceed(Response<InformationDPBean> response) {
                 InformationDPBean body = response.body();
-                if("fail".equals(body.getFlag())){
+                if ("fail".equals(body.getFlag())) {
                     ToastUtil.show(InformationDepartmentActivity.this, body.getData().toString());
-                    return ;
+                    informationListRV.setAdapter(null);
+                    return;
                 }
+
                 Gson gson = new Gson();
                 Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
                 }.getType();
                 List<InformationDPBean.DataBean> data = gson.fromJson(body.getData().toString(), type);
+//                for (int i = 0; i < data.size(); i++) {
+//                    data.get(i).setDepartment("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+//                    data.get(i).setRegname("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+//                    data.get(i).setPhone("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+//                    data.get(i).setUserStatus("图一面最多可以放多少图一面最多可以放多少多少图一面最");
+//                }
                 Log.d(TAG, "onSucceed:login " + data);
                 //获取informationListRV的视图一面最多可以放多少个item
                 int itemNum = getInformationListRVHeight();
@@ -392,6 +400,11 @@ public class InformationDepartmentActivity extends AppCompatActivity {
             selfStatus = info.get(0).getStatus();
             selfPhone = info.get(0).getPhone();
         }
+
+        if (selfStatus == 1) {
+            contentBox.setVisibility(View.GONE);
+            contentBoxByDP.setVisibility(View.VISIBLE);
+        }
     }
 
 
@@ -430,11 +443,12 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
 
     public void quit(View view) {
-//        Intent intent = new Intent(this, MainActivity.class);
-//        //新建一个activity并清除以前的全部activity
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        this.startActivity(intent);
-        finish();
+        UserManage.getInstance().saveUserInfo(InformationDepartmentActivity.this,null);
+        Intent intent = new Intent(this, MainActivity.class);
+        //新建一个activity并清除以前的全部activity
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        this.startActivity(intent);
+//        finish();
     }
 
     @Override
