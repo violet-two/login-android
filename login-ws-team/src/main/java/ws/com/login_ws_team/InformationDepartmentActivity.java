@@ -1,11 +1,14 @@
 package ws.com.login_ws_team;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -113,8 +116,8 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
     static int showEndNum = 0;
     int lastVisibleItem = 0;
-
-    private synchronized void handlerUpPullOnload() {
+    private long lastonScrollTime=0;//全局变量
+    private void handlerUpPullOnload() {
         informationListRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -131,7 +134,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
             }
 
             @Override
-            public synchronized void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 List<InformationDPBean.DataBean> list = InformationAdapter.getList();
                 InformationAdapter instance = InformationAdapter.getInstance(list);
@@ -140,6 +143,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             instance.changeMoreStatus(2);
+                            return;
                         }
                     });
                     return;
@@ -149,69 +153,69 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             instance.changeMoreStatus(0);
+                            return;
                         }
                     });
                 }
-                new Handler().postDelayed(new Runnable() {
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("managerPhone", selfPhone);
+                hashMap.put("phone", "");
+//                long time= SystemClock.uptimeMillis();//局部变量
+//                if (time-lastonScrollTime<=1000) {
+//                    return;
+//                }else {
+//                    lastonScrollTime=time;
+//                }
+                informationDepartmentModel.queryInformation(hashMap, new IBaseRetCallback<InformationDPBean>() {
                     @Override
-                    public void run() {
-                        HashMap<String, String> hashMap = new HashMap<>();
-                        hashMap.put("managerPhone", selfPhone);
-                        hashMap.put("phone", "");
-                        informationDepartmentModel.queryInformation(hashMap, new IBaseRetCallback<InformationDPBean>() {
-                            @Override
-                            public void onSucceed(Response<InformationDPBean> response) {
-                                InformationDPBean body = response.body();
-                                List<InformationDPBean.DataBean> info;
-                                int showMaxNum = getInformationListRVHeight();
-                                InformationAdapter instance;
-                                if ("success".equals(body.getFlag())) {
-                                    Gson gson = new Gson();
-                                    Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
-                                    }.getType();
-                                    info = gson.fromJson(body.getData().toString(), type);
-                                    synchronized (info) {
-                                        //计算页面最大可以显示几条数据
-                                        if (showMaxNum == 0) {
-                                            int height = informationListRV.getHeight();
-                                            showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
-                                        }
+                    public void onSucceed(Response<InformationDPBean> response) {
+                        InformationDPBean body = response.body();
+                        List<InformationDPBean.DataBean> info;
+                        int showMaxNum = getInformationListRVHeight();
+                        InformationAdapter instance;
+                        if ("success".equals(body.getFlag())) {
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
+                            }.getType();
+                            info = gson.fromJson(body.getData().toString(), type);
+                            synchronized (info) {
+                                //计算页面最大可以显示几条数据
+                                if (showMaxNum == 0) {
+                                    int height = informationListRV.getHeight();
+                                    showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
+                                }
 
-                                        //获取现在适配器里面数据的长度
-                                        List<InformationDPBean.DataBean> list = InformationAdapter.getList();
-                                        synchronized (list) {
-                                            //获取适配器
-                                            instance = InformationAdapter.getInstance(list);
-                                            synchronized (instance) {
-                                                int size = list.size();
-                                                showEndNum = size + 1;
-                                                if (showEndNum > info.size()) {
-                                                    if (size > showMaxNum) {
-                                                        return;
-                                                    }
-                                                    List<InformationDPBean.DataBean> dataBeans = info.subList(size, info.size());
-                                                    //添加数据
-                                                    instance.addHeaderItem(dataBeans);
-
-//                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
-                                                    return;
-                                                }
-                                                //从全部数据中获取要加载的数据段
-                                                List<InformationDPBean.DataBean> dataBeans = info.subList(size, showEndNum);
-                                                instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
-                                                //添加数据
-                                                instance.addHeaderItem(dataBeans);
-                                            }
+                                //获取现在适配器里面数据的长度
+                                List<InformationDPBean.DataBean> list = InformationAdapter.getList();
+                                //获取适配器
+                                instance = InformationAdapter.getInstance(list);
+                                synchronized (instance) {
+                                    int size = list.size();
+                                    showEndNum = size + 5;
+                                    if (showEndNum > info.size()) {
+                                        if (size > showMaxNum) {
+                                            return;
                                         }
+                                        List<InformationDPBean.DataBean> dataBeans = info.subList(size, info.size());
+                                        //添加数据
+                                        instance.addHeaderItem(dataBeans);
+                                        return;
                                     }
+                                    //从全部数据中获取要加载的数据段
+                                    List<InformationDPBean.DataBean> dataBeans = info.subList(size, showEndNum);
+                                    instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
+                                    //添加数据
+                                    instance.addHeaderItem(dataBeans);
                                 }
                             }
+                        }
+                    }
 
-                            @Override
-                            public void onFailed(Throwable t) {
+                    @Override
+                    public void onFailed(Throwable t) {
 
-                            }
-                        });
+                    }
+                });
 //                        Handler handler = new Handler() {
 //                            private List<InformationDPBean.DataBean> info;
 //                            private int showMaxNum;
@@ -267,8 +271,6 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 //                        API api = HttpUtil.getRetrofit().create(API.class);
 //                        Call<InformationDPBean> task = api.queryDPAll(hashMap);
 //                        HttpUtil.queryTask(handler, task);
-                    }
-                }, 1000);
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 //最后一个可见的ITEM
@@ -283,21 +285,21 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 //        initData(hashMap);
         sr.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public synchronized void onRefresh() {
+            public void onRefresh() {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        hashMap.put("phone", "");
                         //上拉刷新重置数据
                         initData(hashMap);
                         ToastUtil.show(InformationDepartmentActivity.this, "成功刷新");
                         //停止刷新
                         sr.setRefreshing(false);
+                        //设置searchView的输入框查询字段
+                        searchView.setQuery("", true);
                     }
                 }, 0);
             }
         });
-
     }
 
     private void initLoginData() {
@@ -359,7 +361,6 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 //                    data.get(i).setPhone("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 //                    data.get(i).setUserStatus("图一面最多可以放多少图一面最多可以放多少多少图一面最");
 //                }
-                Log.d(TAG, "onSucceed:login " + data);
                 //获取informationListRV的视图一面最多可以放多少个item
                 int itemNum = getInformationListRVHeight();
                 if (data.size() > itemNum) {
@@ -407,7 +408,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         }
     }
 
-
+    private long lastChangeTextTime=0;//全局变量
     public void searchViewStyle() {
         //设置输入框的图标不可见
         searchView.setSubmitButtonEnabled(false);
@@ -425,16 +426,24 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                 hashMap.put("phone", query);
                 initData(hashMap);
 //                InformationDP.informationDP(InformationDepartmentActivity.this, allView, hashMap);
-                return true;
+                return false;
 
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
+                hashMap.put("phone", newText);
                 if (selfStatus == 1) {
                     return false;
                 }
-                hashMap.put("phone", newText);
+                if ("".equals(newText)) {
+                    initData(hashMap);
+                }
+                long time=SystemClock.uptimeMillis();//局部变量
+                if (time-lastChangeTextTime<=1000) {
+                    return false;
+                }else {
+                    lastChangeTextTime=time;
+                }
                 initData(hashMap);
                 return false;
             }
@@ -443,7 +452,9 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
 
     public void quit(View view) {
-        UserManage.getInstance().saveUserInfo(InformationDepartmentActivity.this,null);
+
+        //清除SharedPreferences里面的数据
+        UserManage.getInstance().saveUserInfo(InformationDepartmentActivity.this, null);
         Intent intent = new Intent(this, MainActivity.class);
         //新建一个activity并清除以前的全部activity
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

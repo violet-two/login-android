@@ -54,9 +54,6 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mData = data;
     }
 
-//    public InformationAdapter(List<InformationDPUtil.DataBean> mData) {
-//        this.mData = mData;
-//    }
 
     @NonNull
     @Override
@@ -92,12 +89,10 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        System.out.println("adapter"+mData.size());
         return mData.size()+1;
     }
     @Override
     public int getItemViewType(int position) {
-
         if (position + 1 == getItemCount()) {
             //最后一个item设置为footerView
             return TYPE_FOOTER;
@@ -173,6 +168,10 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
+    public void updateList(List<InformationDPBean.DataBean> data){
+        mData = data;
+        notifyDataSetChanged();
+    }
 
     public void changeMoreStatus(int status){
         mLoadMoreStatus=status;

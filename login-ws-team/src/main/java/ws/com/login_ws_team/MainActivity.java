@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             intent.putExtra("data", result);
                             startActivity(intent);
+                            //登录成功就数据存储到SharedPreferences里面去
                             UserManage.getInstance().saveUserInfo(MainActivity.this,result);
                             finish();
                         } else {

@@ -15,7 +15,7 @@ public class SplashActivity extends AppCompatActivity {
         setTheme(R.style.Theme_Login);
         super.onCreate(savedInstanceState);
 
-        if (UserManage.getInstance().hasUserInfo(this))//自动登录判断，SharePrefences中有数据，则跳转到主页，没数据则跳转到登录页
+        if (UserManage.getInstance().hasUserInfo(this))//自动登录判断，SharedPreferences中有数据，则跳转到主页，没数据则跳转到登录页
         {
             Intent intent = new Intent(this, InformationDepartmentActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
