@@ -16,19 +16,23 @@
             android:layout_alignParentLeft="true"
             android:gravity="center_vertical"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/name"
                 android:layout_width="150dp"
                 android:layout_height="30dp"
                 android:gravity="center_vertical"
+                android:lines="1"
+                android:singleLine="true"
                 android:text="名字"
-                android:textStyle="bold"
-                android:textSize="@dimen/s16sp"></TextView>
+                android:textSize="@dimen/s16sp"
+                android:textStyle="bold"></TextView>
+
             <TextView
-                android:layout_marginTop="2dp"
                 android:id="@+id/phone"
                 android:layout_width="150dp"
                 android:layout_height="20dp"
+                android:layout_marginTop="2dp"
                 android:gravity="center_vertical"
                 android:text="电话号码"
                 android:textSize="@dimen/s14sp"></TextView>
@@ -40,7 +44,9 @@
             android:layout_height="60dp"
             android:layout_toLeftOf="@id/dp"
             android:layout_toRightOf="@id/idBox"
+            android:ellipsize="end"
             android:gravity="center_vertical"
+            android:lines="3"
             android:text="身份"
             android:textSize="@dimen/s16sp"
             android:textStyle="bold"></TextView>
@@ -50,9 +56,11 @@
             android:layout_width="100dp"
             android:layout_height="60dp"
             android:layout_alignParentRight="true"
+            android:ellipsize="end"
             android:gravity="center"
+            android:lines="3"
             android:text="部门"
-            android:textStyle="bold"
-            android:textSize="@dimen/s16sp"></TextView>
+            android:textSize="@dimen/s16sp"
+            android:textStyle="bold"></TextView>
     </RelativeLayout>
 </LinearLayout>

@@ -1,9 +1,5 @@
 package ws.com.login_ws_team;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +8,9 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,6 +51,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //设置主题，同时去掉加载应用时的主题
         setTheme(R.style.Theme_Login);
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_sign_in);
         gvWeek = findViewById(R.id.gvWeek);
         //配置week适配器
@@ -73,11 +73,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         initView();
         //设置系统属性
         setSystemStyle();
+        //设置适配
+        setAdapterBySize();
+    }
+
+    private void setAdapterBySize() {
         double pingMuSize = GetPingMuSizeUtil.getPingMuSize(this);
-        Log.d(TAG, "initAdapter: 手机屏幕尺寸"+pingMuSize);
-        if(pingMuSize>4.5){
+        Log.d(TAG, "initAdapter: 手机屏幕尺寸" + pingMuSize);
+        if (pingMuSize > 4.5) {
             gvDate.setVerticalSpacing(30);
-        }else{
+        } else {
             gvDate.setVerticalSpacing(0);
         }
     }
@@ -101,6 +106,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 SignInBean body = response.body();
 //                Log.d(TAG, "onSucceed: "+body.getFlag());
                 try {
+                    if(body==null){
+                        signInDays = new int[0];
+                        initAdapter();
+                    }
                     if ("success".equals(body.getFlag())) {
                         if (body.getSignDate() == null) {
                             signInDays = new int[0];
@@ -120,7 +129,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         }
                         //初始化适配器
                         initAdapter();
-                    }else{
+                    } else {
                         getSignInDays();
                     }
                 } catch (Exception e) {
@@ -136,15 +145,35 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initAdapter() {
         do {
+            if (jpdetail == null) {
+                List<SignInBean.JpdetailBean> list = new ArrayList<>();
+                SignInBean.JpdetailBean jpdetailBeans = new SignInBean.JpdetailBean();
+                jpdetailBeans.setDay(today + 6);
+                jpdetailBeans.setMonth(month);
+                jpdetailBeans.setYear(year);
+                jpdetailBeans.setNum(0);
+                jpdetailBeans.setContinuityNum(0);
+                list.add(jpdetailBeans);
+                Log.d(TAG, "initAdapter: "+list);
+                dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays, list);
+                break;
+            }
             dateAdapter = DateAdapter.getInstance(SignInActivity.this, days, year, month, signInDays, jpdetail);
-            Log.d(TAG, "initAdapter,day: "+days);
-            Log.d(TAG, "initAdapter,year: "+year);
-            Log.d(TAG, "initAdapter,month: "+month);
-            Log.d(TAG, "initAdapter,signInDays: "+signInDays);
-            Log.d(TAG, "initAdapter,jpdetail: "+jpdetail);
-        }while (days==null);
+            Log.d(TAG, "initAdapter,day: " + days);
+            Log.d(TAG, "initAdapter,year: " + year);
+            Log.d(TAG, "initAdapter,month: " + month);
+            Log.d(TAG, "initAdapter,signInDays: " + signInDays);
+            Log.d(TAG, "initAdapter,jpdetail: " + jpdetail);
+        } while (days == null);
         for (int signInDay : signInDays) {
             Log.d(TAG, "initAdapter: " + signInDay);
+        }
+        if(jpdetail==null){
+            dateAdapter.changeSetGift(today+6,month,year,0,0);
+        }else{
+            if(jpdetail.get(0).getDay()<DateUtils.getDaysOfMonth(year,month)){
+                dateAdapter.changeSetGift(today+6,month,year,0,0);
+            }
         }
         gvDate.setAdapter(dateAdapter);
 //        gvDate.setEnabled(false);
@@ -166,18 +195,18 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
                 try {
-                    if(result.getQiandaoTx()){
+                    if (result.getQiandaoTx()) {
                         findViewById(R.id.leftRadio).setVisibility(View.GONE);
                         findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
                         radioStatus = "true";
                     }
                     if ("success".equals(result.getFlag()) && result.getNowFlag()) {
-                        tvText.setText("今天已签到，获取奖励×5");
+                        tvText.setText("今天已签到，获取奖励");
                         signInTextView.setText(" ×" + result.getPoints().toString());
                         signInButton.setText("已签到");
-                    }else if("success".equals(result.getFlag()) && !result.getNowFlag()){
+                    } else if ("success".equals(result.getFlag()) && !result.getNowFlag()) {
                         signInTextView.setText(" ×" + result.getPoints().toString());
-                    }else{
+                    } else {
                         initView();
                     }
                 } catch (Exception e) {
@@ -211,13 +240,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void radioClick(View view) {
         HashMap<String, String> hashMap1 = new HashMap<>();
         hashMap1.put("type", "signTx");
-        hashMap1.put("phone", "15337117134");
+        hashMap1.put("phone", hashMap.get("phone"));
         radioStatus = radioStatus == "false" ? "true" : "false";
-        hashMap1.put("qiandaoTx", ""+radioStatus+"");
+        hashMap1.put("qiandaoTx", "" + radioStatus + "");
         signInModel.signIn(hashMap1, new IBaseRetCallback<SignInBean>() {
             @Override
             public void onSucceed(Response<SignInBean> response) {
             }
+
             @Override
             public void onFailed(Throwable t) {
             }
@@ -227,10 +257,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onSucceed(Response<SignInBean> response) {
                 SignInBean result = response.body();
-                if(result.getQiandaoTx()){
+                if (result.getQiandaoTx()) {
                     findViewById(R.id.leftRadio).setVisibility(View.GONE);
                     findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
                     findViewById(R.id.rightRadio).setVisibility(View.GONE);
                 }
@@ -241,20 +271,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
-
-
-//        if (radioStatus == 0) {
-//            findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
-//            findViewById(R.id.rightRadio).setVisibility(View.GONE);
-//            radioStatus = 1;
-//            return;
-//        }
-//        if (radioStatus == 1) {
-//            findViewById(R.id.leftRadio).setVisibility(View.GONE);
-//            findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
-//            radioStatus = 0;
-//            return;
-//        }
     }
 
     @Override
@@ -267,15 +283,24 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     public void onSucceed(Response<SignInBean> response) {
                         SignInBean result = response.body();
                         if ("success".equals(result.getFlag())) {
-                            tvText.setText("今天已签到，获取奖励");
                             signInButton.setText("已签到");
                             hashMap.put("type", "selectSign");
-                            ToastUtil.show(SignInActivity.this,result.getMsg());
+                            tvText.setText("今天已签到，获取奖励");
+                            ToastUtil.show(SignInActivity.this, result.getMsg());
                             signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                                 @Override
                                 public void onSucceed(Response<SignInBean> response) {
                                     signInTextView.setText(" ×" + response.body().getPoints().toString());
                                     dateAdapter.changeToday(today);
+                                    if(response.body().getJpdetail().get(0).getContinuityNum()==7){
+                                        dateAdapter.changeSetGift(today+6,month,year,0,0);
+                                        gvDate.setAdapter(dateAdapter);
+                                    }
+//                                    dateAdapter.changeSetGift(response.body().getJpdetail().get(0).getDay(),
+//                                            response.body().getJpdetail().get(0).getMonth(),
+//                                            response.body().getJpdetail().get(0).getYear(),
+//                                            response.body().getJpdetail().get(0).getNum(),
+//                                            response.body().getJpdetail().get(0).getContinuityNum());
                                 }
 
                                 @Override
