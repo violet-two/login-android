@@ -154,13 +154,15 @@ public class DateAdapter extends BaseAdapter {
         return textView;
     }
 
-    //将今天的背景改变
+    //将礼物的背景改变
     public void changeSetGift(int day,int month,int year,int num,int conNum) {
+        SignInBean.JpdetailBean mJpdetail = new SignInBean.JpdetailBean();
         mJpdetail.setDay(day);
         mJpdetail.setContinuityNum(conNum);
         mJpdetail.setMonth(month);
         mJpdetail.setYear(year);
         mJpdetail.setNum(num);
+        this.mJpdetail = mJpdetail;
         notifyDataSetChanged();
     }
 

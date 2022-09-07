@@ -61,7 +61,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //初始化账号
         hashMap = new HashMap<>();
         hashMap.put("type", "sign");
-        hashMap.put("phone", "17611111111");
+        hashMap.put("phone", "19172434201");
 
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
@@ -164,9 +164,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         for (int signInDay : signInDays) {
             Log.d(TAG, "initAdapter: " + signInDay);
         }
-//        if(jpdetail==null){
-//            dateAdapter.changeSetGift(today+6,month,year,0,0);
-//        }
+        if(jpdetail==null){
+            dateAdapter.changeSetGift(today+6,month,year,0,0);
+        }else{
+            if(jpdetail.get(0).getDay()<DateUtils.getDaysOfMonth(year,month)){
+                dateAdapter.changeSetGift(today+6,month,year,0,0);
+            }
+        }
         gvDate.setAdapter(dateAdapter);
 //        gvDate.setEnabled(false);
     }
@@ -232,7 +236,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void radioClick(View view) {
         HashMap<String, String> hashMap1 = new HashMap<>();
         hashMap1.put("type", "signTx");
-        hashMap1.put("phone", "15337117134");
+        hashMap1.put("phone", hashMap.get("phone"));
         radioStatus = radioStatus == "false" ? "true" : "false";
         hashMap1.put("qiandaoTx", "" + radioStatus + "");
         signInModel.signIn(hashMap1, new IBaseRetCallback<SignInBean>() {
@@ -263,20 +267,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
             }
         });
-
-
-//        if (radioStatus == 0) {
-//            findViewById(R.id.leftRadio).setVisibility(View.VISIBLE);
-//            findViewById(R.id.rightRadio).setVisibility(View.GONE);
-//            radioStatus = 1;
-//            return;
-//        }
-//        if (radioStatus == 1) {
-//            findViewById(R.id.leftRadio).setVisibility(View.GONE);
-//            findViewById(R.id.rightRadio).setVisibility(View.VISIBLE);
-//            radioStatus = 0;
-//            return;
-//        }
     }
 
     @Override
@@ -298,11 +288,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                                 public void onSucceed(Response<SignInBean> response) {
                                     signInTextView.setText(" ×" + response.body().getPoints().toString());
                                     dateAdapter.changeToday(today);
-                                    dateAdapter.changeSetGift(response.body().getJpdetail().get(0).getDay(),
-                                            response.body().getJpdetail().get(0).getMonth(),
-                                            response.body().getJpdetail().get(0).getYear(),
-                                            response.body().getJpdetail().get(0).getNum(),
-                                            response.body().getJpdetail().get(0).getContinuityNum());
+                                    if(response.body().getJpdetail().get(0).getContinuityNum()==7){
+                                        dateAdapter.changeSetGift(today+6,month,year,0,0);
+                                        gvDate.setAdapter(dateAdapter);
+                                    }
+//                                    dateAdapter.changeSetGift(response.body().getJpdetail().get(0).getDay(),
+//                                            response.body().getJpdetail().get(0).getMonth(),
+//                                            response.body().getJpdetail().get(0).getYear(),
+//                                            response.body().getJpdetail().get(0).getNum(),
+//                                            response.body().getJpdetail().get(0).getContinuityNum());
                                 }
 
                                 @Override
