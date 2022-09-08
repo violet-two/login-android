@@ -61,7 +61,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //初始化账号
         hashMap = new HashMap<>();
         hashMap.put("type", "sign");
-        hashMap.put("phone", "19172434201");
+        hashMap.put("phone", "15337117134");
 
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
@@ -106,6 +106,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 SignInBean body = response.body();
 //                Log.d(TAG, "onSucceed: "+body.getFlag());
                 try {
+                    if(body==null){
+                        signInDays = new int[0];
+                        initAdapter();
+                    }
                     if ("success".equals(body.getFlag())) {
                         if (body.getSignDate() == null) {
                             signInDays = new int[0];

@@ -15,10 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
 
 import retrofit2.Response;
+import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.UserManage;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.LoginModelImpl;
-import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.util.MD5Util;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //设置主题，同时去掉加载应用时的主题
+        setTheme(R.style.Theme_Login);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //设置状态栏背景为透明
