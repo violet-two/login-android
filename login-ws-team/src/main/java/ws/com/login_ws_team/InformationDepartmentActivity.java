@@ -58,6 +58,9 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     private HashMap<String, String> hashMap;
     private LinearLayout contentBox;
     private LinearLayout contentBoxByDP;
+
+    private Type type;
+    private Gson gson;
     //    private UpPullAdapter upPullAdapter;
 
     @Override
@@ -160,12 +163,6 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                 HashMap<String, String> hashMap = new HashMap<>();
                 hashMap.put("managerPhone", selfPhone);
                 hashMap.put("phone", "");
-//                long time= SystemClock.uptimeMillis();//局部变量
-//                if (time-lastonScrollTime<=1000) {
-//                    return;
-//                }else {
-//                    lastonScrollTime=time;
-//                }
                 informationDepartmentModel.queryInformation(hashMap, new IBaseRetCallback<InformationDPBean>() {
                     @Override
                     public void onSucceed(Response<InformationDPBean> response) {
@@ -173,10 +170,10 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                         List<InformationDPBean.DataBean> info;
                         int showMaxNum = getInformationListRVHeight();
                         InformationAdapter instance;
+                        if(body==null){
+                            onSucceed(response);
+                        }
                         if ("success".equals(body.getFlag())) {
-                            Gson gson = new Gson();
-                            Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
-                            }.getType();
                             info = gson.fromJson(body.getData().toString(), type);
                             synchronized (info) {
                                 //计算页面最大可以显示几条数据
@@ -191,16 +188,18 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                                 instance = InformationAdapter.getInstance(list);
                                 synchronized (instance) {
                                     int size = list.size();
-                                    showEndNum = size + 5;
+                                    showEndNum = size + 1;
                                     if (showEndNum > info.size()) {
                                         if (size > showMaxNum) {
                                             return;
                                         }
                                         List<InformationDPBean.DataBean> dataBeans = info.subList(size, info.size());
+                                        instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
                                         //添加数据
                                         instance.addHeaderItem(dataBeans);
                                         return;
                                     }
+
                                     //从全部数据中获取要加载的数据段
                                     List<InformationDPBean.DataBean> dataBeans = info.subList(size, showEndNum);
                                     instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
@@ -216,61 +215,6 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
                     }
                 });
-//                        Handler handler = new Handler() {
-//                            private List<InformationDPBean.DataBean> info;
-//                            private int showMaxNum;
-//
-//                            @Override
-//                            public synchronized void handleMessage(@NonNull Message msg) {
-//                                InformationAdapter instance;
-//                                Bundle bundle = msg.getData();
-//                                InformationDPBean result = (InformationDPBean) bundle.getSerializable("result");
-//                                if ("success".equals(result.getFlag())) {
-//                                    Gson gson = new Gson();
-//                                    Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
-//                                    }.getType();
-//                                    info = gson.fromJson(result.getData().toString(), type);
-//
-//                                    synchronized (info) {
-//                                        //计算页面最大可以显示几条数据
-//                                        if (showMaxNum == 0) {
-//                                            int height = informationListRV.getHeight();
-//                                            showMaxNum = DPUtil.px2dip(InformationDepartmentActivity.this, height) / 60;
-//                                        }
-//
-//                                        //获取现在适配器里面数据的长度
-//                                        List<InformationDPBean.DataBean> list = InformationAdapter.getList();
-//                                        synchronized (list) {
-//                                            //获取适配器
-//                                            instance = InformationAdapter.getInstance(list);
-//                                            synchronized (instance) {
-//                                                int size = list.size();
-//                                                showEndNum = size + 1;
-//                                                if (showEndNum > info.size()) {
-//                                                    if (size > showMaxNum) {
-//                                                        return;
-//                                                    }
-//                                                    List<InformationDPBean.DataBean> dataBeans = info.subList(size, info.size());
-//                                                    //添加数据
-//                                                    instance.addHeaderItem(dataBeans);
-//
-////                                            ToastUtil.show(InformationDepartmentActivity.this, "没有数据了");
-//                                                    return;
-//                                                }
-//                                                //从全部数据中获取要加载的数据
-//                                                List<InformationDPBean.DataBean> dataBeans = info.subList(size, showEndNum);
-//                                                instance.changeMoreStatus(instance.PULLUP_LOAD_MORE);
-//                                                //添加数据
-//                                                instance.addHeaderItem(dataBeans);
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        };
-//                        API api = HttpUtil.getRetrofit().create(API.class);
-//                        Call<InformationDPBean> task = api.queryDPAll(hashMap);
-//                        HttpUtil.queryTask(handler, task);
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 //最后一个可见的ITEM
@@ -303,6 +247,9 @@ public class InformationDepartmentActivity extends AppCompatActivity {
     }
 
     private void initLoginData() {
+        gson = new Gson();
+        type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
+        }.getType();
         dpAndName = findViewById(R.id.dpAndName);
         //获取登录和注册页面传过来的参数
         getLoginData();
@@ -350,22 +297,18 @@ public class InformationDepartmentActivity extends AppCompatActivity {
                     informationListRV.setAdapter(null);
                     return;
                 }
-
-                Gson gson = new Gson();
-                Type type = new TypeToken<ArrayList<InformationDPBean.DataBean>>() {
-                }.getType();
                 List<InformationDPBean.DataBean> data = gson.fromJson(body.getData().toString(), type);
+                //获取informationListRV的视图一面最多可以放多少个item
+                int itemNum = getInformationListRVHeight();
+                if (data.size() > itemNum) {
+                    data = data.subList(0, itemNum);
+                }
 //                for (int i = 0; i < data.size(); i++) {
 //                    data.get(i).setDepartment("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 //                    data.get(i).setRegname("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 //                    data.get(i).setPhone("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 //                    data.get(i).setUserStatus("图一面最多可以放多少图一面最多可以放多少多少图一面最");
 //                }
-                //获取informationListRV的视图一面最多可以放多少个item
-                int itemNum = getInformationListRVHeight();
-                if (data.size() > itemNum) {
-                    data = data.subList(0, itemNum);
-                }
                 InformationAdapter informationAdapter = InformationAdapter.getInstance(data);
                 informationAdapter.changeMoreStatus(2);
                 informationListRV.setAdapter(informationAdapter);
@@ -373,6 +316,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Throwable t) {
+                Log.d(TAG, "onFailed: "+t);
             }
         });
     }
@@ -390,7 +334,6 @@ public class InformationDepartmentActivity extends AppCompatActivity {
             LoginBean result = (LoginBean) bundle.getSerializable("data");
             Object data = result.getData().toString();
             System.out.println(data);
-            Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<LoginBean.DataBean>>() {
             }.getType();
             List<LoginBean.DataBean> info = gson.fromJson(result.getData().toString(), type);
