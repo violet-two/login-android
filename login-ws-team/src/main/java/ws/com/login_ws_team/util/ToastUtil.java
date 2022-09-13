@@ -20,7 +20,6 @@ public class ToastUtil {
             cancelToast();
             toast = Toast.makeText(context, desc, Toast.LENGTH_SHORT);
         }
-        Log.d(TAG, "showSignIn: "+toast.getGravity());
         toast.show();
     }
 
@@ -33,7 +32,6 @@ public class ToastUtil {
             toast = Toast.makeText(context, desc, Toast.LENGTH_LONG);
             toast.setView(view);
         }
-        Log.d(TAG, "showSignIn: "+toast.getGravity());
         toast.show();
 //                showTime(1000);
         return toast;

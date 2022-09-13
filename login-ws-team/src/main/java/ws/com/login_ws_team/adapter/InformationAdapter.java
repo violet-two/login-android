@@ -131,22 +131,24 @@ public class InformationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             setTextFontSize(role);
         }
 
-        private void setTextFontSize(TextView view) {
-            view.post(new Runnable() {
-                @Override
-                public void run() {
-                    //获取省略的字符数，0表示没和省略
-                    int ellipsisCount = view.getLayout().getEllipsisCount(view.getLineCount() - 1);
-                    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-                        if(ellipsisCount>0){
-                            view.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
-                            view.setAutoSizeTextTypeUniformWithConfiguration(8, 18,
-                                    1, TypedValue.COMPLEX_UNIT_SP);
-                        }
+    }
+
+    private void setTextFontSize(TextView view) {
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                //获取省略的字符数，0表示没和省略
+                int ellipsisCount = view.getLayout().getEllipsisCount(view.getLineCount() - 1);
+                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
+                    if(ellipsisCount>0){
+//                        view.setTextSize(12);
+                        view.setAutoSizeTextTypeWithDefaults(TextView.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                        view.setAutoSizeTextTypeUniformWithConfiguration(8, 18,
+                                1, TypedValue.COMPLEX_UNIT_SP);
                     }
                 }
-            });
-        }
+            }
+        });
     }
     class FooterViewHolder extends RecyclerView.ViewHolder {
         ProgressBar mPbLoad;
