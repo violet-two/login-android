@@ -61,7 +61,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //初始化账号
         hashMap = new HashMap<>();
         hashMap.put("type", "sign");
-        hashMap.put("phone", "15337117134");
+        hashMap.put("phone", "13333333333");
 
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
@@ -171,7 +171,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         if(jpdetail==null){
             dateAdapter.changeSetGift(today+6,month,year,0,0);
         }else{
-            if(jpdetail.get(0).getDay()<DateUtils.getDaysOfMonth(year,month)){
+            if(jpdetail.get(0).getDay()<DateUtils.getCurrentDayOfMonth()){
                 dateAdapter.changeSetGift(today+6,month,year,0,0);
             }
         }
@@ -291,11 +291,12 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                                 @Override
                                 public void onSucceed(Response<SignInBean> response) {
                                     signInTextView.setText(" ×" + response.body().getPoints().toString());
+                                    dateAdapter.changeMJdetail(response.body().getJpdetail().get(0));
                                     dateAdapter.changeToday(today);
                                     if(response.body().getJpdetail().get(0).getContinuityNum()==7){
                                         dateAdapter.changeSetGift(today+6,month,year,0,0);
-                                        gvDate.setAdapter(dateAdapter);
                                     }
+                                    gvDate.setAdapter(dateAdapter);
 //                                    dateAdapter.changeSetGift(response.body().getJpdetail().get(0).getDay(),
 //                                            response.body().getJpdetail().get(0).getMonth(),
 //                                            response.body().getJpdetail().get(0).getYear(),

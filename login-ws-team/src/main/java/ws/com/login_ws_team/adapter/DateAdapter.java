@@ -66,6 +66,8 @@ public class DateAdapter extends BaseAdapter {
         return instance;
     }
 
+
+
     @Override
     public int getCount() {
         return mDays.length;
@@ -162,6 +164,18 @@ public class DateAdapter extends BaseAdapter {
         mJpdetail.setMonth(month);
         mJpdetail.setYear(year);
         mJpdetail.setNum(num);
+        this.mJpdetail = mJpdetail;
+        notifyDataSetChanged();
+    }
+
+    //将礼物的背景改变
+    public void changeMJdetail(SignInBean.JpdetailBean jpdetailBean) {
+        SignInBean.JpdetailBean mJpdetail = new SignInBean.JpdetailBean();
+        mJpdetail.setDay(jpdetailBean.getDay());
+        mJpdetail.setContinuityNum(jpdetailBean.getContinuityNum());
+        mJpdetail.setMonth(jpdetailBean.getMonth());
+        mJpdetail.setYear(jpdetailBean.getYear());
+        mJpdetail.setNum(jpdetailBean.getNum());
         this.mJpdetail = mJpdetail;
         notifyDataSetChanged();
     }
