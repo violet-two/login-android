@@ -1,22 +1,29 @@
 package ws.com.login_ws_team.util;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Point;
+import android.os.Build;
+import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class GetPingMuSizeUtil {
 
-    public static double getPingMuSize(Context mContext) {
-        int densityDpi = mContext.getResources().getDisplayMetrics().densityDpi;
-        float scaledDensity = mContext.getResources().getDisplayMetrics().scaledDensity;
-        float density = mContext.getResources().getDisplayMetrics().density;
-        float xdpi = mContext.getResources().getDisplayMetrics().xdpi;
-        float ydpi = mContext.getResources().getDisplayMetrics().ydpi;
-        int width = mContext.getResources().getDisplayMetrics().widthPixels;
-        int height = mContext.getResources().getDisplayMetrics().heightPixels;
+    private static String TAG = "GetPingMuSizeUtil";
 
-        // 这样可以计算屏幕的物理尺寸
-        float width2 = (width / xdpi)*(width / xdpi);
-        float height2 = (height / ydpi)*(width / xdpi);
-        double sqrt = Math.sqrt(width2 + height2);
-        return sqrt;
+    public static double getPingMuSize(Activity activity) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Point point = new Point();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity.getDisplay().getRealSize(point);
+        } else {
+            activity.getWindowManager().getDefaultDisplay().getSize(point);
+        }
+        double w = point.x / metrics.xdpi; // unit is inch
+        double h = point.y / metrics.ydpi; // unit is inch
+        double size = Math.sqrt(w * w + h * h);
+        Log.d(TAG, String.format("Screen size: %.1f", size));
+        return size;
     }
 }

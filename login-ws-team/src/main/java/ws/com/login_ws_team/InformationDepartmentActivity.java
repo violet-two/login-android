@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -37,7 +38,7 @@ import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
 
-public class InformationDepartmentActivity extends AppCompatActivity {
+public class InformationDepartmentActivity extends BaseActivity {
 
     private String TAG = "InformationDepartmentActivity";
     private SearchView searchView;
@@ -410,14 +411,7 @@ public class InformationDepartmentActivity extends AppCompatActivity {
         searchView.clearFocus();
         return super.onTouchEvent(event);
     }
-
-    //关闭软键盘
-    public void closeKeyBoard() {
-        if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
-            View v = getCurrentFocus();
-            ScreenUtil.closeSoftInput(this, v);
-        }
-    }
+    
 
     public void reBack(View view) {
         finish();

@@ -30,10 +30,8 @@ import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends BaseActivity implements View.OnClickListener {
 
-    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?]).{8,16}$/";
-    //    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,16}$/";
     private EditText mPhone;
     private EditText mPassword;
     private EditText mConfirmPassword;
@@ -95,7 +93,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 ToastUtil.show(this, "密码不能为空");
                 return;
             }
-//            mConfirmPassword.getText().toString().isEmpty();
             if (!b) {
                 if ((!"".equals((mConfirmPassword.getText().toString()))) && !(mConfirmPassword.getText().toString()).equals(mPassword.getText().toString())) {
                     ToastUtil.show(this, "密码不一致");
@@ -153,13 +150,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         return super.onTouchEvent(event);
     }
 
-    //关闭软键盘
-    public void closeKeyBoard() {
-        if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
-            View v = getCurrentFocus();
-            ScreenUtil.closeSoftInput(this, v);
-        }
-    }
 
     public void reBack(View view) {
         finish();
@@ -194,10 +184,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     ToastUtil.show(this, "请勾选协议");
                     return;
                 }
-//                if(password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
-//                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字、特殊符号");
-//                    return ;
-//                }
+                if(password.matches(PW_PATTERN)||password.length()<8||password.length()>16){
+                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字、特殊符号");
+                    return ;
+                }
                 if (!password.equals(confirmPassword)) {
                     ToastUtil.show(this, "密码不一致请重新输入");
                     return;

@@ -8,8 +8,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.HashMap;
 
 import retrofit2.Response;
@@ -19,18 +17,14 @@ import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.LoginModelImpl;
 import ws.com.login_ws_team.model.impl.ModifyPasswordModelImpl;
 import ws.com.login_ws_team.util.MD5Util;
-import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
 
-public class ModifyPasswordActivity extends AppCompatActivity implements View.OnClickListener {
+public class ModifyPasswordActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText mOldPassword;
     private EditText mNewPassword;
     private EditText mAgainPassword;
-    //正则表达式，判断是否为含有大小写、8-16位、特殊符号
-    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?]).{8,16}$/";
-    //    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,16}$/";
     private String phone;
 
     @Override
@@ -129,16 +123,9 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         closeKeyBoard();
-        return super.onTouchEvent(event);
+        return onTouchEvent(event);
     }
 
-    //关闭软键盘
-    public void closeKeyBoard() {
-        if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
-            View v = getCurrentFocus();
-            ScreenUtil.closeSoftInput(this, v);
-        }
-    }
 
     public void reBack(View view) {
         finish();
@@ -167,10 +154,10 @@ public class ModifyPasswordActivity extends AppCompatActivity implements View.On
                     ToastUtil.show(this, "2次输入密码不一致");
                     return;
                 }
-//                if(newPassword.matches(PW_PATTERN)||newPassword.length()<8||newPassword.length()>16){
-//                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字、特殊符号");
-//                    return ;
-//                }
+                if(newPassword.matches(PW_PATTERN)||newPassword.length()<8||newPassword.length()>16){
+                    ToastUtil.show(this,"密码长度必须为8-16位并且包含大小写字母、数字、特殊符号");
+                    return ;
+                }
                 HashMap<String, String> params = new HashMap<>();
                 params.put("phone", phone);
                 params.put("beforePassword", MD5Util.md5s(beforePassword));

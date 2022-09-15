@@ -1,13 +1,19 @@
 package ws.com.login_ws_team.util;
 
+import java.util.HashMap;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ws.com.login_ws_team.api.API;
 
-public class RetrofitUtil {
+public class RetrofitUtil{
     private static Retrofit retrofit;
     private static volatile RetrofitUtil mInstance;
     private static API api;
+
+    public static void init(RetrofitUtil instance){
+        mInstance = instance;
+    }
 
     public static RetrofitUtil getInstance(){
         if(mInstance==null){

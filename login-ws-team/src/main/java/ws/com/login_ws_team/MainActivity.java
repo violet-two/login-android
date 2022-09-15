@@ -25,7 +25,7 @@ import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText password;
 
@@ -110,19 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        closeKeyBoard();
-        return super.onTouchEvent(event);
-    }
-
-    //关闭软键盘
-    public void closeKeyBoard() {
-        if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
-            View v = getCurrentFocus();
-            ScreenUtil.closeSoftInput(this, v);
-        }
-    }
 
     //改变密码框输入的密码是否显示和图标显示
     public void changePasswordImage(View view) {

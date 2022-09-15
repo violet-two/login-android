@@ -1,5 +1,6 @@
 package ws.com.login_ws_team.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -116,7 +117,7 @@ public class DateAdapter extends BaseAdapter {
                 if (mDays[i] == mJpdetail.getDay() &&!(i > 20 && mDays[i] < 15)&&!(i > 20 && mDays[i] < 15)) {
 //                    viewHolder.date_item.setBackgroundResource(R.color.noBlack);
                     viewHolder.iv_gift.setVisibility(View.VISIBLE);
-                    viewHolder.iv_gift.setOnClickListener(view1 -> {
+                    view.setOnClickListener(view1 -> {
                         try {
                             View textView = initToastView();
                             //自定义弹窗视图
@@ -168,7 +169,7 @@ public class DateAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    //将礼物的背景改变
+    //修改礼物数据
     public void changeMJdetail(SignInBean.JpdetailBean jpdetailBean) {
         SignInBean.JpdetailBean mJpdetail = new SignInBean.JpdetailBean();
         mJpdetail.setDay(jpdetailBean.getDay());
@@ -218,8 +219,8 @@ public class DateAdapter extends BaseAdapter {
         }
 
         public void setStyle() {
-            double pingMuSize = GetPingMuSizeUtil.getPingMuSize(mContext);
-            if (pingMuSize < 4.5) {
+            double pingMuSize = GetPingMuSizeUtil.getPingMuSize((Activity)mContext);
+            if (pingMuSize < 5.5) {
                 date_item.setTypeface(Typeface.create(date_item.getTypeface(), Typeface.NORMAL), Typeface.BOLD);
                 date_item.setTextSize(16);
                 if (mDays.length / 7 > 5) {
@@ -228,7 +229,7 @@ public class DateAdapter extends BaseAdapter {
                 return;
             }
             date_item.setTypeface(Typeface.create(date_item.getTypeface(), Typeface.NORMAL), Typeface.BOLD);
-            date_item.setTextSize(24);
+            date_item.setTextSize(16);
         }
     }
 }
