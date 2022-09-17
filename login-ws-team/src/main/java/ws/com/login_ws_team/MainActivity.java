@@ -67,7 +67,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 if (b) {
                     // 此处为得到焦点时的处理内容
                     System.out.println("获取焦点");
-                    String isTruePhoneNum = "^1(3[0-9]|5[012356789]|7[1235678]|8[0-9])\\d{8}$";
                     String inputPhone = user.getText().toString();
                     if (!inputPhone.matches(isTruePhoneNum)) {
                         ToastUtil.show(MainActivity.this, "手机号格式不正确");
@@ -98,13 +97,38 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onResume();
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            String status = bundle.getString("status");
-            if ("success".equals(status)) {
-                user.setText(bundle.getString("user"));
-                password.setText(bundle.getString("password"));
-                Intent intent = new Intent(this, InformationDepartmentActivity.class);
-                startActivity(intent);
-            }
+            String phone = bundle.getString("phone");
+            String password = bundle.getString("password");
+            user.setText(phone);
+            this.password.setText(password);
+            progressDialog.show();
+            HashMap<String, String> params = new HashMap<>();
+            params.put("phone", phone);
+            params.put("password", MD5Util.md5s(password));
+            loginModel.login(params, new IBaseRetCallback<LoginBean>() {
+                @Override
+                public void onSucceed(Response<LoginBean> response) {
+                    LoginBean result = response.body();
+                    Log.d("mainActivity", "onSucceed: " + result);
+                    if ("success".equals(result.getFlag())) {
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(MainActivity.this, InformationDepartmentActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.putExtra("data", result);
+                        startActivity(intent);
+                        //登录成功就数据存储到SharedPreferences里面去
+                        UserManage.getInstance().saveUserInfo(MainActivity.this,result);
+                        finish();
+                    } else {
+                        progressDialog.dismiss();
+                        ToastUtil.show(MainActivity.this, result.getData().toString());
+                    }
+                }
+
+                @Override
+                public void onFailed(Throwable t) {
+                }
+            });
         } else {
             password.setText("");
         }

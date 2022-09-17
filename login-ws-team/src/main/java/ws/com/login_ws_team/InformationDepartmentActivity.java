@@ -301,12 +301,6 @@ public class InformationDepartmentActivity extends BaseActivity {
                 if (data.size() > itemNum) {
                     data = data.subList(0, itemNum);
                 }
-//                for (int i = 0; i < data.size(); i++) {
-//                    data.get(i).setDepartment("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-//                    data.get(i).setRegname("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-//                    data.get(i).setPhone("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-//                    data.get(i).setUserStatus("图一面最多可以放多少图一面最多可以放多少多少图一面最");
-//                }
                 InformationAdapter informationAdapter = InformationAdapter.getInstance(data);
                 informationAdapter.changeMoreStatus(2);
                 informationListRV.setAdapter(informationAdapter);

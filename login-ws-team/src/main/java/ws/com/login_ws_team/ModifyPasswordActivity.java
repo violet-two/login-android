@@ -1,6 +1,7 @@
 package ws.com.login_ws_team;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,11 +32,6 @@ public class ModifyPasswordActivity extends BaseActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_password);
-
-        //设置状态栏背景为透明
-        StatusBarUtil.getStatusAToTransparent(this);
-        //获取状态栏高度
-        int statusBarHeight = StatusBarUtil.getStatusBarHeight(this);
         //获取RelativeLayout
         RelativeLayout topBox = findViewById(R.id.topBox);
         //设置属性,获取属性要获取到他的父级容器标签或者布局
@@ -168,7 +164,11 @@ public class ModifyPasswordActivity extends BaseActivity implements View.OnClick
                     public void onSucceed(Response<ModifyPasswordBean> response) {
                         ModifyPasswordBean result = response.body();
                         if (result.getFlag().equals("success")) {
-                            finish();
+                            Intent intent = new Intent(ModifyPasswordActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.putExtra("phone",phone);
+                            intent.putExtra("password",newPassword);
+                            startActivity(intent);
                         } else {
                             ToastUtil.show(ModifyPasswordActivity.this, result.getData());
                         }
