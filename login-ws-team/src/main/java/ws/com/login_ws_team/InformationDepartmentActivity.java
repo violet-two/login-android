@@ -110,6 +110,10 @@ public class InformationDepartmentActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected IBasePresenter createPresenter() {
+        return null;
+    }
 
     private void upPullAndDownPush() {
         handlerUpPullOnload();

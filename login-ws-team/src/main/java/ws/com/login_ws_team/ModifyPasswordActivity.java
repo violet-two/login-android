@@ -84,6 +84,11 @@ public class ModifyPasswordActivity extends BaseActivity implements View.OnClick
         findViewById(R.id.modify_password).setOnClickListener(this);
     }
 
+    @Override
+    protected IBasePresenter createPresenter() {
+        return null;
+    }
+
 
     boolean b;
 

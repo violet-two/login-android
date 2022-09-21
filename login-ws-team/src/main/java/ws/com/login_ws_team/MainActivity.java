@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
 
@@ -19,13 +16,14 @@ import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.UserManage;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.LoginModelImpl;
+import ws.com.login_ws_team.presenter.LoginPresenter;
 import ws.com.login_ws_team.util.MD5Util;
-import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
+import ws.com.login_ws_team.view.ILoginView;
 
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity<LoginPresenter, ILoginView> implements View.OnClickListener, ILoginView {
 
     private EditText password;
 
@@ -50,31 +48,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         password = findViewById(R.id.et_password);
         login = findViewById(R.id.btn_login);
         resign = findViewById(R.id.btn_resign);
-        user.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
-                    // 此处为得到焦点时的处理内容
-                    System.out.println("获取焦点");
-                } else {
-                    System.out.println("失去焦点");
+        password.setOnFocusChangeListener((view, b) -> {
+            if (b) {
+                // 此处为得到焦点时的处理内容
+                System.out.println("获取焦点");
+                String inputPhone = user.getText().toString();
+                if (!inputPhone.matches(isTruePhoneNum)) {
+                    ToastUtil.show(MainActivity.this, "手机号格式不正确");
+                    user.requestFocus();
                 }
-            }
-        });
-        password.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b) {
-                    // 此处为得到焦点时的处理内容
-                    System.out.println("获取焦点");
-                    String inputPhone = user.getText().toString();
-                    if (!inputPhone.matches(isTruePhoneNum)) {
-                        ToastUtil.show(MainActivity.this, "手机号格式不正确");
-                        user.requestFocus();
-                    }
-                } else {
-                    System.out.println("失去焦点");
-                }
+            } else {
+                System.out.println("失去焦点");
             }
         });
         login.setOnClickListener(this);
@@ -88,8 +72,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("请稍等.....");
+    }
 
-        loginModel = new LoginModelImpl();
+    @Override
+    protected LoginPresenter createPresenter() {
+        return new LoginPresenter();
     }
 
     @Override
@@ -99,41 +86,24 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (bundle != null) {
             String phone = bundle.getString("phone");
             String password = bundle.getString("password");
+            HashMap<String, String> params = new HashMap<>();
+            params.put("phone", user.getText().toString());
+            params.put("password", MD5Util.md5s(password));
             user.setText(phone);
             this.password.setText(password);
             progressDialog.show();
-            HashMap<String, String> params = new HashMap<>();
-            params.put("phone", phone);
-            params.put("password", MD5Util.md5s(password));
-            loginModel.login(params, new IBaseRetCallback<LoginBean>() {
-                @Override
-                public void onSucceed(Response<LoginBean> response) {
-                    LoginBean result = response.body();
-                    Log.d("mainActivity", "onSucceed: " + result);
-                    if ("success".equals(result.getFlag())) {
-                        progressDialog.dismiss();
-                        Intent intent = new Intent(MainActivity.this, InformationDepartmentActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("data", result);
-                        startActivity(intent);
-                        //登录成功就数据存储到SharedPreferences里面去
-                        UserManage.getInstance().saveUserInfo(MainActivity.this,result);
-                        finish();
-                    } else {
-                        progressDialog.dismiss();
-                        ToastUtil.show(MainActivity.this, result.getData().toString());
-                    }
-                }
-
-                @Override
-                public void onFailed(Throwable t) {
-                }
-            });
+            presenter.login(params);
         } else {
             password.setText("");
         }
     }
 
+    @Override
+    public void register() {
+        Intent intent = new Intent(this, RegisterActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+    }
 
     //改变密码框输入的密码是否显示和图标显示
     public void changePasswordImage(View view) {
@@ -157,6 +127,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.btn_login:
                 String phone = user.getText().toString();
                 String mPassword = password.getText().toString();
+                HashMap<String, String> params = new HashMap<>();
+                params.put("phone", user.getText().toString());
+                params.put("password", MD5Util.md5s(password.getText().toString()));
                 if ("".equals(phone)) {
                     ToastUtil.show(this, "用户名不能为空");
                     return;
@@ -166,39 +139,30 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     return;
                 }
                 progressDialog.show();
-                HashMap<String, String> params = new HashMap<>();
-                params.put("phone", phone);
-                params.put("password", MD5Util.md5s(mPassword));
-                loginModel.login(params, new IBaseRetCallback<LoginBean>() {
-                    @Override
-                    public void onSucceed(Response<LoginBean> response) {
-                        LoginBean result = response.body();
-                        Log.d("mainActivity", "onSucceed: " + result);
-                        if ("success".equals(result.getFlag())) {
-                            progressDialog.dismiss();
-                            Intent intent = new Intent(MainActivity.this, InformationDepartmentActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("data", result);
-                            startActivity(intent);
-                            //登录成功就数据存储到SharedPreferences里面去
-                            UserManage.getInstance().saveUserInfo(MainActivity.this,result);
-                            finish();
-                        } else {
-                            progressDialog.dismiss();
-                            ToastUtil.show(MainActivity.this, result.getData().toString());
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(Throwable t) {
-                    }
-                });
+                presenter.login(params);
                 break;
             case R.id.btn_resign:
-                Intent intent = new Intent(this, RegisterActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                startActivity(intent);
+                register();
                 break;
+        }
+    }
+
+    @Override
+    public void login(Response<LoginBean> loginBeanResponse) {
+        LoginBean result = loginBeanResponse.body();
+        Log.d("mainActivity", "onSucceed: " + result);
+        if ("success".equals(result.getFlag())) {
+            progressDialog.dismiss();
+            Intent intent = new Intent(MainActivity.this, InformationDepartmentActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("data", result);
+            startActivity(intent);
+            //登录成功就数据存储到SharedPreferences里面去
+            UserManage.getInstance().saveUserInfo(MainActivity.this, result);
+            finish();
+        } else {
+            progressDialog.dismiss();
+            ToastUtil.show(MainActivity.this, result.getData().toString());
         }
     }
 }

@@ -162,6 +162,11 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         });
     }
 
+    @Override
+    protected IBasePresenter createPresenter() {
+        return null;
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
