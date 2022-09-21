@@ -25,6 +25,7 @@ import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.RegisterBean;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.RegisterModelImpl;
+import ws.com.login_ws_team.presenter.IBasePresenter;
 import ws.com.login_ws_team.util.MD5Util;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
@@ -68,13 +69,21 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mCheck.setOnClickListener(this);
         mCheck.setChecked(false);
         mDepartment = findViewById(R.id.department);
-
         mPhone.setOnFocusChangeListener((v, hasFocus) -> {
             if(hasFocus)return;
+            else{
+                if (!(mPhone.getText().toString().matches(isTruePhoneNum))) {
+                    ToastUtil.show(this, "手机号格式不正确");
+                }
+            }
         });
         mPassword.setOnFocusChangeListener((view, b) -> {
             if ("".equals(mPhone.getText().toString())) {
                 ToastUtil.show(this, "手机号不能为空");
+                return;
+            }
+            if (!(mPhone.getText().toString().matches(isTruePhoneNum))) {
+                ToastUtil.show(this, "手机号格式不正确");
                 return;
             }
             if (!b) {
@@ -87,6 +96,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         mConfirmPassword.setOnFocusChangeListener((view, b) -> {
             if ("".equals(mPhone.getText().toString())) {
                 ToastUtil.show(this, "手机号不能为空");
+                return;
+            }
+            if (!(mPhone.getText().toString().matches(isTruePhoneNum))) {
+                ToastUtil.show(this, "手机号格式不正确");
                 return;
             }
             if ("".equals(mPassword.getText().toString())) {
@@ -102,6 +115,10 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         });
         mName.setOnFocusChangeListener((view, b) -> {
+            if (!(mPhone.getText().toString().matches(isTruePhoneNum))) {
+                ToastUtil.show(this, "手机号格式不正确");
+                return;
+            }
             if ("".equals(mPhone.getText().toString())) {
                 ToastUtil.show(this, "手机号不能为空");
                 return;
@@ -123,6 +140,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     ToastUtil.show(RegisterActivity.this, "手机号不能为空");
                     return;
                 }
+
                 if ("".equals(mPassword.getText().toString())) {
                     ToastUtil.show(RegisterActivity.this, "密码不能为空");
                     return;
@@ -132,7 +150,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     return;
                 }
                 if ("".equals(mName.getText().toString())) {
-                    ToastUtil.show(RegisterActivity.this, "重复密码不能为空");
+                    ToastUtil.show(RegisterActivity.this, "名称不能为空");
                     return;
                 }
             }
@@ -143,6 +161,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
         });
     }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {

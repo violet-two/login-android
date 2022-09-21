@@ -33,6 +33,7 @@ import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.UserManage;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.InformationDepartmentModelImpl;
+import ws.com.login_ws_team.presenter.IBasePresenter;
 import ws.com.login_ws_team.util.DPUtil;
 import ws.com.login_ws_team.util.ScreenUtil;
 import ws.com.login_ws_team.util.StatusBarUtil;
@@ -49,7 +50,6 @@ public class InformationDepartmentActivity extends BaseActivity {
     private String department;
     private String regname;
     private TextView dpAndName;
-    private View allView;
     private LinearLayout bottomBox;
     private SwipeRefreshLayout sr;
     private InformationDepartmentModelImpl informationDepartmentModel;
@@ -109,6 +109,7 @@ public class InformationDepartmentActivity extends BaseActivity {
 //            InformationDP.informationDP(this, allView, hashMap);
         });
     }
+
 
     private void upPullAndDownPush() {
         handlerUpPullOnload();
@@ -285,7 +286,7 @@ public class InformationDepartmentActivity extends BaseActivity {
     }
 
     private synchronized void initData(HashMap<String, String> hashMap) {
-        allView = findViewById(R.id.allView);
+        View allView = findViewById(R.id.allView);
         informationDepartmentModel.queryInformation(hashMap, new IBaseRetCallback<InformationDPBean>() {
             @Override
             public void onSucceed(Response<InformationDPBean> response) {

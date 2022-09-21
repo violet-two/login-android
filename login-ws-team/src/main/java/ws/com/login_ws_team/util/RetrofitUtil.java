@@ -3,6 +3,7 @@ package ws.com.login_ws_team.util;
 import java.util.HashMap;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ws.com.login_ws_team.api.API;
 
@@ -30,6 +31,7 @@ public class RetrofitUtil{
             retrofit = new Retrofit.Builder()
                     .baseUrl("http://119.96.82.181:8081")
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .build();
         }
         return retrofit;

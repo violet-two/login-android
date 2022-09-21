@@ -1,7 +1,6 @@
 package ws.com.login_ws_team;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.GridView;
@@ -47,6 +46,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private GridView gvWeek;
     private HashMap<String, String> hashMap;
     private int today;
+    private boolean dataError = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +66,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //初始化账号
         hashMap = new HashMap<>();
         hashMap.put("type", "sign");
-        hashMap.put("phone", "15662554246");
+        hashMap.put("phone", "15337117134");
         //初始化signInModel实现类
         signInModel = new SignInModelImpl();
         //获取签到的天数并初始化适配器
@@ -92,6 +92,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void getSignInDays() {
         hashMap.put("type", "selectSign");
         signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
+
             @Override
             public synchronized void onSucceed(Response<SignInBean> response) {
                 SignInBean body = response.body();
@@ -99,10 +100,11 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                     //判断时间是否被篡改
                     Date date = new Date();
                     Date parse = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(body.getNowTime());
-                    if(((date.getTime() - parse.getTime())  % 1000)>1000){
+                    if((Math.abs((date.getTime() - parse.getTime()))  / 1000)>1){
                         ToastUtil.show(SignInActivity.this,"日期不对");
                         signInDays = new int[0];
                         initAdapter();
+                        dataError = false;
                         return;
                     }
                     //如果请求失败，则只进行日历的显示
@@ -241,6 +243,10 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.signInButton:
+                if(!dataError){
+                    ToastUtil.show(SignInActivity.this,"日期不对，请调整日期");
+                    return ;
+                }
                 hashMap.put("type", "sign");
                 signInModel.signIn(hashMap, new IBaseRetCallback<SignInBean>() {
                     @Override

@@ -17,6 +17,7 @@ import ws.com.login_ws_team.entity.ModifyPasswordBean;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.LoginModelImpl;
 import ws.com.login_ws_team.model.impl.ModifyPasswordModelImpl;
+import ws.com.login_ws_team.presenter.IBasePresenter;
 import ws.com.login_ws_team.util.MD5Util;
 import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
@@ -82,6 +83,7 @@ public class ModifyPasswordActivity extends BaseActivity implements View.OnClick
         });
         findViewById(R.id.modify_password).setOnClickListener(this);
     }
+
 
     boolean b;
 
