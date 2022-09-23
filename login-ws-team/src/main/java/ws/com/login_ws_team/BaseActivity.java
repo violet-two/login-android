@@ -2,6 +2,7 @@ package ws.com.login_ws_team;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,7 +20,8 @@ public abstract class BaseActivity<P extends IBasePresenter,V extends IBaseView>
     protected static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*?]).{8,16}$/";
     //底部状态栏高度
     protected static int statusBarHeight;
-    P presenter;
+    protected P presenter;
+    protected ProgressDialog progressDialog;
     //    public static final String PW_PATTERN = "/^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z]).{8,16}$/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,11 @@ public abstract class BaseActivity<P extends IBasePresenter,V extends IBaseView>
         statusBarHeight = StatusBarUtil.getStatusBarHeight(this);
         presenter = createPresenter();
         presenter.attachView((V)this);
+        //弹出等待框
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("请稍等.....");
 
     }
 

@@ -31,8 +31,7 @@ public class MainActivity extends BaseActivity<LoginPresenter, ILoginView> imple
     private EditText user;
     private Button login;
     private Button resign;
-    private LoginModelImpl loginModel;
-    private ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +41,16 @@ public class MainActivity extends BaseActivity<LoginPresenter, ILoginView> imple
         setContentView(R.layout.activity_main);
         //设置状态栏背景为透明
         StatusBarUtil.getStatusAToTransparent(this);
-        user = findViewById(R.id.et_user);
-        user.setFocusable(true);
-        user.requestFocus();
-        password = findViewById(R.id.et_password);
-        login = findViewById(R.id.btn_login);
-        resign = findViewById(R.id.btn_resign);
+
+        initView();
+
+        initEvent();
+        //设置密码框默认属性
+        findViewById(R.id.changePasswordImage).setBackgroundResource(R.drawable.ic_visibility_off_24);
+        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+    }
+
+    private void initEvent() {
         password.setOnFocusChangeListener((view, b) -> {
             if (b) {
                 // 此处为得到焦点时的处理内容
@@ -63,15 +66,15 @@ public class MainActivity extends BaseActivity<LoginPresenter, ILoginView> imple
         });
         login.setOnClickListener(this);
         resign.setOnClickListener(this);
-        //设置密码框默认属性
-        findViewById(R.id.changePasswordImage).setBackgroundResource(R.drawable.ic_visibility_off_24);
-        password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+    }
 
-        //弹出等待框
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage("请稍等.....");
+    private void initView() {
+        user = findViewById(R.id.et_user);
+        user.setFocusable(true);
+        user.requestFocus();
+        password = findViewById(R.id.et_password);
+        login = findViewById(R.id.btn_login);
+        resign = findViewById(R.id.btn_resign);
     }
 
     @Override
@@ -138,7 +141,9 @@ public class MainActivity extends BaseActivity<LoginPresenter, ILoginView> imple
                     ToastUtil.show(this, "密码不能为空");
                     return;
                 }
+                //当登录条件符合时，显示加载框
                 progressDialog.show();
+                //触发点击事件
                 presenter.login(params);
                 break;
             case R.id.btn_resign:
@@ -150,9 +155,8 @@ public class MainActivity extends BaseActivity<LoginPresenter, ILoginView> imple
     @Override
     public void login(Response<LoginBean> loginBeanResponse) {
         LoginBean result = loginBeanResponse.body();
-        Log.d("mainActivity", "onSucceed: " + result);
+        progressDialog.dismiss();
         if ("success".equals(result.getFlag())) {
-            progressDialog.dismiss();
             Intent intent = new Intent(MainActivity.this, InformationDepartmentActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("data", result);
@@ -161,7 +165,6 @@ public class MainActivity extends BaseActivity<LoginPresenter, ILoginView> imple
             UserManage.getInstance().saveUserInfo(MainActivity.this, result);
             finish();
         } else {
-            progressDialog.dismiss();
             ToastUtil.show(MainActivity.this, result.getData().toString());
         }
     }

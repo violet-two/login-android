@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg"
+    android:background="#94C7C3"
     android:orientation="vertical"
     android:padding="5dp"
     tools:context=".RegisterActivity">
@@ -18,18 +17,17 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:onClick="reBack"
-            android:paddingLeft="0dp"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:src="@drawable/reback_01" />
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:src="@drawable/ic_back_24" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center"
             android:text="@string/title"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="@dimen/s16sp" />
     </RelativeLayout>
 
@@ -37,88 +35,168 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:background="@drawable/register_input_bg"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/et_phone"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/register_input_bg"
-            android:hint="@string/phoneNum"
-            android:inputType="number"
-            android:maxLength="11"
-            android:paddingLeft="5dp"
-            android:textColor="@color/black"
-            android:textColorHint="#95A1AA" />
-
-        <EditText
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/register_input_bg"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:paddingLeft="5dp"
-            android:textColor="@color/black"
-            android:textColorHint="#95A1AA" />
-
-        <EditText
-            android:id="@+id/et_confirm_password"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/register_input_bg"
-            android:hint="@string/confirmPassword"
-            android:inputType="textPassword"
-            android:paddingLeft="5dp"
-            android:textColor="@color/black"
-            android:textColorHint="#95A1AA" />
-
-        <EditText
-            android:id="@+id/et_name"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/register_input_bg"
-            android:hint="@string/name"
-            android:paddingLeft="5dp"
-            android:textColor="@color/black"
-            android:textColorHint="#95A1AA" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="15dp"
-            android:layout_centerVertical="true"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:background="@drawable/register_input_bg">
 
-            <Spinner
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="4dp"
+                android:src="@drawable/register_name" />
+
+            <EditText
+                android:id="@+id/et_name"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:hint="@string/name"
+                android:paddingLeft="5dp"
+                android:textColor="@color/black"
+                android:textColorHint="#95A1AA" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="4dp"
+                android:src="@drawable/register_phone_24"></ImageView>
+
+            <EditText
+                android:id="@+id/et_phone"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:hint="@string/phoneNum"
+                android:inputType="number"
+                android:maxLength="11"
+                android:paddingLeft="5dp"
+                android:textColor="@color/black"
+                android:textColorHint="#95A1AA" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="4dp"
+                android:src="@drawable/register_lock"></ImageView>
+
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:textColor="@color/black"
+                android:textColorHint="#95A1AA" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/register_input_bg">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="4dp"
+                android:src="@drawable/register_unlock"></ImageView>
+
+            <EditText
+                android:id="@+id/et_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:hint="@string/confirmPassword"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:textColor="@color/black"
+                android:textColorHint="#95A1AA" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/register_input_bg">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="4dp"
+                android:src="@drawable/register_dp"></ImageView>
+
+            <EditText
                 android:id="@+id/department"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_centerVertical="true"
-                android:entries="@array/DepartmentList"
-                android:popupBackground="@drawable/register_spinner_bg"
-                android:spinnerMode="dropdown"></Spinner>
-        </RelativeLayout>
+                android:layout_height="45dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:hint="请输入您的部门"
+                android:paddingLeft="5dp"
+                android:textColor="@color/black"
+                android:textColorHint="#95A1AA" />
+        </LinearLayout>
+
+        <!--        <RelativeLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="40dp"-->
+        <!--            android:layout_centerVertical="true"-->
+        <!--            android:layout_marginLeft="15dp"-->
+        <!--            android:layout_marginTop="20dp"-->
+        <!--            android:layout_marginRight="15dp"-->
+        <!--            android:background="@drawable/register_input_bg">-->
+        <!--            -->
+        <!--            <Spinner-->
+        <!--                android:id="@+id/department"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="40dp"-->
+        <!--                android:layout_centerVertical="true"-->
+        <!--                android:entries="@array/DepartmentList"-->
+        <!--                android:popupBackground="@drawable/register_spinner_bg"-->
+        <!--                android:spinnerMode="dropdown"></Spinner>-->
+        <!--        </RelativeLayout>-->
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp">
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="15dp"
+        >
 
         <RadioButton
             android:id="@+id/check"
@@ -130,7 +208,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" 已同意并阅读 "
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="14sp" />
 
         <TextView
@@ -175,8 +253,9 @@
             android:layout_marginTop="20dp"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
+            android:gravity="center"
             android:text="@string/tips"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="14sp" />
     </LinearLayout>
 </LinearLayout>

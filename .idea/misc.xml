@@ -41,6 +41,7 @@
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-xhdpi/signin_left_radio_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-xhdpi/signin_radio_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable-xhdpi/signin_right_radio_bg.xml" value="0.229" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/ic_back_24.xml" value="0.1625" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/ic_baseline_arrow_drop_down_24.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1535" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/ic_lock_24.xml" value="0.3015" />
@@ -53,6 +54,7 @@
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/signin_calendar_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/signin_gradual_color_bg.xml" value="0.229" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/drawable/signup_calendar_bg.xml" value="0.229" />
+        <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/a.xml" value="0.17806484295845998" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_information_department.xml" value="0.1" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_login_success.xml" value="0.17806484295845998" />
         <entry key="..\:/AndroidCode/login/login-ws-team/src/main/res/layout/activity_main.xml" value="0.22" />
