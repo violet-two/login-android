@@ -185,10 +185,6 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter, IRegisterV
         finish();
     }
 
-    /**
-     这是第5次编写周记了，也到了9月份了，9月初的时候由于疫情，我们3个被限制在了家中不能去上班，这是我们第一次居家办公，好在我们是计算机专业的，可以在自己的电脑上办公，这个月初的任务是，要我们自己编写一个
-     签到实例，
-     */
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

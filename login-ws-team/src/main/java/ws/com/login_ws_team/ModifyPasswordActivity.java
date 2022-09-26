@@ -1,9 +1,7 @@
 package ws.com.login_ws_team;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -16,23 +14,24 @@ import ws.com.login_ws_team.entity.LoginBean;
 import ws.com.login_ws_team.entity.ModifyPasswordBean;
 import ws.com.login_ws_team.model.IBaseRetCallback;
 import ws.com.login_ws_team.model.impl.LoginModelImpl;
-import ws.com.login_ws_team.model.impl.ModifyPasswordModelImpl;
-import ws.com.login_ws_team.presenter.IBasePresenter;
+import ws.com.login_ws_team.presenter.ModifyPasswordPresenter;
 import ws.com.login_ws_team.util.MD5Util;
-import ws.com.login_ws_team.util.StatusBarUtil;
 import ws.com.login_ws_team.util.ToastUtil;
+import ws.com.login_ws_team.view.IModifyPasswordView;
 
-public class ModifyPasswordActivity extends BaseActivity implements View.OnClickListener {
+public class ModifyPasswordActivity extends BaseActivity<ModifyPasswordPresenter, IModifyPasswordView> implements View.OnClickListener, IModifyPasswordView {
 
     private EditText mOldPassword;
     private EditText mNewPassword;
     private EditText mAgainPassword;
     private String phone;
+    private ModifyPasswordPresenter modifyPasswordPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modify_password);
+        modifyPasswordPresenter = presenter;
         //获取RelativeLayout
         RelativeLayout topBox = findViewById(R.id.topBox);
         //设置属性,获取属性要获取到他的父级容器标签或者布局
@@ -44,9 +43,17 @@ public class ModifyPasswordActivity extends BaseActivity implements View.OnClick
         Bundle bundle = getIntent().getExtras();
         phone = bundle.getString("phone");
 
+        initView();
+        initEvent();
+    }
+
+    private void initView() {
         mOldPassword = findViewById(R.id.old_password);
         mNewPassword = findViewById(R.id.new_password);
         mAgainPassword = findViewById(R.id.again_password);
+    }
+
+    private void initEvent() {
         mNewPassword.setOnFocusChangeListener((view, b) -> {
             if (b) {
                 // 此处为得到焦点时的处理内容
@@ -85,15 +92,12 @@ public class ModifyPasswordActivity extends BaseActivity implements View.OnClick
     }
 
     @Override
-    protected IBasePresenter createPresenter() {
-        return null;
+    protected ModifyPasswordPresenter createPresenter() {
+        return new ModifyPasswordPresenter();
     }
 
-
     boolean b;
-
     //检查密码是否正确
-    @SuppressLint("HandlerLeak")
     private boolean checkPassword() {
         if ("".equals(mOldPassword.getText().toString())) {
             mOldPassword.requestFocus();
@@ -122,13 +126,6 @@ public class ModifyPasswordActivity extends BaseActivity implements View.OnClick
         });
         return b;
     }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        closeKeyBoard();
-        return onTouchEvent(event);
-    }
-
 
     public void reBack(View view) {
         finish();
@@ -165,28 +162,27 @@ public class ModifyPasswordActivity extends BaseActivity implements View.OnClick
                 params.put("phone", phone);
                 params.put("beforePassword", MD5Util.md5s(beforePassword));
                 params.put("password", MD5Util.md5s(newPassword));
-                ModifyPasswordModelImpl modifyPasswordModel = new ModifyPasswordModelImpl();
-                modifyPasswordModel.modifyPassword(params, new IBaseRetCallback<ModifyPasswordBean>() {
-                    @Override
-                    public void onSucceed(Response<ModifyPasswordBean> response) {
-                        ModifyPasswordBean result = response.body();
-                        if (result.getFlag().equals("success")) {
-                            Intent intent = new Intent(ModifyPasswordActivity.this, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            intent.putExtra("phone",phone);
-                            intent.putExtra("password",newPassword);
-                            startActivity(intent);
-                        } else {
-                            ToastUtil.show(ModifyPasswordActivity.this, result.getData());
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(Throwable t) {
-
-                    }
-                });
+                modifyPasswordPresenter.modifyPassword(params);
                 break;
         }
+    }
+
+    @Override
+    public void modifyPassword(Response<ModifyPasswordBean> modifyPasswordBeanResponse) {
+        ModifyPasswordBean result = modifyPasswordBeanResponse.body();
+        if (result.getFlag().equals("success")) {
+            Intent intent = new Intent(ModifyPasswordActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("phone",phone);
+            intent.putExtra("password",mNewPassword.getText().toString());
+            startActivity(intent);
+        } else {
+            ToastUtil.show(ModifyPasswordActivity.this, result.getData());
+        }
+    }
+
+    @Override
+    public void checkPasswordIsTrue(Response<ModifyPasswordBean> modifyPasswordBeanResponse) {
+
     }
 }
